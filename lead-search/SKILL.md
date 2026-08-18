@@ -1,8 +1,42 @@
 ---
 name: lead-search
-version: 0.1.0
+version: 0.2.0
 publisher: localoy
 capabilities: [files, web]
+# localoy dialect: stages make this runnable on small local models. Each stage
+# is its own turn with its own time budget and a file that survives it, so a
+# model too slow to finish one monolithic research turn still ships the list.
+# Claude Code ignores this key and runs the Procedure below in one pass.
+stages:
+  - id: harvest
+    goal: >
+      Run 5 to 8 web searches for the described buyer, each with a DIFFERENT
+      angle: direct ("<niche> companies in <place>"), roundups ("best <niche>
+      <place>"), neighboring cities by name, and site: queries for gated
+      sources read from snippets. Snippets only — fetch NO pages in this
+      stage. Record every candidate company as a line: name, the query that
+      found it, the result URL. Never repeat an identical query.
+    produces: work/found.md
+  - id: resolve
+    goal: >
+      For each candidate in work/found.md, establish its own website (its own
+      domain — a Yelp, Clutch, Facebook or directory page is never the
+      website), its location, and its decision maker via one search like
+      "<company>" (founder OR CEO OR owner) or site:linkedin.com/in
+      "<company>", reading names and titles from result titles only. Never
+      construct a profile URL — record only URLs a search surfaced. Fetch at
+      most 3 pages in this whole stage, and only where snippets left a row
+      ambiguous. Write UNKNOWN for anything not observed.
+    produces: work/resolved.md
+  - id: report
+    goal: >
+      Read work/found.md and work/resolved.md. Deduplicate by canonical domain
+      (strip www, lowercase, one row per domain). Write the CSV with header
+      "Company Name,Location,Website,Decision Maker Name,Title,Profile URL,
+      Evidence URL,Confidence" — one row per lead, Confidence one of
+      verified/likely/unconfirmed, every row carrying the evidence URL a
+      reader could open. After the rows, add no commentary; the file is data.
+    produces: leads/{date}-{slug}.csv
 description: Find sales leads on the open web — companies and decision makers with evidence behind every row. (localstack)
 allowed-tools:
   - Bash

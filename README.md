@@ -1,45 +1,51 @@
 # localstack
 
-A Claude Code skill suite in the gstack mold: each skill is a directory with a
-`SKILL.md`, installed by symlink into `~/.claude/skills`, updated by `git pull`.
+Skills for Claude Code: install once, and your agent is ready to do real
+marketing work — SEO today, sales prospecting today, more as each skill earns
+its place.
 
-**Scope, deliberately: sales only.** One skill ships today. The bar for the
-second is that the first is demonstrably good on real work — breadth is not
-allowed to do the work evidence should do.
+Each skill is a directory with a `SKILL.md`, installed by symlink into
+`~/.claude/skills`. Updating is `git pull` — the symlinks mean there is
+nothing to re-install.
 
 ## Install
 
 ```bash
-./install.sh
+git clone https://github.com/localoy-ai/localstack.git ~/localstack && ~/localstack/install.sh
 ```
 
-`./install.sh --remove` takes the wrappers back out and touches nothing else.
+That's it. Open Claude Code anywhere and the skills are available.
+`~/localstack/install.sh --remove` takes the wrappers back out and touches
+nothing else.
 
 ## Skills
 
 | Skill | What it does |
 |---|---|
 | `/lead-search` | Builds a lead list from the open web only — companies and decision makers, every row carrying the URL it came from and an honest confidence. No accounts, no logins, no paid data, no outreach. |
+| `/seo-audit` | Crawls up to 30 of a site's important pages and reports what is actually on them — titles, metas, headings, internal links, canonicals, markup flags — as a prioritized fix list. |
+| `/keyword-research` | Decides what a site should target: the terms its buyers actually use, grouped by intent, each mapped to the page that should own it. No invented volumes or difficulty scores. |
+| `/on-page-optimizer` | Rewrites one page against one target term — current and proposed values side by side, so a human approves each change. Produces a proposal, never an edit. |
 
 ## Principles
 
-Carried from a prior project (skopio.ai) that learned them the expensive way:
+Every skill holds the same line, learned the expensive way in earlier projects:
 
-- **Search engines are the universal adapter.** One search integration plus
-  `site:` dorks replaces N brittle per-site scrapers, and never gets blocked.
-  Gated sites (LinkedIn, Crunchbase, directories) are read through what search
-  results say about them, never fetched.
-- **Provenance on every field.** `UNKNOWN` for the unobserved, an evidence URL
-  and a three-value confidence on every row. It is what makes a later verify
-  pass possible at all.
-- **Bound the expensive thing.** Page fetches are budgeted per row; snippets
-  first. You cannot prompt your way out of a cost problem — only the procedure
-  can bound it.
-- **Fabrication has known shapes.** Guessed profile slugs, aggregator URLs in
-  the website column, invented firmographics. Each is banned by name.
+- **Say only what you observed.** Every claim names the URL and the value
+  actually seen. No invented scores, volumes, firmographics, or contact data —
+  where a number would normally go, the honest output names the check that
+  could not be run.
+- **Search engines are the universal adapter.** Gated sites (LinkedIn,
+  Crunchbase, directories) are read through what public search results say
+  about them, never fetched, never logged into.
+- **Provenance on every row.** `UNKNOWN` for the unobserved, an evidence URL,
+  an honest confidence. It is what makes checking — by a human or a later
+  skill — possible at all.
+- **Partial work is reported as partial.** A subset is never described as the
+  whole, and what was cut ships alongside what was kept.
 
 ## Roadmap
 
-Qualify/score, verify, and outreach-draft skills follow once `/lead-search`
-has earned them. Nothing here sends anything, and that is a feature until a
-send channel exists that a human reviews.
+Qualify/verify skills for the lead list, and outreach drafting, follow once
+the current set proves out on real work. Nothing here sends anything on your
+behalf — that stays true until there is a send path a human reviews.

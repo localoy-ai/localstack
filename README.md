@@ -44,6 +44,20 @@ Every skill holds the same line, learned the expensive way in earlier projects:
 - **Partial work is reported as partial.** A subset is never described as the
   whole, and what was cut ships alongside what was kept.
 
+## One suite, several runtimes
+
+These skills run anywhere a `SKILL.md` runs. Each file's frontmatter is a
+two-dialect superset: `allowed-tools` and `triggers` are read by Claude Code;
+`publisher` and `capabilities` are read by the localoy daemon, whose catalog
+syncs from this repo; each runtime ignores the other's keys. Codex support is
+planned. Two rules keep this working:
+
+- **A content change needs a version bump.** localoy pins installs by
+  `@publisher/name@version` digest — same version with new content is refused.
+- **`stacks/` holds charters, not skills.** A `STACK.md` there becomes an
+  agent role (persona + skill set) in localoy; Claude Code and `install.sh`
+  ignore the directory entirely.
+
 ## Curate your own stack
 
 A stack is just a repo shaped like this one: skill folders, each with a

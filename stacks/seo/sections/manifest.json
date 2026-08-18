@@ -1,0 +1,13 @@
+{
+  "stack": "seo",
+  "version": 1,
+  "note": "PASSIVE registry. Fields are ids, file names, human titles, and human-readable trigger text ONLY. The charter's Playbook prose is the ONLY place that decides WHEN to read a section. No machine predicate here — two things that can both answer 'should I load this?' will eventually disagree, and the prose is the half a model actually reads.",
+  "sections": [
+    {
+      "id": "playbook",
+      "file": "playbook.md",
+      "title": "Prioritising findings, answering a ranking question, sequencing multi-skill work",
+      "trigger": "the request is open-ended, spans more than one skill, or the findings disagree about what matters most"
+    }
+  ]
+}

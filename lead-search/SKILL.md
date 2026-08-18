@@ -1,6 +1,8 @@
 ---
 name: lead-search
 version: 0.1.0
+publisher: localoy
+capabilities: [files, web]
 description: Find sales leads on the open web — companies and decision makers with evidence behind every row. (localstack)
 allowed-tools:
   - Bash

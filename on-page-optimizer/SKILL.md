@@ -1,7 +1,14 @@
 ---
 name: on-page-optimizer
-version: 0.1.0
-description: Rewrites one page against one target term: title, meta description, headings, body copy and internal links, with the current and proposed values side by side. Use when asked to "fix this page", "optimise this post", "improve this page for <term>", or "write the title and meta for this URL". (localstack)
+version: 0.2.0
+publisher: localoy
+capabilities: [files, web]
+description: >-
+  Rewrites one page against one target term: title, meta description,
+  headings, body copy and internal links, with the current and proposed values
+  side by side. Use when asked to "fix this page", "optimise this post",
+  "improve this page for <term>", or "write the title and meta for this URL".
+  (localstack)
 allowed-tools:
   - Bash
   - Read

@@ -1,7 +1,13 @@
 ---
 name: keyword-research
-version: 0.1.0
-description: Decides what a site should target: the terms its buyers actually use, grouped by the intent behind them and mapped to the page that should own each one. Use when asked "what keywords should we target", "find keywords", "what should we write about", or "what do people search for". (localstack)
+version: 0.2.0
+publisher: localoy
+capabilities: [files, web]
+description: >-
+  Decides what a site should target: the terms its buyers actually use,
+  grouped by the intent behind them and mapped to the page that should own
+  each one. Use when asked "what keywords should we target", "find keywords",
+  "what should we write about", or "what do people search for". (localstack)
 allowed-tools:
   - Bash
   - Read

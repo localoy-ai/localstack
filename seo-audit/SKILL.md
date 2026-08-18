@@ -1,6 +1,8 @@
 ---
 name: seo-audit
-version: 0.1.0
+version: 0.2.0
+publisher: localoy
+capabilities: [files, web]
 description: Crawls a site's important pages and audits what is actually on them — titles, metas, headings, internal links, canonicals, image and markup flags — then writes a prioritized fix list to reports/. Use when asked to "audit my site", "check my SEO", "is anything broken", or "why am I not ranking". (localstack)
 allowed-tools:
   - Bash

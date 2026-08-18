@@ -44,8 +44,17 @@ Every skill holds the same line, learned the expensive way in earlier projects:
 - **Partial work is reported as partial.** A subset is never described as the
   whole, and what was cut ships alongside what was kept.
 
+## Curate your own stack
+
+A stack is just a repo shaped like this one: skill folders, each with a
+`SKILL.md`, and this `install.sh` at the root. Fork it, keep the skills you
+want, add your own — installing your fork beside this repo works, because the
+installer only ever touches wrappers that point back into its own checkout.
+
 ## Roadmap
 
 Qualify/verify skills for the lead list, and outreach drafting, follow once
-the current set proves out on real work. Nothing here sends anything on your
-behalf — that stays true until there is a send path a human reviews.
+the current set proves out on real work. Enabling multiple stacks side by side
+is the intended shape — install each repo, and its skills land together in
+`~/.claude/skills`. Nothing here sends anything on your behalf — that stays
+true until there is a send path a human reviews.

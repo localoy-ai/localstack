@@ -1,6 +1,6 @@
 ---
 name: lead-search
-version: 0.2.0
+version: 0.3.0
 publisher: localoy
 capabilities: [files, web]
 # localoy dialect: stages make this runnable on small local models. Each stage
@@ -51,6 +51,13 @@ triggers:
   - find prospects
   - who could we sell to
   - find companies that need this
+  - find agencies
+  - find companies
+  - find businesses
+  - agencies in
+  - companies in
+  - lead list
+tags: [sales, leads, prospects, agencies, companies, businesses]
 ---
 
 ## When to invoke this skill

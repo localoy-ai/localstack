@@ -1,12 +1,12 @@
 ---
 name: general
-label: General
+label: localstack
 description: |
   The whole localstack suite in one agent: the full sales-development
   pipeline, the SEO function, and the router that sends any request to the
   right skill and stage. The default role — deploy it and start typing; no
   skill choices needed.
-version: 0.1.0
+version: 0.1.1
 publisher: localoy
 license: MIT
 triggers:

@@ -1,8 +1,15 @@
 ---
 name: keyword-research
-version: 0.2.0
+version: 0.3.0
 publisher: localoy
 capabilities: [files, web]
+author: localoy
+license: MIT
+platforms: [linux, macos, windows]
+metadata:
+  hermes:
+    tags: [seo, keywords, localstack]
+    related_skills: [seo-audit, on-page-optimizer]
 description: >-
   Decides what a site should target: the terms its buyers actually use,
   grouped by the intent behind them and mapped to the page that should own

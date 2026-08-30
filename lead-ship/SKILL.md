@@ -1,0 +1,120 @@
+---
+name: lead-ship
+version: 0.1.0
+publisher: localoy
+capabilities: [files]
+# No localoy stages: dedupe + package is one deterministic pass over files
+# already on disk — no web work, no judgment calls a small model would need
+# extra turns for.
+description: Package the final lead list — kept rows only, deduped against every previously shipped list, with a provenance summary naming the whole chain. (localstack)
+author: localoy
+license: MIT
+platforms: [linux, macos, windows]
+metadata:
+  hermes:
+    tags: [sales, ship, localstack]
+    related_skills: [outreach-draft, sales-retro]
+allowed-tools:
+  - Bash
+  - Read
+  - Write
+  - AskUserQuestion
+triggers:
+  - ship the lead list
+  - finalize the list
+  - package the leads
+  - dedupe against shipped
+tags: [sales, ship, package, dedupe]
+---
+
+## When to invoke this skill
+
+Turns a qualified lead list into the shipped package: kept rows only, minus
+every domain shipped in any earlier cycle, with a summary that names the whole
+chain that produced it. Use after `/outreach-draft`, or when asked to
+"finalize", "package", or "ship" the list.
+
+## What you read first
+
+- **Qualified list (required):** `ls -t reviews/*.csv 2>/dev/null | head -1`,
+  rows with `Verdict=keep`. Missing → fall back to the newest `leads/*.csv`
+  with an explicit warning in chat and in the summary ("shipped unqualified —
+  /lead-qualify was not run"), and offer to run `/lead-qualify` first instead.
+  Neither file → ask for a path or offer to start at `/lead-search`. Never
+  fabricate rows.
+- **Drafts (optional):** `ls -t outreach/*.md 2>/dev/null | head -1` — only to
+  report draft coverage; absence is noted, not blocking.
+- **Every prior shipment:** all of `shipped/*.csv` (not just the newest) — the
+  dedupe set. `cat shipped/*.csv 2>/dev/null`.
+
+## Ground rules (non-negotiable)
+
+1. **A domain ships once.** Canonical domain (strip `www.`, lowercase) already
+   present in any prior `shipped/*.csv` is dropped, and the summary names the
+   file it first shipped in. Re-shipping a lead someone already worked is how
+   lists lose trust.
+2. **Rows pass through unedited.** This skill packages; it does not re-verify,
+   re-score, or fill in blanks. `UNKNOWN` stays `UNKNOWN`. A row that looks
+   wrong is flagged in the summary, not fixed silently.
+3. **Cut rows do not ship, but the cut is reported.** Verdict=cut rows stay in
+   `reviews/`; the summary carries the kept/cut counts so the reader knows the
+   shipped file is a subset and where the rest lives.
+4. **Partial is labeled partial.** No brief, no qualify pass, no drafts —
+   whatever is missing from the chain is stated in the summary, never papered
+   over.
+
+## Procedure
+
+**1. Load** the inputs above. Note which fallbacks fired.
+
+**2. Dedupe.** Build the set of canonical domains across all prior
+`shipped/*.csv`; drop matching kept rows, recording (domain, first-shipped
+file) per drop.
+
+**3. Write the package.**
+
+- `shipped/{YYYY-MM-DD}-{slug}.csv` — the reviews CSV columns plus
+  `First Shipped Date` (today, this file's date). Kept rows only, minus dupes.
+  Data only, no commentary.
+- `shipped/{YYYY-MM-DD}-{slug}-summary.md`:
+
+```
+# Shipped: {slug}
+
+## Provenance
+(brief → leads → reviews → outreach paths actually consumed; "not run" where missing)
+
+## Shipped
+N rows.
+
+## Deduped against prior shipments
+M dropped: domain — first shipped in <file>. (or "none")
+
+## Draft coverage
+N of the shipped rows have a draft in <outreach file>; the rows without one
+are listed in that file's "no observed channel" section. (or "outreach not run")
+
+## Known gaps
+(UNKNOWN fields, unverified rows, fallbacks that fired)
+
+## Chain status
+- stage: ship
+- source-artifact: <reviews or leads CSV consumed>
+- status: DONE | PARTIAL
+- kept: N / deduped: M
+- unresolved: (list or NONE)
+```
+
+**4. Report and hand off.** In chat: shipped count, dedupe count, gaps. Then
+offer the next stage — "Run `/sales-retro` on this cycle?" — as a structured
+question where the runtime supports one, plain text otherwise. On yes, invoke
+`/sales-retro` if this runtime can invoke skills directly (Claude Code: the
+Skill tool); otherwise tell the user to type `/sales-retro` (Codex:
+`$sales-retro`).
+
+## Quality bar
+
+- The dedupe test: shipping the same reviews file twice must produce a second
+  package with zero new rows.
+- Every dropped duplicate names the file it first shipped in.
+- The summary reads in one screen; the CSV is the deliverable.

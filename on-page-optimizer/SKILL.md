@@ -1,8 +1,15 @@
 ---
 name: on-page-optimizer
-version: 0.2.0
+version: 0.3.0
 publisher: localoy
 capabilities: [files, web]
+author: localoy
+license: MIT
+platforms: [linux, macos, windows]
+metadata:
+  hermes:
+    tags: [seo, on-page, localstack]
+    related_skills: [seo-audit, keyword-research]
 description: >-
   Rewrites one page against one target term: title, meta description,
   headings, body copy and internal links, with the current and proposed values

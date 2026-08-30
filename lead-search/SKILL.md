@@ -1,6 +1,6 @@
 ---
 name: lead-search
-version: 0.3.0
+version: 0.4.0
 publisher: localoy
 capabilities: [files, web]
 # localoy dialect: stages make this runnable on small local models. Each stage
@@ -10,6 +10,8 @@ capabilities: [files, web]
 stages:
   - id: harvest
     goal: >
+      If briefs/*.md exists, read the newest one first for the buyer,
+      territory, list size and disqualifiers.
       Run 5 to 8 web searches for the described buyer, each with a DIFFERENT
       angle: direct ("<niche> companies in <place>"), roundups ("best <niche>
       <place>"), neighboring cities by name, and site: queries for gated
@@ -38,6 +40,13 @@ stages:
       reader could open. After the rows, add no commentary; the file is data.
     produces: leads/{date}-{slug}.csv
 description: Find sales leads on the open web — companies and decision makers with evidence behind every row. (localstack)
+author: localoy
+license: MIT
+platforms: [linux, macos, windows]
+metadata:
+  hermes:
+    tags: [sales, leads, prospects, localstack]
+    related_skills: [prospect-brief, lead-qualify]
 allowed-tools:
   - Bash
   - Read
@@ -45,6 +54,7 @@ allowed-tools:
   - WebSearch
   - WebFetch
   - AskUserQuestion
+  - Skill
 triggers:
   - find leads
   - build a lead list
@@ -69,6 +79,13 @@ ends at the list. Use when asked to "find leads", "build a lead list",
 "find prospects", or "who could we sell to".
 
 ## What you need first
+
+**Check for a brief before asking anything:**
+`ls -t briefs/*.md 2>/dev/null | head -1`. If one exists, confirm it in one
+line ("Found briefs/2026-08-29-acme.md — sell X in Y, target N. Use it?") and
+take the three facts below, plus the disqualifiers, from it. Anything the user
+says explicitly in this conversation overrides the brief. No brief — written
+by `/prospect-brief` — means the current behavior:
 
 Three facts. Check the conversation and workspace first; ask for whatever is
 still missing in a SINGLE message, then wait.
@@ -154,10 +171,18 @@ observation), or `unconfirmed` (snippet only). Every row's `Evidence URL` is a
 page or search that a reader could open to check the row.
 
 **6. Report.** In chat: how many leads, the angles that worked, what you cut
-and why, and what you could not check. The cut list matters — a candidate
+and why, and what you could not check — and which brief you consumed
+(`briefs/...` by path, or "no brief"). The cut list matters — a candidate
 dropped for cause (aggregator-only presence, wrong territory, dead domain) is
 information the next run needs. Keep the gist short; the file is the
 deliverable.
+
+**7. Hand off.** Offer the next stage — "Qualify this list with
+`/lead-qualify`?" — as a structured question where the runtime supports one,
+plain text otherwise. On yes, invoke `/lead-qualify` if this runtime can
+invoke skills directly (Claude Code: the Skill tool); otherwise tell the user
+to type `/lead-qualify` (Codex: `$lead-qualify`). The skill still ends at the
+list; the chain continues only when the user says so.
 
 ## Quality bar
 

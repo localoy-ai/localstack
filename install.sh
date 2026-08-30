@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Installs localstack skills into every coding agent on this machine, the same
-# wrapper-symlink way gstack does: each skill gets a wrapper directory holding
-# one symlink back to this repo, so a `git pull` here updates every installed
-# skill in every runtime with no re-install.
+# Installs localstack skills into every coding agent on this machine: each
+# skill gets a wrapper directory holding one symlink back to this repo, so a
+# `git pull` here updates every installed skill in every runtime with no
+# re-install.
 #
 # Targets (installed automatically where the runtime's home dir exists):
 #   Claude Code  ~/.claude/skills/<name>/SKILL.md            → /<name>

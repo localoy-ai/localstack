@@ -1,6 +1,6 @@
 ---
 name: localstack
-version: 0.2.0
+version: 0.2.1
 publisher: localoy
 capabilities: []
 description: Router for the localstack skill suite — sends any sales-development or SEO request to the right skill and stage. (localstack)
@@ -41,8 +41,7 @@ and `/lead-ship` packages. `/sales-retro` reads the whole cycle. Nothing
 falls through the cracks because every step knows what came before it.
 
 ```
-Think    /office-hours     gstack skill, optional — its design doc can seed the brief
-Plan     /prospect-brief   → briefs/{date}-{slug}.md
+Plan     /prospect-brief   → briefs/{date}-{slug}.md   (also the thinking step: its interview IS "who should we sell to")
 Build    /lead-search      → leads/{date}-{slug}.csv
 Review   /lead-qualify     → reviews/{date}-{slug}.csv + .md
 Draft    /outreach-draft   → outreach/{date}-{slug}.md   (drafts only — a human sends)
@@ -53,8 +52,6 @@ Reflect  /sales-retro      → retros/{date}-{slug}.md
 Every stage also runs standalone. Each skill finds its input by newest file
 (`ls -t <dir>/* 2>/dev/null | head -1`), so to route mid-pipeline: **send the
 request to the first stage whose input exists but whose output does not.**
-`/office-hours` belongs to gstack, not localstack — if it is not installed,
-`/prospect-brief`'s interview covers the Think step.
 
 ## Route first
 
@@ -72,8 +69,7 @@ cheaper than a false negative.
 
 | They say | Route |
 |---|---|
-| "is this worth selling", "think the offer through" | `/office-hours` (gstack) if installed, else `/prospect-brief` |
-| "define our ICP", "plan prospecting", "who should we target" | `/prospect-brief` |
+| "is this worth selling", "think the offer through", "define our ICP", "who should we target" | `/prospect-brief` |
 | "find leads", "build a list", "more like these" | `/lead-search` |
 | "qualify these leads", "verify/clean the list" | `/lead-qualify` |
 | "draft outreach", "write cold emails" | `/outreach-draft` |

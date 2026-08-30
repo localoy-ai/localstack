@@ -1,6 +1,6 @@
 ---
 name: sales-retro
-version: 0.1.0
+version: 0.1.1
 publisher: localoy
 capabilities: [files]
 # No localoy stages: one read-and-write pass over files already on disk. A
@@ -118,8 +118,8 @@ double, territory changes — each traced to a finding above)
 
 **6. Report in chat.** The funnel line, the top two findings, and the "change
 next cycle" list. This is the end of the chain — for the next cycle, point at
-`/prospect-brief` (or gstack's `/office-hours` if the offer itself needs
-rethinking). Do not invoke either; the next cycle starts when the user says so.
+`/prospect-brief`. Do not invoke it; the next cycle starts when the user
+says so.
 
 ## Quality bar
 

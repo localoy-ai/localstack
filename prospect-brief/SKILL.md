@@ -1,6 +1,6 @@
 ---
 name: prospect-brief
-version: 0.1.0
+version: 0.1.1
 publisher: localoy
 capabilities: [files, web]
 # No localoy stages: this is one structured conversation plus one document.
@@ -38,11 +38,9 @@ Use when asked to "define our ICP", "plan prospecting", or before a lead run.
 
 ## What you read first (optional seeds — never required)
 
-1. **A gstack design doc**, if the user has been thinking the offer through
-   with `/office-hours`: `ls -t ~/.gstack/projects/*/*-design-*.md 2>/dev/null | head -1`.
-   If one exists, offer to seed the brief from it. Its contents are treated
-   as the user's own context, not observed web fact — and it is read-only:
-   never write into `~/.gstack`.
+1. **A document the user points at** — a positioning doc, a pitch, a plan.
+   If they name one, read it and offer to seed the brief from it. Its
+   contents are the user's own context, not observed web fact.
 2. **A prior brief:** `ls -t briefs/*.md 2>/dev/null | head -1` — offer
    "revise the last brief" vs "start fresh". The newest retro
    (`ls -t retros/*.md 2>/dev/null | head -1`) may carry a "Change next

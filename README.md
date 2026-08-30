@@ -61,7 +61,6 @@ and `/lead-ship` packages, deduped against every earlier shipment.
 Nothing falls through the cracks because every step knows what came before it.
 
 ```
-Think    /office-hours     optional gstack entry point — its design doc can seed the brief
 Plan     /prospect-brief   → briefs/{date}-{slug}.md
 Build    /lead-search      → leads/{date}-{slug}.csv
 Review   /lead-qualify     → reviews/{date}-{slug}.csv + .md

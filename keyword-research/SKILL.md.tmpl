@@ -1,5 +1,4 @@
 ---
-# GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: keyword-research
 version: 0.4.0
 publisher: localoy
@@ -44,7 +43,7 @@ Check what you already know from this workspace and the conversation. Ask for ev
 
 If no answer comes, do not guess your way through. Produce whatever is genuinely useful without the missing facts, state at the top which ones you lacked, and say what would change once you have them.
 
-**Prior runs:** `ls reports/*-keywords-{slug}*.md 2>/dev/null | sort -rV` — if anything matches, tell the user what already exists (one line per file: date and filename) before proceeding; earlier runs are never overwritten. If nothing matches, say nothing and continue.
+{{PRIOR_RUNS:reports/*-keywords-{slug}*.md}}
 
 ## What you decide, and what you do not
 
@@ -115,7 +114,7 @@ the claim did not earn.
 7. **Write the report.** Save to `reports/{date}-keywords-{slug}.md`. Summary table first —
    term, intent group, target page, exists or to create — then the groups with the
    evidence for each term, then what you cut and why.
-   Never overwrite an existing artifact: if `reports/{date}-keywords-{slug}.md` already exists, append a sequence suffix before the extension — `reports/{date}-keywords-{slug}-2.md`, then `-3`… (count the existing matches and add one).
+   {{COLLISION_SUFFIX:reports/{date}-keywords-{slug}.md}}
 
 ## Quality bar
 

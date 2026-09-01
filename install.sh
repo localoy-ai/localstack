@@ -78,6 +78,19 @@ if [ "${1:-}" = "--remove" ]; then
   exit 0
 fi
 
+# Freshness gate: SKILL.md files are generated from SKILL.md.tmpl; never
+# install a SKILL.md that no longer matches its template.
+if compgen -G "$REPO/*/SKILL.md.tmpl" >/dev/null; then
+  if command -v bun >/dev/null 2>&1; then
+    bun "$REPO/scripts/gen-skill-docs.ts" --dry-run || {
+      echo "install aborted: run scripts/build.sh, commit, then re-run install.sh" >&2
+      exit 1
+    }
+  else
+    echo "warn: bun not found — skipping the SKILL.md freshness check" >&2
+  fi
+fi
+
 # Pick targets: flags name them; no flags = every runtime whose home exists.
 want_claude=false; want_codex=false; want_hermes=false; any_flag=false
 for arg in "$@"; do

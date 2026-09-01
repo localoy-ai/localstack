@@ -74,7 +74,10 @@ packages, deduped against every earlier shipment. `sales-retro` reads the
 whole cycle and its findings feed the next brief. Every stage also runs
 standalone — each finds its input as the newest file in the previous stage's
 directory (`briefs/`, `leads/`, `reviews/`, `outreach/`, `shipped/`,
-`retros/`).
+`retros/`), where "newest" is the `{date}` filename prefix, not mtime.
+Scratch lives in `work/{date}-{slug}/`, one directory per run, and no run
+ever overwrites an earlier run's files — a same-day artifact collision takes
+a `-2`, `-3`… suffix.
 
 ## Playbook
 

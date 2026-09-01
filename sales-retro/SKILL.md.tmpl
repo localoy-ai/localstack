@@ -1,5 +1,4 @@
 ---
-# GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: sales-retro
 version: 0.2.0
 publisher: localoy
@@ -90,7 +89,7 @@ sharpest signal for the next brief.
 user-reported.
 
 **5. Write the retro.** `retros/{YYYY-MM-DD}-{slug}.md`.
-Never overwrite an existing artifact: if `retros/{date}-{slug}.md` already exists, append a sequence suffix before the extension — `retros/{date}-{slug}-2.md`, then `-3`… (count the existing matches and add one).
+{{COLLISION_SUFFIX:retros/{date}-{slug}.md}}
 Template:
 
 ```

@@ -1,5 +1,4 @@
 ---
-# GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: lead-qualify
 version: 0.2.0
 publisher: localoy
@@ -71,10 +70,10 @@ URL — never a score. Use after `/lead-search`, or when asked to "qualify",
 
 ## What you read first
 
-- **The list (required):** `ls leads/*.csv 2>/dev/null | sort -rV | head -1`. If none
+- **The list (required):** {{DISCOVER_INPUT:leads/*.csv}}. If none
   exists: offer to run `/lead-search` now, or accept a CSV path or pasted
   rows. Never fabricate input.
-- **The brief (optional):** `ls briefs/*.md 2>/dev/null | sort -rV | head -1` — its
+- **The brief (optional):** {{DISCOVER_INPUT:briefs/*.md}} — its
   `Disqualifiers` section becomes the cut criteria. No brief → qualify on
   observability alone (dead domains, aggregator-as-website, decision maker
   mismatch) and say so in the report.
@@ -100,9 +99,9 @@ URL — never a score. Use after `/lead-search`, or when asked to "qualify",
 
 **1. Load** the list and brief (stage `load` above is the spec).
 
-Scratch for this run lives in `work/{date}-{slug}/` — one directory per run, so a new run never clobbers an earlier one. Scratch is disposable; old `work/` run directories may be deleted freely.
+{{WORK_DIR}}
 
-**Prior runs:** `ls reviews/*-{slug}*.csv 2>/dev/null | sort -rV` — if anything matches, tell the user what already exists (one line per file: date and filename) before proceeding; earlier runs are never overwritten. If nothing matches, say nothing and continue.
+{{PRIOR_RUNS:reviews/*-{slug}*.csv}}
 
 **2. Verify each row** (stage `verify` is the spec): website is their own
 domain and alive; decision maker re-searched and compared from result titles;
@@ -112,7 +111,7 @@ disqualifiers tested against observations. One verdict line per row.
 
 - `reviews/{YYYY-MM-DD}-{slug}.csv` — original columns plus
   `Verdict,Verdict Reason,Verification URL,Verified Date`, all rows included.
-  Never overwrite an existing artifact: if `reviews/{date}-{slug}.csv` already exists, append a sequence suffix before the extension — `reviews/{date}-{slug}-2.csv`, then `-3`… (count the existing matches and add one). The `.md` pairs with the
+  {{COLLISION_SUFFIX:reviews/{date}-{slug}.csv}} The `.md` pairs with the
   CSV and takes the same suffix.
 - `reviews/{YYYY-MM-DD}-{slug}.md`:
 

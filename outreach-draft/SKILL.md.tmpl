@@ -1,5 +1,4 @@
 ---
-# GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: outreach-draft
 version: 0.2.0
 publisher: localoy
@@ -80,12 +79,12 @@ This skill has no send path and refuses to acquire one.
 
 ## What you read first
 
-- **Qualified list (preferred):** `ls reviews/*.csv 2>/dev/null | sort -rV | head -1`,
+- **Qualified list (preferred):** {{DISCOVER_INPUT:reviews/*.csv}},
   `Verdict=keep` rows only. Missing → the newest `leads/*.csv` with an
   explicit warning ("unqualified list — drafts may target rows /lead-qualify
   would have cut"), after offering to run `/lead-qualify` first. Neither →
   ask for a path or pasted rows. Never fabricate.
-- **The brief (for the value proposition):** `ls briefs/*.md 2>/dev/null | sort -rV | head -1`.
+- **The brief (for the value proposition):** {{DISCOVER_INPUT:briefs/*.md}}.
   Missing → ask what they sell and what the one-line value proposition is, in
   the same single message as anything else you need.
 
@@ -110,9 +109,9 @@ This skill has no send path and refuses to acquire one.
 
 **1. Load** the inputs above; note fallbacks in the output.
 
-Scratch for this run lives in `work/{date}-{slug}/` — one directory per run, so a new run never clobbers an earlier one. Scratch is disposable; old `work/` run directories may be deleted freely.
+{{WORK_DIR}}
 
-**Prior runs:** `ls outreach/*-{slug}*.md 2>/dev/null | sort -rV` — if anything matches, tell the user what already exists (one line per file: date and filename) before proceeding; earlier runs are never overwritten. If nothing matches, say nothing and continue.
+{{PRIOR_RUNS:outreach/*-{slug}*.md}}
 
 **2. Find channels** per kept row (the `channels` stage goal above is the
 spec: observed only, one fetch max, UNKNOWN is an answer).
@@ -123,7 +122,7 @@ smell — but personalization is only as deep as the evidence goes.
 
 **4. Package.** `outreach/{YYYY-MM-DD}-{slug}.md`, stating at the top:
 **drafts only — a human sends every one.**
-Never overwrite an existing artifact: if `outreach/{date}-{slug}.md` already exists, append a sequence suffix before the extension — `outreach/{date}-{slug}-2.md`, then `-3`… (count the existing matches and add one). Per lead:
+{{COLLISION_SUFFIX:outreach/{date}-{slug}.md}} Per lead:
 
 ```
 ## <Company> — <Decision maker or UNKNOWN>

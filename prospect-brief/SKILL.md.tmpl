@@ -1,5 +1,4 @@
 ---
-# GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: prospect-brief
 version: 0.2.0
 publisher: localoy
@@ -42,9 +41,9 @@ Use when asked to "define our ICP", "plan prospecting", or before a lead run.
 1. **A document the user points at** — a positioning doc, a pitch, a plan.
    If they name one, read it and offer to seed the brief from it. Its
    contents are the user's own context, not observed web fact.
-2. **A prior brief:** `ls briefs/*.md 2>/dev/null | sort -rV | head -1` — offer
+2. **A prior brief:** {{DISCOVER_INPUT:briefs/*.md}} — offer
    "revise the last brief" vs "start fresh". The newest retro
-   (`ls retros/*.md 2>/dev/null | sort -rV | head -1`) may carry a "Change next
+   ({{DISCOVER_INPUT:retros/*.md}}) may carry a "Change next
    cycle" list; if it does, put those items on the table explicitly.
 
 Neither found → interview the user directly: ask for everything still missing
@@ -78,7 +77,7 @@ open questions.
 
 **2. Draft the brief.** `briefs/{YYYY-MM-DD}-{slug}.md` (slug from the
 niche + territory).
-Never overwrite an existing artifact: if `briefs/{date}-{slug}.md` already exists, append a sequence suffix before the extension — `briefs/{date}-{slug}-2.md`, then `-3`… (count the existing matches and add one).
+{{COLLISION_SUFFIX:briefs/{date}-{slug}.md}}
 Template:
 
 ```

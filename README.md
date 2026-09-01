@@ -71,7 +71,12 @@ Reflect  /sales-retro      → retros/{date}-{slug}.md
 
 The chain needs no infrastructure: artifacts are plain files in the working
 directory, one directory per stage, and each skill finds its input as the
-newest file in the previous stage's directory. Every stage runs standalone
+newest file in the previous stage's directory — "newest" meaning the `{date}`
+filename prefix (`ls <dir>/* | sort -rV | head -1` — version
+sort ranks a `-2` rerun above its base file), never mtime. Runs never
+overwrite each other: scratch lives in `work/{date}-{slug}/`, one directory
+per run, and a same-day collision on a final artifact takes a `-2`, `-3`…
+suffix instead of clobbering the earlier file. Every stage runs standalone
 too — a skill whose input is missing offers to run the upstream skill, or
 takes a file path, and never fabricates one. Each stage ends by offering the
 next, so "run the whole pipeline" is just starting at `/prospect-brief` and
@@ -106,19 +111,26 @@ drive Codex's `/skills` picker and `$name` invocation; `author`, `license`,
 `platforms` and `metadata.hermes` are read by Hermes; `publisher`,
 `capabilities` and `stages` are read by the localoy daemon, whose catalog
 syncs from this repo. Skill bodies are written runtime-agnostically — chain
-discovery is plain `ls -t`, and handoffs say what to type when the runtime
-cannot invoke skills directly. Two rules keep this working:
+discovery is a plain filename sort (`ls | sort -rV`), and handoffs say what to
+type when the runtime cannot invoke skills directly. Three rules keep this
+working:
 
 - **A content change needs a version bump.** localoy pins installs by
   `@publisher/name@version` digest — same version with new content is refused.
 - **`stacks/` holds charters, not skills.** A `STACK.md` there becomes an
   agent role (persona + skill set) in localoy; the other runtimes and
   `install.sh` ignore the directory entirely.
+- **`SKILL.md` is generated — edit `SKILL.md.tmpl`.** Shared idioms (input
+  discovery, collision suffixes, per-run scratch, prior-run surfacing) live
+  once in `scripts/resolvers.ts` as `{{PLACEHOLDER}}`s; `scripts/build.sh`
+  regenerates every `SKILL.md`, and `install.sh` refuses to install a stale
+  one (`scripts/build.sh --dry-run` is the freshness check).
 
 ## Curate your own stack
 
 A stack is just a repo shaped like this one: skill folders, each with a
-`SKILL.md`, and this `install.sh` at the root. Fork it, keep the skills you
+`SKILL.md` (generated from its `SKILL.md.tmpl`), and this `install.sh` at
+the root. Fork it, keep the skills you
 want, add your own — installing your fork beside this repo works, because the
 installer only ever touches wrappers that point back into its own checkout.
 

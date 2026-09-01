@@ -1,5 +1,4 @@
 ---
-# GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: on-page-optimizer
 version: 0.4.0
 publisher: localoy
@@ -44,7 +43,7 @@ Check what you already know from this workspace and the conversation. Ask for ev
 
 If no answer comes, do not guess your way through. Produce whatever is genuinely useful without the missing facts, state at the top which ones you lacked, and say what would change once you have them.
 
-**Prior runs:** `ls reports/*-onpage-{slug}*.md 2>/dev/null | sort -rV` — if anything matches, tell the user what already exists (one line per file: date and filename) before proceeding; earlier runs are never overwritten. If nothing matches, say nothing and continue.
+{{PRIOR_RUNS:reports/*-onpage-{slug}*.md}}
 
 ## What you decide, and what you do not
 
@@ -124,7 +123,7 @@ the claim did not earn.
 9. **Write the report.** Save to `reports/{date}-onpage-{slug}.md`. Summary table first —
    element, current, proposed, why — then the body edits, then anything you chose
    not to change and the reason.
-   Never overwrite an existing artifact: if `reports/{date}-onpage-{slug}.md` already exists, append a sequence suffix before the extension — `reports/{date}-onpage-{slug}-2.md`, then `-3`… (count the existing matches and add one).
+   {{COLLISION_SUFFIX:reports/{date}-onpage-{slug}.md}}
 
 ## Quality bar
 

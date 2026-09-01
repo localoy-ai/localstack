@@ -1,5 +1,4 @@
 ---
-# GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: lead-search
 version: 0.5.0
 publisher: localoy
@@ -82,7 +81,7 @@ ends at the list. Use when asked to "find leads", "build a lead list",
 ## What you need first
 
 **Check for a brief before asking anything:**
-`ls briefs/*.md 2>/dev/null | sort -rV | head -1`. If one exists, confirm it in one
+{{DISCOVER_INPUT:briefs/*.md}}. If one exists, confirm it in one
 line ("Found briefs/2026-08-29-acme.md — sell X in Y, target N. Use it?") and
 take the three facts below, plus the disqualifiers, from it. Anything the user
 says explicitly in this conversation overrides the brief. No brief — written
@@ -128,9 +127,9 @@ observed failure.
 
 ## Procedure
 
-Scratch for this run lives in `work/{date}-{slug}/` — one directory per run, so a new run never clobbers an earlier one. Scratch is disposable; old `work/` run directories may be deleted freely.
+{{WORK_DIR}}
 
-**Prior runs:** `ls leads/*-{slug}*.csv 2>/dev/null | sort -rV` — if anything matches, tell the user what already exists (one line per file: date and filename) before proceeding; earlier runs are never overwritten. If nothing matches, say nothing and continue.
+{{PRIOR_RUNS:leads/*-{slug}*.csv}}
 
 **1. Write the buyer down.** One sentence, from what the user told you — not
 from their website's copy. Copy says how they describe themselves, which is
@@ -174,7 +173,7 @@ One row per lead, appended as resolved — not held back for a final flourish.
 `Confidence` is `verified` (two independent observations), `likely` (one solid
 observation), or `unconfirmed` (snippet only). Every row's `Evidence URL` is a
 page or search that a reader could open to check the row.
-Never overwrite an existing artifact: if `leads/{date}-{slug}.csv` already exists, append a sequence suffix before the extension — `leads/{date}-{slug}-2.csv`, then `-3`… (count the existing matches and add one).
+{{COLLISION_SUFFIX:leads/{date}-{slug}.csv}}
 
 **6. Report.** In chat: how many leads, the angles that worked, what you cut
 and why, and what you could not check — and which brief you consumed

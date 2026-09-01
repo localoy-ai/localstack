@@ -1,5 +1,4 @@
 ---
-# GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: lead-ship
 version: 0.2.0
 publisher: localoy
@@ -37,13 +36,13 @@ chain that produced it. Use after `/outreach-draft`, or when asked to
 
 ## What you read first
 
-- **Qualified list (required):** `ls reviews/*.csv 2>/dev/null | sort -rV | head -1`,
+- **Qualified list (required):** {{DISCOVER_INPUT:reviews/*.csv}},
   rows with `Verdict=keep`. Missing → fall back to the newest `leads/*.csv`
   with an explicit warning in chat and in the summary ("shipped unqualified —
   /lead-qualify was not run"), and offer to run `/lead-qualify` first instead.
   Neither file → ask for a path or offer to start at `/lead-search`. Never
   fabricate rows.
-- **Drafts (optional):** `ls outreach/*.md 2>/dev/null | sort -rV | head -1` — only to
+- **Drafts (optional):** {{DISCOVER_INPUT:outreach/*.md}} — only to
   report draft coverage; absence is noted, not blocking.
 - **Every prior shipment:** all of `shipped/*.csv` (not just the newest) — the
   dedupe set. `cat shipped/*.csv 2>/dev/null`.
@@ -77,7 +76,7 @@ file) per drop.
 - `shipped/{YYYY-MM-DD}-{slug}.csv` — the reviews CSV columns plus
   `First Shipped Date` (today, this file's date). Kept rows only, minus dupes.
   Data only, no commentary.
-  Never overwrite an existing artifact: if `shipped/{date}-{slug}.csv` already exists, append a sequence suffix before the extension — `shipped/{date}-{slug}-2.csv`, then `-3`… (count the existing matches and add one). The summary file takes the
+  {{COLLISION_SUFFIX:shipped/{date}-{slug}.csv}} The summary file takes the
   same suffix.
 - `shipped/{YYYY-MM-DD}-{slug}-summary.md`:
 

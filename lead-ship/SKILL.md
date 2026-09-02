@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: lead-ship
-version: 0.2.0
+version: 0.3.0
 publisher: localoy
 capabilities: [files]
 # No localoy stages: dedupe + package is one deterministic pass over files
@@ -108,7 +108,26 @@ are listed in that file's "no observed channel" section. (or "outreach not run")
 - unresolved: (list or NONE)
 ```
 
-**4. Report and hand off.** In chat: shipped count, dedupe count, gaps. Then
+**4. Remember what shipped.** If the `localbrain` CLI is on PATH
+(`command -v localbrain`), record each shipped row in the brain so every
+future `/lead-search` — in any repo, on this whole machine — dedupes against
+it:
+
+```
+localbrain put "lead-<canonical-domain>" --type lead \
+  --body "<Company Name> — <canonical domain>. Shipped <YYYY-MM-DD> in <shipped csv filename>. Contact: <Decision Maker Name>, <Title>."
+```
+
+One record per shipped row, named `lead-<canonical-domain>` (the domain is
+already lowercase; dots are fine in a record name). Re-shipping cycles
+overwrite their own records harmlessly. No CLI on PATH → skip and add one
+line to the summary's Known gaps: "localbrain not installed — this shipment
+is invisible to cross-repo dedupe (run /setup-localbrain)". A brain error
+never blocks the package — the CSV already shipped; note the error and move
+on. The files in `shipped/` stay the source of truth; the brain is the index
+other repos can reach.
+
+**5. Report and hand off.** In chat: shipped count, dedupe count, gaps. Then
 offer the next stage — "Run `/sales-retro` on this cycle?" — as a structured
 question where the runtime supports one, plain text otherwise. On yes, invoke
 `/sales-retro` if this runtime can invoke skills directly (Claude Code: the

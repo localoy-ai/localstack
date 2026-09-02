@@ -5,6 +5,15 @@ Two names on one domain are one company; the same company found by two angles
 keeps the stronger evidence. A domain present in any prior `shipped/*.csv`
 is cut here, logged with the shipped file it first appeared in.
 
+**The brain widens the dedupe set beyond this repo.** If the `localbrain` CLI
+is on PATH (`command -v localbrain`), read the shipped memory ONCE —
+`localbrain list --type lead` — and cut any candidate whose canonical domain
+appears in a record name (`lead-<domain>`), logged as "cut: in the brain —
+<record name>". This catches leads shipped from OTHER repos and machines that
+`shipped/*.csv` cannot see. No CLI on PATH → skip silently; the file scan
+above still stands. Never let a brain error kill the report — note it and
+continue.
+
 **Write the list.** `leads/{YYYY-MM-DD}-{slug}.csv` in the project, header
 exactly:
 

@@ -1,0 +1,93 @@
+---
+# GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
+name: setup-localbrain
+version: 0.1.0
+publisher: localoy
+capabilities: [files]
+# No localoy stages: install + init + smoke test is one deterministic pass —
+# no web work, no judgment calls a small model would need extra turns for.
+description: Install and verify localbrain — the local-first memory store the sales pipeline remembers through; markdown files plus a rebuildable search index, nothing leaves the machine. (localstack)
+author: localoy
+license: MIT
+platforms: [linux, macos, windows]
+metadata:
+  hermes:
+    tags: [memory, brain, setup, localstack]
+    related_skills: [lead-search, lead-ship]
+allowed-tools:
+  - Bash
+  - Read
+  - AskUserQuestion
+triggers:
+  - setup localbrain
+  - install localbrain
+  - set up the brain
+  - configure localbrain
+tags: [memory, brain, setup, localbrain]
+---
+
+## When to invoke this skill
+
+One pass from zero to "localbrain works on this machine": install the CLI,
+create the store, prove a write/search round trip. Use when asked to "setup
+localbrain", "install localbrain", or when another skill reported the brain
+is missing. Re-running is safe — every step detects existing state and
+repairs only what is missing.
+
+## What localbrain is (say this once, in one line)
+
+A local memory store at `~/.localbrain` (or `$LOCALBRAIN_DIR`): markdown
+files as the source of truth, a derived SQLite search index, no accounts, no
+cloud. The pipeline uses it to remember shipped leads, cut reasons and retro
+learnings across runs. Source: https://github.com/localoy-ai/localbrain
+
+## Procedure
+
+**1. Detect.** `command -v localbrain && localbrain version`. Already on
+PATH → skip to step 3.
+
+**2. Install.** In order of preference, stopping at the first that works:
+
+- Go toolchain present (`command -v go`):
+  `go install github.com/localoy-ai/localbrain/cmd/localbrain@latest`,
+  then confirm it landed: `command -v localbrain` — if not, the Go bin dir
+  (`go env GOPATH`/bin) is not on PATH; say exactly that and give the
+  one-line PATH fix for the user's shell rather than working around it.
+- No Go: say so plainly and ask (structured question where the runtime
+  supports one) whether to install Go first or skip localbrain. Every
+  pipeline skill degrades gracefully without it — skipping loses cross-run
+  memory, nothing else. Never fake an install.
+
+**3. Init + smoke test.** Prove the round trip, then clean up:
+
+```
+localbrain init
+echo "setup smoke test $(date +%s)" | localbrain put setup-smoke-test --type note
+localbrain search "smoke" | grep -q setup-smoke-test && echo ROUNDTRIP_OK
+localbrain delete setup-smoke-test
+localbrain doctor
+```
+
+`ROUNDTRIP_OK` missing or doctor unhealthy → surface the full output and
+stop. Do not paper over a broken store; the fix is usually
+`localbrain reindex` (the index is derived — rebuilding loses nothing).
+
+**4. Report.** One short block, every row `OK`/`FIX`:
+
+```
+localbrain: GREEN
+  CLI ........ OK  <version>
+  Store ...... OK  <dir> (<N> records)
+  Round trip . OK  put -> search -> delete
+```
+
+Then one line on what changes: "/lead-search now dedupes against the brain;
+/lead-ship records what ships. The localoy app shows the same records on its
+Brain screen."
+
+## Quality bar
+
+- Never claim installed without `command -v localbrain` succeeding after.
+- The smoke record is always deleted — setup leaves no litter in the store.
+- A machine that ends without localbrain ends with an honest one-liner about
+  what the pipeline loses (cross-run memory), not a failure.

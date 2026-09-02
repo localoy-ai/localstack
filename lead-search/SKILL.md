@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: lead-search
-version: 0.7.1
+version: 0.8.0
 publisher: localoy
 capabilities: [files, web]
 # localoy dialect: stages make this runnable on small local models. Each stage
@@ -39,11 +39,12 @@ stages:
       "Company Name,Location,Website,Decision Maker Name,Title,Profile URL,
       Evidence URL,Confidence" — one row per lead, Confidence one of
       verified/likely/unconfirmed, every row carrying the evidence URL a
-      reader could open. If this runtime lets you run shell commands and
-      `localbrain` is on PATH, run `localbrain list --type lead` ONCE and
-      cut any candidate whose canonical domain appears in a `lead-<domain>`
-      record, logged as "cut: in the brain"; no shell or no CLI, skip
-      silently. After the rows, add no commentary; the file is data.
+      reader could open. Widen the dedupe with the brain: with shell and
+      `localbrain` on PATH, run `localbrain list --type lead` ONCE; without
+      shell, read `.brain/context.md` in the workspace if it exists. Either
+      way, cut any candidate whose canonical domain appears in a
+      `lead-<domain>` record, logged as "cut: in the brain". Neither
+      available, skip silently. After the rows, add no commentary; the file is data.
     produces: leads/{date}-{slug}.csv
 description: Find sales leads on the open web — companies and decision makers with evidence behind every row. (localstack)
 author: localoy

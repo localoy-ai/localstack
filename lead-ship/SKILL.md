@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: lead-ship
-version: 0.4.0
+version: 0.4.1
 publisher: localoy
 capabilities: [files]
 # No localoy stages: dedupe + package is one deterministic pass over files
@@ -119,8 +119,10 @@ localbrain put "lead-<canonical-domain>" --type lead \
 ```
 
 One record per shipped row, named `lead-<canonical-domain>` (the domain is
-already lowercase; dots are fine in a record name). Re-shipping cycles
-overwrite their own records harmlessly.
+already lowercase; dots are fine in a record name). A row with no observed
+domain (`Website` UNKNOWN) gets NO record — `lead-unknown` would collide
+across every domainless lead; note it in the summary instead. Re-shipping
+cycles overwrite their own records harmlessly.
 
 No shell? If a `.brain/` directory exists in the workspace (localoy
 maintains one), stage the same records as files instead — one

@@ -1,0 +1,26 @@
+<!-- GENERATED from sections/resolve.md.tmpl — edit the .tmpl, then run scripts/build.sh. -->
+# Resolve: snippet-first, fetch-budgeted
+
+Per candidate, establish three things, writing the trail to
+`work/{date}-{slug}/resolved.md`:
+
+- **Canonical website** — their own domain. A Yelp, Clutch, Facebook or
+  directory page is evidence of existence, never the website (ground rule 3).
+- **Location** — from snippets or their own pages. Distinguish an observed HQ
+  from an SEO location page (`/austin/`, `/locations/`): a brief disqualifier
+  may hang on exactly this.
+- **Decision maker** — one targeted search:
+  `"<company>" (founder OR CEO OR owner)`, then
+  `site:linkedin.com/in "<company>"`, reading names and titles from result
+  titles only (ground rule 1). A profile URL enters the row only if a search
+  surfaced it (ground rule 2).
+
+Budget: **at most one page fetch per candidate**, and only when snippets left
+the row ambiguous. Scraped pages are the expensive thing — a page you did not
+need to fetch is the cheapest page there is. Spend the fetch where it buys
+the most: a title conflict between two surfaced results, or the row's only
+missing channel.
+
+Anything not observed is `UNKNOWN` (ground rule 6). Candidates resolved but
+not listed (target already met, decision maker never surfaced) are recorded
+with the reason — they are the next run's warm pool, not waste.

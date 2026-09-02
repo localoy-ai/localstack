@@ -1,12 +1,13 @@
 ---
 name: lead-search
-version: 0.5.0
+version: 0.6.0
 publisher: localoy
 capabilities: [files, web]
 # localoy dialect: stages make this runnable on small local models. Each stage
 # is its own turn with its own time budget and a file that survives it, so a
 # model too slow to finish one monolithic research turn still ships the list.
 # Claude Code ignores this key and runs the Procedure below in one pass.
+# The stage goals double as the compressed fallback when sections/ is absent.
 stages:
   - id: harvest
     goal: >
@@ -96,7 +97,7 @@ still missing in a SINGLE message, then wait.
   companies is the lead. "Anywhere" is a choice the user makes, not a default
   you assume.
 - **How many they want** — ten leads deserve a fetch each; a hundred are
-  snippet work. The budget below scales from this.
+  snippet work. The budget scales from this.
 
 If no answer comes, produce what is genuinely useful anyway, state at the top
 which facts you lacked, and say what would change once you have them.
@@ -104,7 +105,8 @@ which facts you lacked, and say what would change once you have them.
 ## Ground rules (non-negotiable)
 
 These come from watching earlier lead tools fail. Each one bans a specific,
-observed failure.
+observed failure. They apply in every step, whether or not you read a
+section.
 
 1. **Search engines are the only door to gated sites.** Never fetch LinkedIn,
    Crunchbase, ZoomInfo, G2, Clutch or anything behind a login — they block,
@@ -125,6 +127,21 @@ observed failure.
 6. **`UNKNOWN` is a value.** Every field you could not observe says `UNKNOWN`.
    A blank looks like an oversight; `UNKNOWN` is a finding.
 
+## Sections (read on demand)
+
+The step-by-step mechanics live in `sections/` next to this file. Read a
+section right before doing that step — never all of them up front:
+
+| When | Read |
+|---|---|
+| planning the harvest queries (Step 2) | `sections/harvest.md` |
+| resolving candidates into rows (Step 3) | `sections/resolve.md` |
+| deduping, writing the CSV, reporting (Steps 4-6) | `sections/report.md` |
+
+If `sections/` is missing (partial install), do not stop: the stage goals in
+this file's frontmatter carry the compressed rules — follow those plus the
+ground rules above.
+
 ## Procedure
 
 {{WORK_DIR}}
@@ -135,52 +152,17 @@ observed failure.
 from their website's copy. Copy says how they describe themselves, which is
 often not how their buyers look.
 
-**2. Harvest, varying the angle — not the page.** Breadth comes from different
-query shapes, never from paging one phrasing:
+**2. Harvest** (read `sections/harvest.md`): 5-8 searches, each a different
+angle, snippets only. Every candidate lands in `work/{date}-{slug}/found.md`
+with its query and result URL.
 
-- direct: `<niche> companies in <place>`
-- roundups: `best <niche> <place>`, `top <niche> agencies <year>`
-- directories surfaced by search (fetch a directory page only when one result
-  names many candidates at once — that is one fetch buying N candidates)
-- local: `<niche> near <city>` and neighboring cities by name
-- signal-based: who is hiring for the role your product replaces, who sponsors
-  the niche's events, who wrote about the problem
-- `site:` dorks for gated sources, read from snippets only
+**3. Resolve** (read `sections/resolve.md`): per candidate — own website,
+location, decision maker from result titles; at most one page fetch per
+candidate. Trail goes to `work/{date}-{slug}/resolved.md`.
 
-Record every candidate with the query that found it and the URL of the result.
-Never repeat an identical query; never fetch the same URL twice.
-
-**3. Resolve each candidate — snippet-first, fetch-budgeted.** Per candidate:
-canonical website (their own domain), location, and one targeted search for the
-decision maker: `"<company>" (founder OR CEO OR owner)` then
-`site:linkedin.com/in "<company>"`, reading from result titles per rule 1.
-Budget: **at most one page fetch per candidate**, and only when snippets left
-the row ambiguous. Scraped pages are the expensive thing — a page you did not
-need to fetch is the cheapest page there is.
-
-**4. Dedupe by canonical domain.** Strip `www.`, lowercase, one row per
-domain. Two names on one domain are one company; the same company found by two
-angles keeps the stronger evidence.
-
-**5. Write the list.** `leads/{YYYY-MM-DD}-{slug}.csv` in the project, header
-exactly:
-
-```
-Company Name,Location,Website,Decision Maker Name,Title,Profile URL,Evidence URL,Confidence
-```
-
-One row per lead, appended as resolved — not held back for a final flourish.
-`Confidence` is `verified` (two independent observations), `likely` (one solid
-observation), or `unconfirmed` (snippet only). Every row's `Evidence URL` is a
-page or search that a reader could open to check the row.
-{{COLLISION_SUFFIX:leads/{date}-{slug}.csv}}
-
-**6. Report.** In chat: how many leads, the angles that worked, what you cut
-and why, and what you could not check — and which brief you consumed
-(`briefs/...` by path, or "no brief"). The cut list matters — a candidate
-dropped for cause (aggregator-only presence, wrong territory, dead domain) is
-information the next run needs. Keep the gist short; the file is the
-deliverable.
+**4-6. Dedupe, write, report** (read `sections/report.md`): one row per
+canonical domain, `leads/{YYYY-MM-DD}-{slug}.csv` with the exact canonical
+header, then the short gist in chat naming the brief consumed.
 
 **7. Hand off.** Offer the next stage — "Qualify this list with
 `/lead-qualify`?" — as a structured question where the runtime supports one,

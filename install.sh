@@ -67,6 +67,14 @@ install_into() {
     fi
     mkdir -p "$root/$name"
     ln -sf "$REPO/$name/SKILL.md" "$root/$name/SKILL.md"
+    # Skills with on-demand sections get the whole sections/ dir symlinked
+    # beside SKILL.md; skills without one drop any stale link. (-sfn: replace
+    # an existing dir symlink instead of descending into it.)
+    if [ -d "$REPO/$name/sections" ]; then
+      ln -sfn "$REPO/$name/sections" "$root/$name/sections"
+    elif [ -L "$root/$name/sections" ]; then
+      rm "$root/$name/sections"
+    fi
     echo "installed /$name ($label)"
   done
 }

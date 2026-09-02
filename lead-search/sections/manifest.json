@@ -1,0 +1,25 @@
+{
+  "skill": "lead-search",
+  "version": 1,
+  "note": "PASSIVE registry (the gstack model): ids, files, titles, and human-readable trigger text ONLY. The skeleton's Sections table is the only place that decides WHEN a section is read; no machine predicate lives here.",
+  "sections": [
+    {
+      "id": "harvest",
+      "file": "harvest.md",
+      "title": "Harvest angles and candidate recording",
+      "trigger": "planning the harvest queries (Step 2)"
+    },
+    {
+      "id": "resolve",
+      "file": "resolve.md",
+      "title": "Resolving candidates: evidence rules and the fetch budget",
+      "trigger": "resolving candidates into rows (Step 3)"
+    },
+    {
+      "id": "report",
+      "file": "report.md",
+      "title": "Dedupe, the canonical CSV, and the chat report",
+      "trigger": "deduping, writing the CSV, and reporting (Steps 4-6)"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+schema_version: "1.1"
+name: "Brief present: consumes it and writes a well-formed leads CSV"
+context:
+  scaffold_script: |
+    mkdir -p briefs work leads
+    cat > briefs/2026-01-15-coffee-roasters-portland.md <<'EOF'
+    # Prospecting brief: coffee-roasters-portland
+
+    ## What we sell
+    Wholesale compostable packaging for specialty food producers.
+
+    ## Who buys (ICP)
+    Small independent coffee roasters; the buyer is the owner/founder.
+
+    ## Territory
+    Portland, OR.
+
+    ## List size target
+    3 leads. Depth over breadth.
+
+    ## Disqualifiers
+    - No own website: aggregator-only presence.
+    - Dead domain: website does not resolve.
+    - Outside territory: located outside the Portland, OR area.
+
+    ## Chain status
+    - stage: plan
+    - source-artifact: NONE
+    - status: DONE
+    - unresolved: NONE
+    EOF

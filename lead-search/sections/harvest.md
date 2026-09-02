@@ -1,0 +1,23 @@
+<!-- GENERATED from sections/harvest.md.tmpl — edit the .tmpl, then run scripts/build.sh. -->
+# Harvest: varying the angle, not the page
+
+Breadth comes from different query shapes, never from paging one phrasing:
+
+- direct: `<niche> companies in <place>`
+- roundups: `best <niche> <place>`, `top <niche> agencies <year>`
+- directories surfaced by search (fetch a directory page only when one result
+  names many candidates at once — that is one fetch buying N candidates)
+- local: `<niche> near <city>` and neighboring cities by name
+- signal-based: who is hiring for the role your product replaces, who sponsors
+  the niche's events, who wrote about the problem
+- `site:` dorks for gated sources, read from snippets only
+
+If the brief's `Angles to try` section names angles — or marks one DROPPED —
+honor it: the brief carries what earlier cycles learned. A retro that killed
+an angle outranks this catalog.
+
+Record every candidate as a line in `work/{date}-{slug}/found.md`: name, the
+query that found it, the URL of the result. Never repeat an identical query;
+never fetch the same URL twice. Candidates cut on sight (already shipped,
+obviously wrong shape) go in a cut list in the same file with the reason —
+the next run reads it.

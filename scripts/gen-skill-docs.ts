@@ -1,12 +1,14 @@
 #!/usr/bin/env bun
 /**
- * Generate SKILL.md files from SKILL.md.tmpl templates (the gstack model).
+ * Generate SKILL.md files from SKILL.md.tmpl templates (the gstack model),
+ * and section files from <skill>/sections/*.md.tmpl.
  *
  * Pipeline: read .tmpl → resolve {{PLACEHOLDERS}} via RESOLVERS → write .md
- * next to the template, with a generated-file marker injected into the
- * frontmatter.
+ * next to the template, with a generated-file marker injected (into the
+ * frontmatter for SKILL.md; as a leading HTML comment for sections, which
+ * have no frontmatter).
  *
- * --dry-run: generate to memory and exit 1 if any committed SKILL.md differs
+ * --dry-run: generate to memory and exit 1 if any committed output differs
  * from what its template produces (freshness check; used by install.sh).
  */
 
@@ -22,28 +24,47 @@ const MARKER =
   '# GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.';
 
 function discoverTemplates(): string[] {
-  return fs
-    .readdirSync(ROOT, { withFileTypes: true })
-    .filter((e) => e.isDirectory())
-    .map((e) => path.join(ROOT, e.name, 'SKILL.md.tmpl'))
-    .filter((p) => fs.existsSync(p))
-    .sort();
+  const out: string[] = [];
+  for (const e of fs.readdirSync(ROOT, { withFileTypes: true })) {
+    if (!e.isDirectory()) continue;
+    const skillTmpl = path.join(ROOT, e.name, 'SKILL.md.tmpl');
+    if (fs.existsSync(skillTmpl)) out.push(skillTmpl);
+    const sectionsDir = path.join(ROOT, e.name, 'sections');
+    if (fs.existsSync(sectionsDir)) {
+      for (const s of fs.readdirSync(sectionsDir)) {
+        if (s.endsWith('.md.tmpl')) out.push(path.join(sectionsDir, s));
+      }
+    }
+  }
+  return out.sort();
+}
+
+function isSectionTemplate(tmplPath: string): boolean {
+  return path.basename(path.dirname(tmplPath)) === 'sections';
 }
 
 function render(tmplPath: string): string {
-  const skill = path.basename(path.dirname(tmplPath));
+  const skill = isSectionTemplate(tmplPath)
+    ? path.basename(path.dirname(path.dirname(tmplPath)))
+    : path.basename(path.dirname(tmplPath));
+  const rel = path.relative(ROOT, tmplPath);
   const src = fs.readFileSync(tmplPath, 'utf-8');
   const body = src.replace(TOKEN, (_m, name: string, arg?: string) => {
     const resolver = RESOLVERS[name];
     if (!resolver) {
-      throw new Error(`Unknown placeholder {{${name}}} in ${skill}/SKILL.md.tmpl`);
+      throw new Error(`Unknown placeholder {{${name}}} in ${rel}`);
     }
     return resolver(arg, { skill });
   });
+  if (isSectionTemplate(tmplPath)) {
+    // Sections have no frontmatter; the marker is a leading HTML comment.
+    const base = path.basename(tmplPath);
+    return `<!-- GENERATED from sections/${base} — edit the .tmpl, then run scripts/build.sh. -->\n${body}`;
+  }
   // Inject the generated-file marker as the first line inside the YAML
   // frontmatter (a YAML comment — every runtime's parser ignores it).
   if (!body.startsWith('---\n')) {
-    throw new Error(`${skill}/SKILL.md.tmpl must start with YAML frontmatter (---)`);
+    throw new Error(`${rel} must start with YAML frontmatter (---)`);
   }
   return body.replace('---\n', `---\n${MARKER}\n`);
 }
@@ -56,7 +77,9 @@ if (templates.length === 0) {
 }
 
 for (const tmpl of templates) {
-  const outPath = path.join(path.dirname(tmpl), 'SKILL.md');
+  const outPath = isSectionTemplate(tmpl)
+    ? tmpl.slice(0, -'.tmpl'.length)
+    : path.join(path.dirname(tmpl), 'SKILL.md');
   const rendered = render(tmpl);
   const current = fs.existsSync(outPath) ? fs.readFileSync(outPath, 'utf-8') : '';
   if (rendered === current) continue;
@@ -71,10 +94,10 @@ for (const tmpl of templates) {
 if (DRY_RUN) {
   if (stale.length) {
     console.error(
-      `stale (SKILL.md differs from its template):\n  ${stale.join('\n  ')}\n` +
+      `stale (generated file differs from its template):\n  ${stale.join('\n  ')}\n` +
         'Run scripts/build.sh to regenerate.'
     );
     process.exit(1);
   }
-  console.log(`fresh: ${templates.length} generated SKILL.md files match their templates.`);
+  console.log(`fresh: ${templates.length} generated files match their templates.`);
 }

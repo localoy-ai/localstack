@@ -1,6 +1,6 @@
 ---
 name: lead-ship
-version: 0.4.1
+version: 0.5.0
 publisher: localoy
 capabilities: [files]
 # No localoy stages: dedupe + package is one deterministic pass over files
@@ -114,8 +114,15 @@ it:
 
 ```
 localbrain put "lead-<canonical-domain>" --type lead \
+  --field domain=<canonical-domain> --field shipped=<YYYY-MM-DD> \
   --body "<Company Name> — <canonical domain>. Shipped <YYYY-MM-DD> in <shipped csv filename>. Contact: <Decision Maker Name>, <Title>."
 ```
+
+The two `--field` pairs make the record structurally queryable
+(`localbrain list --where domain=<domain>`), so dedupe never depends on
+parsing prose. Requires localbrain >= 0.2.0; on an older CLI the flags
+error — drop them and note "localbrain pre-0.2.0 — fields omitted" in
+the summary rather than failing the ship.
 
 One record per shipped row, named `lead-<canonical-domain>` (the domain is
 already lowercase; dots are fine in a record name). A row with no observed
@@ -125,9 +132,19 @@ cycles overwrite their own records harmlessly.
 
 No shell? If a `.brain/` directory exists in the workspace (localoy
 maintains one), stage the same records as files instead — one
-`.brain/put/lead-<canonical-domain>.md` per shipped row, first line
-`type: lead`, then the body above verbatim; the daemon stores them after
-the turn. Neither the CLI nor `.brain/` → skip and add one line to the
+`.brain/put/lead-<canonical-domain>.md` per shipped row, with a
+frontmatter fence carrying the same structure, then the body verbatim:
+
+```
+---
+type: lead
+domain: <canonical-domain>
+shipped: <YYYY-MM-DD>
+---
+<body as above>
+```
+
+The daemon stores them after the turn, fields included. Neither the CLI nor `.brain/` → skip and add one line to the
 summary's Known gaps: "localbrain unavailable — this shipment is invisible
 to cross-repo dedupe (run /setup-localbrain)". A brain error never blocks
 the package — the CSV already shipped; note the error and move on. The

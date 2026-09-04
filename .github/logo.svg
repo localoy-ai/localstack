@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <!-- localstack: a stack of layers, the top one lit.
+       Amber Ground palette: umber tile, cream mark, amber phosphor accent. -->
+  <rect width="256" height="256" rx="56" fill="#161210"/>
+  <rect x="2" y="2" width="252" height="252" rx="54" fill="none" stroke="#2E2720" stroke-width="4"/>
+  <!-- bottom layer -->
+  <path d="M 128 148 L 200 184 L 128 220 L 56 184 Z"
+        fill="none" stroke="#EFE6D9" stroke-width="10" stroke-linejoin="round" opacity="0.55"/>
+  <!-- middle layer -->
+  <path d="M 128 108 L 200 144 L 128 180 L 56 144 Z"
+        fill="#161210" stroke="#EFE6D9" stroke-width="10" stroke-linejoin="round"/>
+  <!-- top layer, lit -->
+  <path d="M 128 36 L 200 72 L 128 108 L 56 72 Z"
+        fill="#FFA02E" stroke="#FFA02E" stroke-width="10" stroke-linejoin="round"/>
+</svg>

@@ -1,7 +1,7 @@
 {
   "skill": "lead-search",
   "version": 1,
-  "note": "PASSIVE registry (the gstack model): ids, files, titles, and human-readable trigger text ONLY. The skeleton's Sections table is the only place that decides WHEN a section is read; no machine predicate lives here.",
+  "note": "PASSIVE registry: ids, files, titles, and human-readable trigger text ONLY. The skeleton's Sections table is the only place that decides WHEN a section is read; no machine predicate lives here.",
   "sections": [
     {
       "id": "harvest",

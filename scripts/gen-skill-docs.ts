@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 /**
- * Generate SKILL.md files from SKILL.md.tmpl templates (the gstack model),
+ * Generate SKILL.md files from SKILL.md.tmpl templates,
  * and section files from <skill>/sections/*.md.tmpl.
  *
  * Pipeline: read .tmpl → resolve {{PLACEHOLDERS}} via RESOLVERS → write .md

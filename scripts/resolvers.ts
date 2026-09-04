@@ -3,7 +3,7 @@
  * SKILL.md.tmpl files to the text baked into the generated SKILL.md.
  *
  * These exist so the suite's file-management idioms are written once and
- * stay identical across every skill (the gstack model). Behavior changes to
+ * stay identical across every skill. Behavior changes to
  * an idiom happen here, then `scripts/build.sh` regenerates every SKILL.md.
  */
 

@@ -1,8 +1,22 @@
-# localstack
+<p align="center">
+  <img src=".github/logo.svg" width="128" alt="localstack logo">
+</p>
 
-Skills for coding agents: install once, and your agent is ready to do real
-marketing work — SEO and a full sales-development pipeline today, more as each
-skill earns its place.
+<h1 align="center">localstack</h1>
+
+<p align="center">
+  Skills for coding agents: install once, and your agent is ready to do real
+  marketing work — SEO and a full sales-development pipeline today, more as
+  each skill earns its place.
+</p>
+
+<p align="center">
+  <a href="https://github.com/localoy-ai/localstack/tags"><img src="https://img.shields.io/badge/version-0.7.1-FFA02E" alt="Version"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-EFE6D9" alt="License: MIT"></a>
+  <img src="https://img.shields.io/badge/runtimes-Claude%20Code%20%C2%B7%20Codex%20%C2%B7%20Hermes%20%C2%B7%20localoy-161210" alt="Runtimes">
+</p>
+
+---
 
 Each skill is a directory with a `SKILL.md`, installed by symlink into every
 agent runtime found on the machine. Updating is `git pull` — the symlinks mean
@@ -142,3 +156,14 @@ back into qualification, and richer SEO chaining between audit, keywords, and
 page rewrites. Enabling multiple stacks side by side is the intended shape —
 install each repo, and its skills land together in every runtime. Drafts
 exist now; the send stays human.
+
+## Contributing
+
+Issues and pull requests are welcome. Two things to know before opening one:
+skills hold the evidence line described in Principles — a change that invents
+data where a check could not run will be declined — and `SKILL.md` files are
+generated, so edit the `SKILL.md.tmpl` beside them and run `scripts/build.sh`.
+
+## License
+
+[MIT](LICENSE)

@@ -58,7 +58,8 @@ this repo.
 | `/prospect-brief` | Writes the prospecting brief — what we sell, who buys, territory, disqualifiers — that `/lead-search` reads as its input. |
 | `/lead-search` | Builds a lead list from the open web only — companies and decision makers, every row carrying the URL it came from and an honest confidence. No accounts, no logins, no paid data. |
 | `/lead-qualify` | Re-checks the list row by row against the open web: keep or cut, a reason, fresh evidence — never a score. Cut rows ship in the file too. |
-| `/outreach-draft` | Drafts outreach for the kept rows — drafts only, a human sends every one. Channels and personalization come only from pages actually observed. |
+| `/outreach-draft` | Drafts outreach for the kept rows — drafts only. Channels and personalization come only from pages actually observed. |
+| `/lead-reach` | Sends the drafts from your own browser, one lead at a time: opens the observed channel, fills in the draft, and sends only after you say yes to that message. Every send verified and logged; no lead contacted twice. |
 | `/lead-ship` | Packages the final list: kept rows, deduped against every previously shipped list, with a provenance summary naming the whole chain. |
 | `/sales-retro` | Retros the cycle: the funnel with counts read from the files, what got rows cut, and what to change in the next brief. |
 | `/seo-audit` | Crawls up to 30 of a site's important pages and reports what is actually on them — titles, metas, headings, internal links, canonicals, markup flags — as a prioritized fix list. |
@@ -69,8 +70,9 @@ this repo.
 
 Each skill feeds into the next. `/prospect-brief` writes a brief that
 `/lead-search` reads. `/lead-search` writes a list that `/lead-qualify`
-verifies. `/lead-qualify`'s kept rows are what `/outreach-draft` drafts for
-and `/lead-ship` packages, deduped against every earlier shipment.
+verifies. `/lead-qualify`'s kept rows are what `/outreach-draft` drafts for,
+`/lead-reach` sends (one yes per message) and `/lead-ship` packages, deduped
+against every earlier shipment.
 `/sales-retro` reads the whole cycle and its findings feed the next brief.
 Nothing falls through the cracks because every step knows what came before it.
 
@@ -79,6 +81,7 @@ Plan     /prospect-brief   → briefs/{date}-{slug}.md
 Build    /lead-search      → leads/{date}-{slug}.csv
 Review   /lead-qualify     → reviews/{date}-{slug}.csv + .md
 Draft    /outreach-draft   → outreach/{date}-{slug}.md
+Reach    /lead-reach       → reached/{date}-{slug}.csv + .md
 Ship     /lead-ship        → shipped/{date}-{slug}.csv + -summary.md
 Reflect  /sales-retro      → retros/{date}-{slug}.md
 ```
@@ -112,9 +115,10 @@ Every skill holds the same line, learned the expensive way in earlier projects:
   skill — possible at all.
 - **Partial work is reported as partial.** A subset is never described as the
   whole, and what was cut ships alongside what was kept.
-- **Nothing here sends anything on your behalf.** `/outreach-draft` writes
-  drafts; the send is a human decision made in the human's own tools, every
-  time.
+- **Nothing sends without your yes.** `/outreach-draft` only writes drafts.
+  `/lead-reach` sends them from your own signed-in browser, one message at a
+  time, each after you approve it — never in bulk, never a lead twice, and a
+  platform's spam or rate warning stops the run.
 
 ## One suite, several runtimes
 

@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: sales-retro
-version: 0.2.0
+version: 0.3.0
 publisher: localoy
 capabilities: [files]
 # No localoy stages: one read-and-write pass over files already on disk. A
@@ -30,7 +30,7 @@ tags: [sales, retro, reflect, pipeline]
 ## When to invoke this skill
 
 Closes a sales-development cycle: reads whatever the pipeline wrote
-(`briefs/`, `leads/`, `reviews/`, `outreach/`, `shipped/`), reports the funnel
+(`briefs/`, `leads/`, `reviews/`, `outreach/`, `reached/`, `shipped/`), reports the funnel
 with counts taken from the files, and turns what happened into concrete edits
 for the next brief. Use after `/lead-ship`, or whenever asked "what did we
 learn from prospecting".
@@ -44,6 +44,7 @@ ls briefs/*.md   2>/dev/null | sort -rV | head -1
 ls leads/*.csv   2>/dev/null | sort -rV | head -1
 ls reviews/*.csv 2>/dev/null | sort -rV | head -1
 ls outreach/*.md 2>/dev/null | sort -rV | head -1
+ls reached/*.csv 2>/dev/null | sort -rV | head -1
 ls shipped/*.csv 2>/dev/null | sort -rV | head -1
 ```
 
@@ -54,7 +55,7 @@ A missing stage is reported as **"stage not run"** — never reconstructed or
 guessed. If nothing exists at all, say so and point at `/prospect-brief` to
 start a cycle; there is no retro without artifacts.
 
-Then ask the user ONE question: what happened after shipping — replies,
+Then ask the user ONE question: what happened after sending and shipping — replies,
 meetings, bounces, bad rows? Their answer enters the retro labeled
 **user-reported**, never presented as something you observed.
 
@@ -73,14 +74,16 @@ meetings, bounces, bad rows? Their answer enters the retro labeled
 
 ## Procedure
 
-**1. Load the cycle.** The five newest artifacts above, plus the previous
+**1. Load the cycle.** The six newest artifacts above, plus the previous
 retro (`ls retros/*.md 2>/dev/null | sort -rV | head -2` — the second-newest) to check
 whether its "Change next cycle" items were actually applied.
 
 **2. Count the funnel from the files.** found (rows in the leads CSV before
 dedupe notes, if recorded) → resolved (rows in leads CSV) → kept (Verdict=keep
-rows in reviews CSV) → drafted (drafts in the outreach file) → shipped (rows in
-the shipped CSV). Each number cites its file.
+rows in reviews CSV) → drafted (drafts in the outreach file) → sent
+(`Status=sent` rows in the reached CSV; skipped, failed and blocked counted
+beside it, with the reasons a run stopped) → shipped (rows in the shipped
+CSV). Each number cites its file.
 
 **3. Aggregate the verdicts.** Group the reviews CSV's `Verdict Reason` values:
 what got rows cut, and which brief disqualifier did the cutting. This is the
@@ -100,7 +103,7 @@ Template:
 (the artifact paths read, one per stage; "stage not run" where missing)
 
 ## Funnel
-found N (file) → resolved N (file) → kept N (file) → drafted N (file) → shipped N (file)
+found N (file) → resolved N (file) → kept N (file) → drafted N (file) → sent N (file) → shipped N (file)
 
 ## What worked
 (angles, queries, channels — each backed by the artifact that shows it)

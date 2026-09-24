@@ -176,8 +176,9 @@ const CHAIN: Record<string, string[]> = {
   'lead-search': ['briefs/*.md', 'leads/{YYYY-MM-DD}-{slug}.csv', CSV_HEADER],
   'lead-qualify': ['leads/*.csv', 'briefs/*.md', 'reviews/{YYYY-MM-DD}-{slug}.csv', 'Verdict,Verdict Reason,Verification URL,Verified Date'],
   'outreach-draft': ['reviews/*.csv', 'outreach/{YYYY-MM-DD}-{slug}.md'],
+  'lead-reach': ['outreach/*.md', 'reached/*.csv', 'reached/{YYYY-MM-DD}-{slug}.csv', 'Status=sent'],
   'lead-ship': ['reviews/*.csv', 'shipped/*.csv', 'shipped/{YYYY-MM-DD}-{slug}.csv', 'First Shipped Date'],
-  'sales-retro': ['briefs/*.md', 'leads/*.csv', 'reviews/*.csv', 'outreach/*.md', 'shipped/*.csv', 'retros/{YYYY-MM-DD}-{slug}.md'],
+  'sales-retro': ['briefs/*.md', 'leads/*.csv', 'reviews/*.csv', 'outreach/*.md', 'reached/*.csv', 'shipped/*.csv', 'retros/{YYYY-MM-DD}-{slug}.md'],
 };
 for (const [skill, needles] of Object.entries(CHAIN)) {
   if (!fs.existsSync(path.join(ROOT, skill, 'SKILL.md'))) {

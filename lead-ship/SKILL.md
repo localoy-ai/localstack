@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: lead-ship
-version: 0.5.0
+version: 0.6.0
 publisher: localoy
 capabilities: [files]
 # No localoy stages: dedupe + package is one deterministic pass over files
@@ -14,7 +14,7 @@ platforms: [linux, macos, windows]
 metadata:
   hermes:
     tags: [sales, ship, localstack]
-    related_skills: [outreach-draft, sales-retro]
+    related_skills: [lead-reach, sales-retro]
 allowed-tools:
   - Bash
   - Read
@@ -32,7 +32,8 @@ tags: [sales, ship, package, dedupe]
 
 Turns a qualified lead list into the shipped package: kept rows only, minus
 every domain shipped in any earlier cycle, with a summary that names the whole
-chain that produced it. Use after `/outreach-draft`, or when asked to
+chain that produced it. Use after `/lead-reach` (or `/outreach-draft` when
+the user sends from their own tools), or when asked to
 "finalize", "package", or "ship" the list.
 
 ## What you read first
@@ -45,6 +46,8 @@ chain that produced it. Use after `/outreach-draft`, or when asked to
   fabricate rows.
 - **Drafts (optional):** `ls outreach/*.md 2>/dev/null | sort -rV | head -1` — only to
   report draft coverage; absence is noted, not blocking.
+- **Sends (optional):** `ls reached/*.csv 2>/dev/null | sort -rV | head -1` — only to report
+  how many kept rows were reached (`Status=sent`); rows still ship unedited.
 - **Every prior shipment:** all of `shipped/*.csv` (not just the newest) — the
   dedupe set. `cat shipped/*.csv 2>/dev/null`.
 

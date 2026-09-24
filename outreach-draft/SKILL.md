@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: outreach-draft
-version: 0.2.0
+version: 0.3.0
 publisher: localoy
 capabilities: [files, web]
 # localoy dialect: stages make this runnable on small local models. Each stage
@@ -35,16 +35,20 @@ stages:
       Assemble outreach/{date}-{slug}.md: per lead — channel + evidence URL,
       the personalization facts with their URLs, then the draft. End with a
       "Leads with no observed channel" list and the Chain status block.
-      State plainly at the top: drafts only, a human sends every one.
+      State plainly at the top: drafts only — /lead-reach sends each one
+      after the user says yes to it.
     produces: outreach/{date}-{slug}.md
-description: Draft outreach for qualified leads — drafts only, a human sends every one; channels and personalization come only from pages actually observed. (localstack)
+description: >-
+  Draft outreach for qualified leads — drafts only, sent later one yes at a
+  time by /lead-reach; channels and personalization come only from pages
+  actually observed. (localstack)
 author: localoy
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
   hermes:
     tags: [sales, outreach, drafts, localstack]
-    related_skills: [lead-qualify, lead-ship]
+    related_skills: [lead-qualify, lead-reach]
 allowed-tools:
   - Bash
   - Read
@@ -65,18 +69,19 @@ tags: [sales, outreach, drafts, cold-email]
 Writes outreach drafts for the qualified rows of a lead list — one draft per
 lead that has an actually observed channel, personalized only from cited
 observations. Use after `/lead-qualify`, or when asked to "draft outreach" or
-"write cold emails". The output is a file a human reviews and sends from
-their own tools.
+"write cold emails". The output is a file the user reviews; `/lead-reach`
+sends from it, one message at a time, each after the user's yes.
 
 ## Never sends — the hard boundary
 
 This skill NEVER sends anything: no email tool, no form submission, no
 connection request, no API call that delivers a message. Drafts go to a file;
-the send is a human decision made outside this skill. It also never invents a
+sending is `/lead-reach`'s job, and it asks the user before every message. It also never invents a
 channel: no guessed email patterns (`first@domain.com` is fabrication), no
 constructed profile URLs, no "probably reachable at". **A lead with no
 observed channel gets no draft** — that lead is listed as a finding instead.
-This skill has no send path and refuses to acquire one.
+This skill has no send path; the draft it writes is exactly what
+`/lead-reach` will show the user before sending, so write it ready to go.
 
 ## What you read first
 
@@ -122,7 +127,7 @@ hook first, the brief's value proposition once, one clear ask. No template
 smell — but personalization is only as deep as the evidence goes.
 
 **4. Package.** `outreach/{YYYY-MM-DD}-{slug}.md`, stating at the top:
-**drafts only — a human sends every one.**
+**drafts only — `/lead-reach` sends each one after your yes.**
 Never overwrite an existing artifact: if `outreach/{date}-{slug}.md` already exists, append a sequence suffix before the extension — `outreach/{date}-{slug}-2.md`, then `-3`… (count the existing matches and add one). Per lead:
 
 ```
@@ -145,11 +150,12 @@ Then `## Leads with no observed channel` (company + what was tried), and:
 ```
 
 **5. Report and hand off.** In chat: drafted count, no-channel count, any
-fallback warnings. Then offer the next stage — "Package the final list with
-`/lead-ship`?" — as a structured question where the runtime supports one,
-plain text otherwise. On yes, invoke `/lead-ship` if this runtime can invoke
-skills directly (Claude Code: the Skill tool); otherwise tell the user to
-type `/lead-ship` (Codex: `$lead-ship`).
+fallback warnings. Then offer the next stage — "Send them with
+`/lead-reach`? It asks you before each message." — as a structured question
+where the runtime supports one, plain text otherwise; if the user would
+rather send from their own tools, offer `/lead-ship` instead. On yes, invoke
+the skill if this runtime can invoke skills directly (Claude Code: the Skill
+tool); otherwise tell the user to type it (Codex: `$lead-reach`).
 
 ## Quality bar
 

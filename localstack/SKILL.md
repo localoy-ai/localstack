@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: localstack
-version: 0.3.0
+version: 0.4.0
 publisher: localoy
 capabilities: []
 description: Router for the localstack skill suite — sends any sales-development or SEO request to the right skill and stage. (localstack)
@@ -37,15 +37,16 @@ specific skill, or ask "which localstack skill fits this?".
 
 Each skill feeds into the next. `/prospect-brief` writes a brief that
 `/lead-search` reads. `/lead-search` writes a list that `/lead-qualify`
-verifies. `/lead-qualify`'s kept rows are what `/outreach-draft` drafts for
-and `/lead-ship` packages. `/sales-retro` reads the whole cycle. Nothing
+verifies. `/lead-qualify`'s kept rows are what `/outreach-draft` drafts for,
+`/lead-reach` sends (one yes per message) and `/lead-ship` packages. `/sales-retro` reads the whole cycle. Nothing
 falls through the cracks because every step knows what came before it.
 
 ```
 Plan     /prospect-brief   → briefs/{date}-{slug}.md   (also the thinking step: its interview IS "who should we sell to")
 Build    /lead-search      → leads/{date}-{slug}.csv
 Review   /lead-qualify     → reviews/{date}-{slug}.csv + .md
-Draft    /outreach-draft   → outreach/{date}-{slug}.md   (drafts only — a human sends)
+Draft    /outreach-draft   → outreach/{date}-{slug}.md   (drafts only)
+Reach    /lead-reach       → reached/{date}-{slug}.csv + .md   (sends each draft after your yes)
 Ship     /lead-ship        → shipped/{date}-{slug}.csv + -summary.md
 Reflect  /sales-retro      → retros/{date}-{slug}.md
 ```
@@ -78,6 +79,7 @@ cheaper than a false negative.
 | "find leads", "build a list", "more like these" | `/lead-search` |
 | "qualify these leads", "verify/clean the list" | `/lead-qualify` |
 | "draft outreach", "write cold emails" | `/outreach-draft` |
+| "send the outreach", "reach out to these leads", "send the drafts" | `/lead-reach` |
 | "finalize/ship the list", "dedupe against what we sent" | `/lead-ship` |
 | "what did we learn", "retro the run" | `/sales-retro` |
 | "run the whole pipeline" | start at `/prospect-brief`; each skill hands off to the next |
@@ -96,14 +98,17 @@ cheaper than a false negative.
 These have no localstack path on purpose. Say plainly the suite does not do
 them, and do NOT produce the adjacent artifact as a stand-in:
 
-- **Sending anything.** No emails, messages, connection requests, or form
-  submissions leave this suite. `/outreach-draft` produces drafts; a human
-  reviews and sends every one.
+- **Sending without a yes.** `/lead-reach` is the only thing that sends, and
+  it asks before every message — never "send all", never in bulk, never a
+  lead twice. Anything else that would send (an email tool, an API, a
+  script) the suite does not do.
 - **Invented data.** No constructed emails or profile URLs, no numeric
   scores, no imagined firmographics or keyword volumes. `UNKNOWN` is the
   honest value.
-- **Signing in anywhere.** Gated sites (LinkedIn, Crunchbase, directories)
-  are read only through what public search results say about them.
+- **Signing in anywhere.** For research, gated sites (LinkedIn, Crunchbase,
+  directories) are read only through what public search results say about
+  them. `/lead-reach` uses a browser session the user is already signed into
+  and never signs in itself.
 - **Paid data.** No purchased lists, no paid enrichment, nothing that spends
   money.
 

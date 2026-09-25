@@ -1,6 +1,6 @@
 ---
 type: file_exists
-path: "leads/*.csv"
+path: "leads-coffee-roasters-portland.csv"
 ---
 
-The deliverable is a dated CSV in leads/.
+The deliverable is the topic's one living list, named after its plan.

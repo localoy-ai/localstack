@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: localstack
-version: 0.4.0
+version: 0.5.0
 publisher: localoy
 capabilities: []
 description: Router for the localstack skill suite — sends any sales-development or SEO request to the right skill and stage. (localstack)
@@ -11,10 +11,11 @@ platforms: [linux, macos, windows]
 metadata:
   hermes:
     tags: [router, sales, seo, localstack]
-    related_skills: [prospect-brief, lead-search, seo-audit]
+    related_skills: [lead-plan, lead-search, lead-qualify, seo-audit]
 allowed-tools:
   - Bash
   - Read
+  - Write
   - AskUserQuestion
   - Skill
 triggers:
@@ -33,31 +34,89 @@ Sends any sales-development or SEO request to the right localstack skill and,
 for sales, the right pipeline stage. Use when you invoke localstack without a
 specific skill, or ask "which localstack skill fits this?".
 
+## The standard files
+
+localstack keeps a working folder in files any agent already understands, so
+whoever opens the folder next — you, a teammate, Claude Code, Codex, Cursor —
+can see what is going on and pick up the work:
+
+```
+AGENTS.md              what this folder is for, the rules, a map, each topic's next step
+PLAN-<topic>.md        one per topic: the brief, the ## Steps checklist, ## Drafts,
+                       dated ## Qualify / ## Export / ## Retro sections
+leads-<topic>.csv      one living lead list per topic; each step fills its own columns
+TODOS.md               open next actions, from every skill
+CHANGELOG.md           dated log of what ran and every message sent
+DESIGN.md              lasting decisions: positioning, tone, channels
+seo-audit-<site>.md    SEO reports, one per site or page (also keywords-, onpage-)
+.localstack/work/      hidden scratch, one directory per run
+```
+
+A **topic** is one piece of sales work, named as a short slug from the niche
+and territory: `austin-dentists`.
+
 ## The sales pipeline
 
-Each skill feeds into the next. `/prospect-brief` writes a brief that
-`/lead-search` reads. `/lead-search` writes a list that `/lead-qualify`
-verifies. `/lead-qualify`'s kept rows are what `/outreach-draft` drafts for,
-`/lead-reach` sends (one yes per message) and `/lead-ship` packages. `/sales-retro` reads the whole cycle. Nothing
-falls through the cracks because every step knows what came before it.
+Each skill feeds into the next, through the topic's plan and lead list:
 
 ```
-Plan     /prospect-brief   → briefs/{date}-{slug}.md   (also the thinking step: its interview IS "who should we sell to")
-Build    /lead-search      → leads/{date}-{slug}.csv
-Review   /lead-qualify     → reviews/{date}-{slug}.csv + .md
-Draft    /outreach-draft   → outreach/{date}-{slug}.md   (drafts only)
-Reach    /lead-reach       → reached/{date}-{slug}.csv + .md   (sends each draft after your yes)
-Ship     /lead-ship        → shipped/{date}-{slug}.csv + -summary.md
-Reflect  /sales-retro      → retros/{date}-{slug}.md
+plan  →  find leads  ─┐
+         or bring     ├→  check & fill  →  draft  →  reach  →  retro
+         your file  ──┘   (qualify +          (one yes
+                          fill gaps)           per message)
+
+                          export — only when you hand the list to someone else
 ```
 
-Every stage also runs standalone. Each skill finds its input by newest file
-(`ls <dir>/* 2>/dev/null | sort -rV | head -1` — newest means the `{date}`
-filename prefix, never mtime; `-V` ranks a `-2` rerun suffix above its base), so to route mid-pipeline: **send the request to
-the first stage whose input exists but whose output does not.** Runs never
-overwrite each other: scratch lives in `work/{date}-{slug}/`, one directory
-per run, and a same-day artifact collision takes a `-2`, `-3`… suffix
-instead of clobbering the earlier file.
+```
+Plan     /lead-plan   → PLAN-<topic>.md (brief + ## Steps)   (its interview IS "who should we sell to")
+Find     /lead-search      → leads-<topic>.csv rows   (or bring your own file to /lead-qualify)
+Check    /lead-qualify     → Verdict + Channel columns filled, ## Qualify in the plan
+Draft    /lead-draft       → ## Drafts in the plan   (drafts only)
+Reach    /lead-reach       → Reached columns + CHANGELOG lines   (sends each draft after your yes)
+Reflect  /lead-retro      → ## Retro in the plan, changes to DESIGN.md and TODOS.md
+Export   /lead-export      → optional hand-off file + Exported column   (not a step)
+```
+
+Every stage also runs standalone. To route mid-pipeline, read the topic's
+plan: **send the request to the first unticked step in its `## Steps`.** No
+plan yet → `/lead-plan`. Several plans and the request does not say
+which → ask which topic. Files are updated in place; CHANGELOG.md and git keep
+the history.
+
+## Moving an older folder over (one time, asked first)
+
+<!-- legacy-layout: the only place the pre-0.9 folder names may appear -->
+Before v0.9.0, localstack wrote one folder per stage: `briefs/`, `leads/`,
+`reviews/`, `outreach/`, `reached/`, `shipped/`, `retros/`, `reports/` and
+`work/`. If any of them exist here and no `PLAN-*.md` does, tell the user once
+("This folder uses the old layout — move it to the standard files?") and ask.
+On yes, per slug found in those filenames (`{date}-{slug}.*`):
+
+1. The newest `briefs/*-<slug>*.md` → `PLAN-<slug>.md`: its brief sections
+   as-is, the five-step `## Steps` checklist with each step ticked whose old
+   folder has a file for this slug (search ← `leads/`, qualify ← `reviews/`,
+   draft ← `outreach/`, reach ← `reached/`, retro ← `retros/`), and its "Change next cycle" items from the newest
+   `retros/*-<slug>*.md` under `## Retro — <that retro's date>`.
+2. Rows from `leads/`, `reviews/` and `shipped/` for this slug → one
+   `leads-<slug>.csv` under the canonical header, one row per canonical domain
+   (strip `www.`, lowercase): lead columns from the newest file that has the
+   row, `Verdict…Verified Date` from the newest review, and `Exported` from
+   the earliest `shipped/` file ("YYYY-MM-DD shipped"). Count the unique domains first and say the
+   number; the new list must hold exactly that many rows.
+3. `outreach/*-<slug>*.md` drafts → the plan's `## Drafts`, one
+   `### <Company> — <person>` each, `Status: draft` (or `Status: sent <date>`
+   when a `reached/` log shows it sent — then fill `Reached` and `Reached
+   Channel` on its row too). A draft's channel also fills the row's `Channel`.
+4. Every `reached/` row and every stage file's date → one CHANGELOG.md line
+   under its date.
+5. `reports/{date}-<kind>-<slug>.md` → the newest one as `<kind>-<slug>.md`.
+6. Write AGENTS.md, TODOS.md and CHANGELOG.md as every skill does, and one
+   CHANGELOG line: "moved from the old layout".
+
+Never delete or change the old folders. Say they are safe to delete once the
+user has checked the new files, and add that as a TODO.
+<!-- /legacy-layout -->
 
 ## Route first
 
@@ -75,14 +134,16 @@ cheaper than a false negative.
 
 | They say | Route |
 |---|---|
-| "is this worth selling", "think the offer through", "define our ICP", "who should we target" | `/prospect-brief` |
+| "is this worth selling", "think the offer through", "define our ICP", "who should we target" | `/lead-plan` |
 | "find leads", "build a list", "more like these" | `/lead-search` |
-| "qualify these leads", "verify/clean the list" | `/lead-qualify` |
-| "draft outreach", "write cold emails" | `/outreach-draft` |
+| "qualify these leads", "verify/clean/enrich the list" | `/lead-qualify` |
+| "here's my list", "check my CSV", "import these leads" | `/lead-qualify` (imports the file first) |
+| "draft outreach", "write cold emails" | `/lead-draft` |
 | "send the outreach", "reach out to these leads", "send the drafts" | `/lead-reach` |
-| "finalize/ship the list", "dedupe against what we sent" | `/lead-ship` |
-| "what did we learn", "retro the run" | `/sales-retro` |
-| "run the whole pipeline" | start at `/prospect-brief`; each skill hands off to the next |
+| "export the list", "hand it to the client", "ship/finalize the list" | `/lead-export` |
+| "what's next", "where were we" | read AGENTS.md and the plan's `## Steps`; route to the first unticked step |
+| "what did we learn", "retro the run" | `/lead-retro` |
+| "run the whole pipeline" | start at `/lead-plan`; each skill hands off to the next |
 
 **SEO:**
 

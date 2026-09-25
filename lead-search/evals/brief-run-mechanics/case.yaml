@@ -1,10 +1,9 @@
 schema_version: "1.1"
-name: "Brief present: consumes it and writes a well-formed leads CSV"
+name: "Plan present: consumes it and writes a well-formed lead list"
 context:
   scaffold_script: |
-    mkdir -p briefs work leads
-    cat > briefs/2026-01-15-coffee-roasters-portland.md <<'EOF'
-    # Prospecting brief: coffee-roasters-portland
+    cat > PLAN-coffee-roasters-portland.md <<'EOF'
+    # Plan: coffee-roasters-portland
 
     ## What we sell
     Wholesale compostable packaging for specialty food producers.
@@ -23,9 +22,11 @@ context:
     - Dead domain: website does not resolve.
     - Outside territory: located outside the Portland, OR area.
 
-    ## Chain status
-    - stage: plan
-    - source-artifact: NONE
-    - status: DONE
-    - unresolved: NONE
+    ## Steps
+    - [ ] search
+    - [ ] qualify
+    - [ ] draft
+    - [ ] reach
+    - [ ] ship
+    - [ ] retro
     EOF

@@ -1,0 +1,133 @@
+---
+name: lead-retro
+version: 0.5.0
+publisher: localoy
+capabilities: [files]
+# No localoy stages: one read-and-write pass over files already on disk. A
+# small model finishes this in a single turn; splitting it buys nothing.
+description: Retro a round of sales work — read the plan, the lead list and the changelog, report the funnel with real counts, and say what to change next time. (localstack)
+author: localoy
+license: MIT
+platforms: [linux, macos, windows]
+metadata:
+  hermes:
+    tags: [sales, retro, localstack]
+    related_skills: [lead-reach, lead-plan]
+allowed-tools:
+  - Bash
+  - Read
+  - Write
+  - AskUserQuestion
+triggers:
+  - sales retro
+  - retro the lead run
+  - what did we learn from prospecting
+  - review the sales cycle
+tags: [sales, retro, reflect, pipeline]
+---
+
+## When to invoke this skill
+
+Closes a round of sales work on one topic: reads what the pipeline wrote —
+`PLAN-<topic>.md`, `leads-<topic>.csv`, `CHANGELOG.md` — reports the funnel
+with counts taken from those files, and turns what happened into concrete
+changes for next time. Use after `/lead-reach`, once replies have had time to come in, or whenever asked "what did we
+learn from prospecting".
+
+## What you read first
+
+- **The topic:** {{PICK_TOPIC}}
+- **The plan:** its brief sections, `## Steps` (which ran, when), the dated
+  `## Qualify`, `## Export` and earlier `## Retro` sections, and `## Drafts`
+  (count of drafts and their `Status:` lines).
+- **The list:** `leads-<topic>.csv` — every column is a stage's record.
+- **CHANGELOG.md:** this topic's lines — what ran when, with counts, and every
+  message sent.
+- **DESIGN.md**, if present — the decisions this round ran under.
+
+A step never run is reported as **"not run"** — never reconstructed or
+guessed. If there is no plan and no list, say so and point at
+`/lead-plan` to start; there is no retro without records.
+
+Then ask the user ONE question: what happened after sending —
+replies, meetings, bounces, bad rows? Their answer enters the retro labeled
+**user-reported**, never presented as something you observed.
+
+## Ground rules (non-negotiable)
+
+1. **Every count cites its source.** "12 sent" carries where it came from
+   — `leads-acme-austin.csv, Reached column`. A count you
+   cannot point at a file for does not appear.
+2. **Opinions are labeled opinions.** "The roundup queries outperformed" is a
+   claim only if the plan, list or changelog show it; otherwise it is a
+   hypothesis and says so.
+3. **Outcomes are the user's facts.** Replies and meetings come from the user;
+   the retro repeats them with that label and draws conclusions cautiously.
+4. **Partial rounds get partial retros.** A round that stopped at qualify is
+   retroed to there, with the steps not run listed as not run.
+
+## Procedure
+
+**1. Load the round.** The files above, plus the previous `## Retro` section
+in the plan (if any), to check whether its "Change next time" items were
+actually applied.
+
+**2. Count the funnel from the files.** rows in the list → checked (rows with
+a `Verdict`) → kept (`Verdict=keep`) → drafted (`## Drafts` entries) → sent
+(rows with `Reached`; skipped, failed and blocked counted from the drafts'
+`Status:` lines and CHANGELOG, with the reasons a run stopped), plus — only
+if the list was handed off — exported (rows with `Exported`). Each number
+cites the column or section it came
+from.
+
+**3. Aggregate the verdicts.** Group the list's `Verdict Reason` values: what
+got rows cut, and which plan disqualifier did the cutting. This is the
+sharpest signal for next time.
+
+**4. Ask the outcome question** (one message), fold the answer in as
+user-reported.
+
+**5. Write the retro** as a dated section at the end of `PLAN-<topic>.md`:
+
+```
+## Retro — YYYY-MM-DD
+
+### Funnel
+listed N → checked N → kept N → drafted N → sent N (each with its source); exported N, if any
+
+### What worked
+(angles, queries, channels — each backed by the record that shows it)
+
+### What was cut and why
+(aggregated verdict reasons, counts per reason)
+
+### Outcomes (user-reported)
+(what the user said happened after sending; "none reported" if none)
+
+### Change next time
+(concrete edits: disqualifiers to add, angles to drop or double, territory
+changes — each traced to a finding above)
+```
+
+Then carry the changes where they will be used:
+
+- Each "Change next time" item that changes the brief is proposed to the user
+  as an edit to the plan's brief sections — applied only on their yes.
+- A lasting decision (a channel to stop using, a tone that worked) is
+  proposed for `DESIGN.md` — recorded only on their yes.
+- Everything else to do becomes a line in `TODOS.md`.
+
+{{STANDARD_FILES:retro}}
+
+**6. Report in chat.** The funnel line, the top two findings, and the "change
+next time" list. This is the end of the chain — for the next round, point at
+`/lead-plan` (it revises this plan) or `/lead-search` (more leads on the
+same plan). Do not invoke either; the next round starts when the user says so.
+
+## Quality bar
+
+- Zero numbers without a named source, zero outcomes without the
+  user-reported label.
+- The previous retro's recommendations are checked, not just re-issued: say
+  which were applied and what happened.
+- Short. A retro nobody reads changes nothing.

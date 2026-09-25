@@ -1,5 +1,5 @@
 ---
-name: "No brief: asks for all three facts in a single message"
+name: "No plan: asks for all three facts in a single message"
 tags: ["cheap", "no-network"]
 runs: 3
 max_turns: 4

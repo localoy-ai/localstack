@@ -55,49 +55,71 @@ this repo.
 | Skill | What it does |
 |---|---|
 | `/localstack` | The router: sends any sales or SEO request to the right skill and pipeline stage. |
-| `/prospect-brief` | Writes the prospecting brief — what we sell, who buys, territory, disqualifiers — that `/lead-search` reads as its input. |
-| `/lead-search` | Builds a lead list from the open web only — companies and decision makers, every row carrying the URL it came from and an honest confidence. No accounts, no logins, no paid data. |
-| `/lead-qualify` | Re-checks the list row by row against the open web: keep or cut, a reason, fresh evidence — never a score. Cut rows ship in the file too. |
-| `/outreach-draft` | Drafts outreach for the kept rows — drafts only. Channels and personalization come only from pages actually observed. |
+| `/lead-plan` | Writes the plan, `PLAN-<topic>.md` — what we sell, who buys, territory, disqualifiers — and the checklist every later step ticks. |
+| `/lead-search` | Finds leads on the open web only — companies and decision makers, every row carrying the URL it came from and an honest confidence — into `leads-<topic>.csv`. No accounts, no logins, no paid data. |
+| `/lead-qualify` | Check & fill: takes the list, or a file you bring, re-checks each row against the open web, fills the gaps it can observe (website, decision maker, contact channel), and keeps or cuts with a reason — never a score. |
+| `/lead-draft` | Drafts outreach for the kept rows — drafts only. Channels and personalization come only from pages actually observed. |
 | `/lead-reach` | Sends the drafts from your own browser, one lead at a time: opens the observed channel, fills in the draft, and sends only after you say yes to that message. Every send verified and logged; no lead contacted twice. |
-| `/lead-ship` | Packages the final list: kept rows, deduped against every previously shipped list, with a provenance summary naming the whole chain. |
-| `/sales-retro` | Retros the cycle: the funnel with counts read from the files, what got rows cut, and what to change in the next brief. |
+| `/lead-export` | Optional hand-off: exports the kept rows for a client, a team or a CRM, never a lead already contacted or exported, and marks them on the list. |
+| `/lead-retro` | Looks back on the round: the funnel with counts read from the files, what got rows cut, and what to change next time. |
 | `/seo-audit` | Crawls up to 30 of a site's important pages and reports what is actually on them — titles, metas, headings, internal links, canonicals, markup flags — as a prioritized fix list. |
 | `/keyword-research` | Decides what a site should target: the terms its buyers actually use, grouped by intent, each mapped to the page that should own it. No invented volumes or difficulty scores. |
 | `/on-page-optimizer` | Rewrites one page against one target term — current and proposed values side by side, so a human approves each change. Produces a proposal, never an edit. |
 
 ## The sales pipeline
 
-Each skill feeds into the next. `/prospect-brief` writes a brief that
-`/lead-search` reads. `/lead-search` writes a list that `/lead-qualify`
-verifies. `/lead-qualify`'s kept rows are what `/outreach-draft` drafts for,
-`/lead-reach` sends (one yes per message) and `/lead-ship` packages, deduped
-against every earlier shipment.
-`/sales-retro` reads the whole cycle and its findings feed the next brief.
+Each skill feeds into the next, through the topic's plan and lead list:
+
+```
+plan  →  find leads  ─┐
+         or bring     ├→  check & fill  →  draft  →  reach  →  retro
+         your file  ──┘   (qualify +          (one yes
+                          fill gaps)           per message)
+
+                          export — only when you hand the list to someone else
+```
+
 Nothing falls through the cracks because every step knows what came before it.
 
 ```
-Plan     /prospect-brief   → briefs/{date}-{slug}.md
-Build    /lead-search      → leads/{date}-{slug}.csv
-Review   /lead-qualify     → reviews/{date}-{slug}.csv + .md
-Draft    /outreach-draft   → outreach/{date}-{slug}.md
-Reach    /lead-reach       → reached/{date}-{slug}.csv + .md
-Ship     /lead-ship        → shipped/{date}-{slug}.csv + -summary.md
-Reflect  /sales-retro      → retros/{date}-{slug}.md
+Plan     /lead-plan   → PLAN-<topic>.md (brief + ## Steps checklist)
+Find     /lead-search      → leads-<topic>.csv rows (or bring your own file to /lead-qualify)
+Check    /lead-qualify     → Verdict + Channel columns filled, ## Qualify in the plan
+Draft    /lead-draft       → ## Drafts in the plan
+Reach    /lead-reach       → Reached columns + CHANGELOG.md lines
+Reflect  /lead-retro      → ## Retro in the plan, DESIGN.md, TODOS.md
+Export   /lead-export      → optional: an export file + Exported column
 ```
 
-The chain needs no infrastructure: artifacts are plain files in the working
-directory, one directory per stage, and each skill finds its input as the
-newest file in the previous stage's directory — "newest" meaning the `{date}`
-filename prefix (`ls <dir>/* | sort -rV | head -1` — version
-sort ranks a `-2` rerun above its base file), never mtime. Runs never
-overwrite each other: scratch lives in `work/{date}-{slug}/`, one directory
-per run, and a same-day collision on a final artifact takes a `-2`, `-3`…
-suffix instead of clobbering the earlier file. Every stage runs standalone
-too — a skill whose input is missing offers to run the upstream skill, or
-takes a file path, and never fabricates one. Each stage ends by offering the
-next, so "run the whole pipeline" is just starting at `/prospect-brief` and
-saying yes.
+### How files are kept
+
+The chain needs no infrastructure, and nothing hides in private folders. A
+working folder holds the files any agent already knows to read, so the next
+person or agent to open it — Claude Code, Codex, Cursor, a teammate — can see
+what is going on and pick up the work:
+
+| File | Holds |
+|---|---|
+| `AGENTS.md` | What the folder is for, the rules, a map of the files, each topic's next step. localstack edits only its own marked block. |
+| `PLAN-<topic>.md` | One per topic: the brief, the `## Steps` checklist, `## Drafts`, dated `## Qualify` / `## Shipped` / `## Retro` sections |
+| `leads-<topic>.csv` | One living lead list per topic; each step fills its own columns on the same rows |
+| `TODOS.md` | Open next actions from every skill |
+| `CHANGELOG.md` | A dated log of what ran and every message sent |
+| `DESIGN.md` | Lasting decisions: positioning, tone, channels |
+| `seo-audit-<site>.md`, `keywords-<site>.md`, `onpage-<page>.md` | SEO reports |
+| `.localstack/work/` | Hidden scratch, one directory per run |
+
+A **topic** is one piece of sales work, named by a short slug such as
+`austin-dentists`. Files are updated in place; `CHANGELOG.md` and git keep the
+history. Every stage runs standalone too — the next step is the first unticked
+one in the plan's `## Steps`, and a skill whose input is missing offers to run
+the one before it, never fabricates one. "Run the whole pipeline" is just
+starting at `/lead-plan` and saying yes.
+
+<!-- legacy-layout -->
+A folder from before v0.9.0 (`briefs/`, `leads/`, `reviews/` …) is moved over
+by `/localstack`, once, after asking; the old folders are left in place.
+<!-- /legacy-layout -->
 
 ## Principles
 
@@ -115,7 +137,7 @@ Every skill holds the same line, learned the expensive way in earlier projects:
   skill — possible at all.
 - **Partial work is reported as partial.** A subset is never described as the
   whole, and what was cut ships alongside what was kept.
-- **Nothing sends without your yes.** `/outreach-draft` only writes drafts.
+- **Nothing sends without your yes.** `/lead-draft` only writes drafts.
   `/lead-reach` sends them from your own signed-in browser, one message at a
   time, each after you approve it — never in bulk, never a lead twice, and a
   platform's spam or rate warning stops the run.

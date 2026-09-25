@@ -1,6 +1,6 @@
 ---
-name: outreach-draft
-version: 0.3.0
+name: lead-draft
+version: 0.5.0
 publisher: localoy
 capabilities: [files, web]
 # localoy dialect: stages make this runnable on small local models. Each stage
@@ -9,8 +9,12 @@ capabilities: [files, web]
 stages:
   - id: channels
     goal: >
-      Read the newest reviews/*.csv (Verdict=keep rows only; fall back to the
-      newest leads/*.csv with a stated warning). For each row, find the
+      Read leads-{slug}.csv, Verdict=keep rows only (if no row has a Verdict
+      yet, use all rows with a stated warning), skipping rows that already
+      have a draft under PLAN-{slug}.md's "## Drafts" and rows already
+      reached or exported (a Reached or Exported value). A row whose Channel
+      column is filled (by /lead-qualify, or user-supplied) uses that
+      channel and its Channel Evidence as-is. For each other row, find the
       OBSERVED outreach channel: a contact page URL read from a fetched page
       or search result, an email address actually read on a page you fetched
       (cite that page), a contact-form URL, or a Profile URL already present
@@ -19,24 +23,28 @@ stages:
       "UNKNOWN — no observed channel" and will receive no draft. Budget: at
       most one page fetch per row. Record one line per row: company, channel
       type, channel value, evidence URL.
-    produces: work/{date}-{slug}/channels.md
+    produces: .localstack/work/{date}-{slug}/channels.md
   - id: draft
     goal: >
-      Read the newest briefs/*.md for what we sell (ask the user if there is
-      no brief). For each row in work/{date}-{slug}/channels.md with an observed channel,
+      Read PLAN-{slug}.md for what we sell (ask the user if it says
+      UNKNOWN) and DESIGN.md, if present, for tone and channels to use or
+      avoid. For each row in .localstack/work/{date}-{slug}/channels.md with an observed channel,
       write one short draft personalized ONLY from facts observed this
       session or recorded in the chain files, each fact cited with its URL.
       No invented pain points, no "I noticed you..." claims without a page
       that shows it. Append each draft under a heading per company.
-    produces: work/{date}-{slug}/drafts.md
+    produces: .localstack/work/{date}-{slug}/drafts.md
   - id: package
     goal: >
-      Assemble outreach/{date}-{slug}.md: per lead — channel + evidence URL,
-      the personalization facts with their URLs, then the draft. End with a
-      "Leads with no observed channel" list and the Chain status block.
-      State plainly at the top: drafts only — /lead-reach sends each one
-      after the user says yes to it.
-    produces: outreach/{date}-{slug}.md
+      Add the drafts to PLAN-{slug}.md under "## Drafts" (create the section
+      after Steps if missing; keep every draft already there): per lead a
+      "### <Company> — <Decision maker>" heading, "Status: draft", channel +
+      evidence URL, the personalization facts with their URLs, then the
+      draft. Under "### No observed channel" list the leads that got none.
+      The section starts with: drafts only — /lead-reach sends each one after
+      the user says yes to it. Then add today's line to CHANGELOG.md, one
+      TODO per no-channel lead, and tick draft in the PLAN's Steps.
+    produces: PLAN-{slug}.md
 description: >-
   Draft outreach for qualified leads — drafts only, sent later one yes at a
   time by /lead-reach; channels and personalization come only from pages
@@ -47,7 +55,7 @@ platforms: [linux, macos, windows]
 metadata:
   hermes:
     tags: [sales, outreach, drafts, localstack]
-    related_skills: [lead-qualify, lead-reach]
+    related_skills: [lead-qualify, lead-reach, lead-export]
 allowed-tools:
   - Bash
   - Read
@@ -68,13 +76,14 @@ tags: [sales, outreach, drafts, cold-email]
 Writes outreach drafts for the qualified rows of a lead list — one draft per
 lead that has an actually observed channel, personalized only from cited
 observations. Use after `/lead-qualify`, or when asked to "draft outreach" or
-"write cold emails". The output is a file the user reviews; `/lead-reach`
-sends from it, one message at a time, each after the user's yes.
+"write cold emails". The drafts go into the topic's plan, `PLAN-<topic>.md`,
+under `## Drafts`, where the user reviews them; `/lead-reach` sends from
+there, one message at a time, each after the user's yes.
 
 ## Never sends — the hard boundary
 
 This skill NEVER sends anything: no email tool, no form submission, no
-connection request, no API call that delivers a message. Drafts go to a file;
+connection request, no API call that delivers a message. Drafts go into the plan;
 sending is `/lead-reach`'s job, and it asks the user before every message. It also never invents a
 channel: no guessed email patterns (`first@domain.com` is fabrication), no
 constructed profile URLs, no "probably reachable at". **A lead with no
@@ -84,14 +93,20 @@ This skill has no send path; the draft it writes is exactly what
 
 ## What you read first
 
-- **Qualified list (preferred):** {{DISCOVER_INPUT:reviews/*.csv}},
-  `Verdict=keep` rows only. Missing → the newest `leads/*.csv` with an
-  explicit warning ("unqualified list — drafts may target rows /lead-qualify
-  would have cut"), after offering to run `/lead-qualify` first. Neither →
-  ask for a path or pasted rows. Never fabricate.
-- **The brief (for the value proposition):** {{DISCOVER_INPUT:briefs/*.md}}.
-  Missing → ask what they sell and what the one-line value proposition is, in
-  the same single message as anything else you need.
+- **The topic:** {{PICK_TOPIC}}
+- **Qualified rows (preferred):** `leads-<topic>.csv`, `Verdict=keep` rows
+  only, minus any row with a `Reached` or `Exported` value. Their `Channel`
+  and `Channel Evidence`, when filled, are the channel to draft for. If no row has a Verdict yet → all rows, with an explicit warning
+  ("unqualified list — drafts may target rows /lead-qualify would have
+  cut"), after offering to run `/lead-qualify` first. No list → ask for a
+  path or pasted rows. Never fabricate.
+- **Drafts already written:** the plan's `## Drafts` section. A lead that
+  already has a draft is skipped unless the user asks to redo it.
+- **The plan (for the value proposition):** `## What we sell` and
+  `## Who buys (ICP)`. UNKNOWN there → ask what they sell and the one-line
+  value proposition, in the same single message as anything else you need.
+- **DESIGN.md**, if present — tone, and channels to use or avoid. It wins
+  over your defaults.
 
 ## Ground rules (non-negotiable)
 
@@ -101,9 +116,9 @@ This skill has no send path; the draft it writes is exactly what
 2. **Personalization is citation.** Every personalized claim in a draft
    ("your site's pricing page", "your post about X") names the URL it was
    read from. A draft that cannot cite its hook does not use that hook.
-3. **The brief's voice, the evidence's facts.** What we offer comes from the
-   brief or the user; what we know about the lead comes from observations.
-   The two never blur.
+3. **The plan's offer, the evidence's facts.** What we offer comes from the
+   plan, DESIGN.md or the user; what we know about the lead comes from
+   observations. The two never blur.
 4. **Budget: one fetch per lead** while hunting channels, and only where
    search snippets left it ambiguous. Gated sites stay gated — searched
    about, never fetched, never logged into.
@@ -116,43 +131,45 @@ This skill has no send path; the draft it writes is exactly what
 
 {{WORK_DIR}}
 
-{{PRIOR_RUNS:outreach/*-{slug}*.md}}
-
-**2. Find channels** per kept row (the `channels` stage goal above is the
+**2. Find channels** per kept row — reuse `Channel` when `/lead-qualify`
+already filled it (the `channels` stage goal above is the
 spec: observed only, one fetch max, UNKNOWN is an answer).
 
 **3. Draft** one message per lead-with-channel: short, specific, the cited
-hook first, the brief's value proposition once, one clear ask. No template
+hook first, the plan's value proposition once, one clear ask, in DESIGN.md's
+tone when it sets one. No template
 smell — but personalization is only as deep as the evidence goes.
 
-**4. Package.** `outreach/{YYYY-MM-DD}-{slug}.md`, stating at the top:
-**drafts only — `/lead-reach` sends each one after your yes.**
-{{COLLISION_SUFFIX:outreach/{date}-{slug}.md}} Per lead:
+**4. Add them to the plan.** In `PLAN-<topic>.md`, under `## Drafts` (create
+it right after `## Steps` if missing; never remove a draft already there),
+starting with the line **drafts only — `/lead-reach` sends each one after your
+yes.** Per lead:
 
 ```
-## <Company> — <Decision maker or UNKNOWN>
+### <Company> — <Decision maker or UNKNOWN>
+Status: draft
 - Channel: <email|form|contact page|profile> <value> — evidence: <URL>
 - Personalization facts: <fact — URL>; <fact — URL>
-### Draft
+
 <subject + body, or message text>
 ```
 
-Then `## Leads with no observed channel` (company + what was tried), and:
+`/lead-reach` changes `Status: draft` to `Status: sent YYYY-MM-DD` when it
+sends one. Then, at the end of the section, `### No observed channel` —
+company + what was tried.
 
-```
-## Chain status
-- stage: draft
-- source-artifact: <reviews or leads CSV consumed>
-- status: DONE | PARTIAL
-- drafted: N / no-channel: M
-- unresolved: (list or NONE)
-```
+{{STANDARD_FILES:draft}}
+
+For this step: the CHANGELOG line gives drafted / no-channel counts; add one
+TODO per no-channel lead (`- [ ] find a channel for <Company> (<topic>)`) and
+`- [ ] review N drafts, then /lead-reach (<topic>)`.
 
 **5. Report and hand off.** In chat: drafted count, no-channel count, any
 fallback warnings. Then offer the next stage — "Send them with
 `/lead-reach`? It asks you before each message." — as a structured question
 where the runtime supports one, plain text otherwise; if the user would
-rather send from their own tools, offer `/lead-ship` instead. On yes, invoke
+rather send from their own tools, or hand the list to someone else, offer
+`/lead-export` instead. On yes, invoke
 the skill if this runtime can invoke skills directly (Claude Code: the Skill
 tool); otherwise tell the user to type it (Codex: `$lead-reach`).
 

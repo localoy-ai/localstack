@@ -1,6 +1,6 @@
 ---
 name: keyword-research
-version: 0.4.0
+version: 0.5.0
 publisher: localoy
 capabilities: [files, web]
 author: localoy
@@ -43,7 +43,10 @@ Check what you already know from this workspace and the conversation. Ask for ev
 
 If no answer comes, do not guess your way through. Produce whatever is genuinely useful without the missing facts, state at the top which ones you lacked, and say what would change once you have them.
 
-{{PRIOR_RUNS:reports/*-keywords-{slug}*.md}}
+**Earlier runs:** if `keywords-<slug>.md` already exists here (`<slug>` is the site's
+host or path, lowercase, dots and slashes as hyphens — `acme-com`), say when it
+was last written (its `Updated:` line) before you start. This run replaces it;
+CHANGELOG.md and git keep the history.
 
 ## What you decide, and what you do not
 
@@ -111,10 +114,13 @@ the claim did not earn.
 6. **Map each surviving term to a page.** An existing URL where one fits, or a
    page that would have to be created, named as such. A term with no plausible
    page is not a target.
-7. **Write the report.** Save to `reports/{date}-keywords-{slug}.md`. Summary table first —
+7. **Write the report.** Save to `keywords-<slug>.md` at the top of the working folder, starting
+   with `Updated: YYYY-MM-DD`. Summary table first —
    term, intent group, target page, exists or to create — then the groups with the
    evidence for each term, then what you cut and why.
-   {{COLLISION_SUFFIX:reports/{date}-keywords-{slug}.md}}
+   Then keep the standard files. Add each page that has to be created to TODOS.md as `- [ ] create a page for "<term>" (keywords <slug>)`.
+
+{{STANDARD_FILES:none}}
 
 ## Quality bar
 

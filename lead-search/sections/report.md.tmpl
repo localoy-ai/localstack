@@ -1,37 +1,47 @@
-# Report: dedupe, the CSV, and the gist
+# Report: dedupe, the list, and the gist
 
 **Dedupe by canonical domain.** Strip `www.`, lowercase, one row per domain.
 Two names on one domain are one company; the same company found by two angles
-keeps the stronger evidence. A domain present in any prior `shipped/*.csv`
-is cut here, logged with the shipped file it first appeared in.
+keeps the stronger evidence. Then skip, and log, any candidate whose domain:
 
-**The brain widens the dedupe set beyond this repo.** Read the shipped
+- is already a row in `leads-<topic>.csv` — "skipped: already listed";
+- has a `Reached` or `Exported` value in any `leads-*.csv` in this folder
+  (contacted, or handed to someone, on any topic) — "skipped: already
+  contacted in leads-<other>.csv" / "skipped: already exported".
+
+**The brain widens the dedupe set beyond this folder.** Read the lead
 memory ONCE, through whichever door this runtime has: the `localbrain` CLI
 on PATH (`localbrain list --type lead`), or — when you cannot run commands —
 the `.brain/context.md` file in the workspace (localoy writes it before every
-turn). Cut any candidate whose canonical domain appears in a record name
-(`lead-<domain>`), logged as "cut: in the brain — <record name>". This
-catches leads shipped from OTHER repos and machines that `shipped/*.csv`
-cannot see. Neither door available → skip silently; the file scan above
-still stands. Never let a brain error kill the report — note it and
+turn). Skip any candidate whose canonical domain appears in a record name
+(`lead-<domain>`), logged as "skipped: in the brain — <record name>". This
+catches leads contacted or exported from OTHER folders and machines that the lists here
+cannot see. Neither door available → skip silently; the file checks above
+still stand. Never let a brain error kill the report — note it and
 continue.
 
-**Write the list.** `leads/{YYYY-MM-DD}-{slug}.csv` in the project, header
-exactly:
+**Write the list.** One living list per topic: `leads-<topic>.csv`. Create it
+if missing, with this header exactly:
 
-```
-Company Name,Location,Website,Decision Maker Name,Title,Profile URL,Evidence URL,Confidence
-```
+{{LEADS_HEADER}}
 
-One row per lead, appended as resolved — not held back for a final flourish.
-`Confidence` is `verified` (two independent observations), `likely` (one solid
-observation), or `unconfirmed` (snippet only). Every row's `Evidence URL` is a
-page or search that a reader could open to check the row. After the rows, no
-commentary — the file is data.
-{{COLLISION_SUFFIX:leads/{date}-{slug}.csv}}
+Append one row per new lead, as resolved — not held back for a final flourish.
+Fill the first eight columns; leave `Verdict` through `Notes` empty — later
+steps fill them in place on the same row. `Confidence` is
+`verified` (two independent observations), `likely` (one solid observation),
+or `unconfirmed` (snippet only). Every row's `Evidence URL` is a page or
+search that a reader could open to check the row. Never rewrite or reorder
+existing rows, and never add a second list for the same topic. The file holds
+rows only — no commentary.
 
-**Report in chat.** How many leads, the angles that worked, what you cut and
-why, what you could not check — and which brief you consumed (`briefs/...` by
-path, or "no brief"). The cut list matters: a candidate dropped for cause
-(aggregator-only presence, wrong territory, dead domain) is information the
-next run needs. Keep the gist short; the file is the deliverable.
+{{STANDARD_FILES:search}}
+
+For this step: the CHANGELOG line gives found / added / skipped counts; add a
+TODO `- [ ] qualify N new leads (<topic>)`.
+
+**Report in chat.** How many leads were added, the angles that worked, what
+you skipped and why, what you could not check — and which plan you used
+(`PLAN-<topic>.md`, or "no plan"). The skip list matters: a candidate dropped
+for cause (aggregator-only presence, wrong territory, dead domain, already
+contacted) is information the next run needs. Keep the gist short; the file is
+the deliverable.

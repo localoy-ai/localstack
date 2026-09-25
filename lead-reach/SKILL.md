@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: lead-reach
-version: 0.1.0
+version: 0.2.0
 publisher: localoy
 capabilities: [files, browser]
 # localoy dialect: stages make this runnable on small local models. The reach
@@ -9,17 +9,18 @@ capabilities: [files, browser]
 stages:
   - id: queue
     goal: >
-      Read the newest outreach/*.md. For each lead with an observed channel,
-      take the channel, its evidence URL and the draft text exactly as
-      written. Drop every lead whose company or channel value already appears
-      in ANY reached/*.csv with Status=sent — a lead is contacted once. Drop
-      leads under "Leads with no observed channel". Write the queue, one
-      block per lead (company, channel type, channel value, evidence URL,
-      draft), at most 10 leads unless the user named another number.
-    produces: work/{date}-{slug}/queue.md
+      Read PLAN-{slug}.md's "## Drafts". For each draft with "Status: draft"
+      and an observed channel, take the channel, its evidence URL and the
+      draft text exactly as written. Drop every lead whose row in ANY
+      leads-*.csv already has a Reached date, or whose channel value appears
+      in any Reached Channel — a lead is contacted once. Drop leads under
+      "No observed channel". Write the queue, one block per lead (company,
+      channel type, channel value, evidence URL, draft), at most 10 leads
+      unless the user named another number.
+    produces: .localstack/work/{date}-{slug}/queue.md
   - id: reach
     goal: >
-      For each lead in work/{date}-{slug}/queue.md, in order: open its channel in
+      For each lead in .localstack/work/{date}-{slug}/queue.md, in order: open its channel in
       the browser (the user's own signed-in session), put the draft in
       exactly as written, and STOP. Show the user the recipient, the channel
       and the final text, and ask: send, edit, or skip. Press send only on
@@ -29,14 +30,18 @@ stages:
       spam warning, or an account-safety notice. Append one line per lead to
       the stage file: company, channel, status (sent|skipped|failed|blocked),
       time, evidence (screenshot path or confirmation text), note.
-    produces: work/{date}-{slug}/reach.md
+    produces: .localstack/work/{date}-{slug}/reach.md
   - id: log
     goal: >
-      Write reached/{date}-{slug}.csv from work/{date}-{slug}/reach.md with columns
-      Company, Channel, Channel Value, Status, Sent At, Evidence, Note, plus
-      reached/{date}-{slug}.md: the counts, anything blocked and why, and the
-      Chain status block.
-    produces: reached/{date}-{slug}.csv
+      From .localstack/work/{date}-{slug}/reach.md: on each SENT lead's row
+      in leads-{slug}.csv set Reached (YYYY-MM-DD HH:MM) and Reached Channel
+      ("<type> <value>"), in place. In PLAN-{slug}.md change that draft's
+      "Status: draft" to "Status: sent YYYY-MM-DD" (or "skipped", "failed —
+      <what you saw>", "blocked — <why>"). Add to CHANGELOG.md one line per
+      lead: company, channel, status, and for sent ones the text exactly as
+      sent and the evidence. Add a TODO to watch for each sent lead's reply.
+      Tick reach in the PLAN's Steps once no draft is left at Status: draft.
+    produces: leads-{slug}.csv
 description: >-
   Reach the leads you drafted for — opens each lead's observed channel in your
   own browser, fills in the draft, and sends it only after you say yes to that
@@ -47,7 +52,7 @@ platforms: [linux, macos, windows]
 metadata:
   hermes:
     tags: [sales, outreach, send, browser, localstack]
-    related_skills: [outreach-draft, lead-ship, sales-retro]
+    related_skills: [lead-draft, lead-retro, lead-export]
 allowed-tools:
   - Bash
   - Read
@@ -63,10 +68,10 @@ tags: [sales, outreach, send, browser]
 
 ## When to invoke this skill
 
-Sends the outreach `/outreach-draft` wrote: one lead at a time, through the
+Sends the outreach `/lead-draft` wrote: one lead at a time, through the
 channel that lead was actually observed on, from the user's own browser, and
 only after the user says yes to that exact message. Use after
-`/outreach-draft`, or when asked to "send the outreach", "reach out to these
+`/lead-draft`, or when asked to "send the outreach", "reach out to these
 leads", or "send the drafts".
 
 ## One yes per message — the hard boundary
@@ -79,7 +84,8 @@ This is the one skill in the stack that sends, so it sends narrowly:
   including an agent's auto mode: auto skips questions about ordinary work,
   never this one.
 - **Only the drafted text, only the observed channel.** The message is the
-  draft in `outreach/` word for word, unless the user edits it here. The
+  draft in the plan's `## Drafts` word for word, unless the user edits it
+  here. The
   channel is the one the draft names, with its evidence URL. No guessed
   email addresses, no looked-up profiles, no second channel when the first
   fails.
@@ -87,9 +93,9 @@ This is the one skill in the stack that sends, so it sends narrowly:
   in as the user, or it is not. Never type a password, never create an
   account, never solve a CAPTCHA. A login wall or a CAPTCHA ends the run for
   that channel, reported as `blocked`.
-- **Once per lead.** A company or channel value that appears in any
-  `reached/*.csv` with `Status=sent` is never contacted again by this skill,
-  whatever the newer drafts say.
+- **Once per lead.** A lead whose row in any `leads-*.csv` has a `Reached`
+  date, or whose channel value appears in any `Reached Channel`, is never
+  contacted again by this skill, whatever the newer drafts say.
 - **A platform's warning is a stop.** A rate limit, a "this looks like spam"
   notice, an account-restriction banner: stop the whole run, log it, tell
   the user. Pushing past one is how an account gets banned.
@@ -100,13 +106,23 @@ browser or nothing.
 
 ## What you read first
 
-- **Drafts (required):** `ls outreach/*.md 2>/dev/null | sort -rV | head -1`. Missing → offer
-  `/outreach-draft` first. Never write a message here that was not drafted
-  there; this skill sends, it does not draft.
-- **Everything already reached:** all of `reached/*.csv` (not just the
-  newest) — the once-per-lead set. `cat reached/*.csv 2>/dev/null`.
+- **The topic:** Pick the topic: `ls PLAN-*.md 2>/dev/null`. If the user named a topic, use `PLAN-<topic>.md`. If exactly one PLAN exists, use it. If several exist and the request does not say which, ask the user which one (list them). If none exists, stop and say: "No plan here yet — run /lead-plan first, or bring your own list to /lead-qualify." The topic is the part between `PLAN-` and `.md`; every other file for it uses the same topic: `leads-<topic>.csv`.
+- **Drafts (required):** the plan's `## Drafts`, entries with
+  `Status: draft`. None → offer `/lead-draft` first. Never send a message
+  here that was not drafted there; this skill sends, it does not draft.
+- **Everything already reached:** the `Reached` and `Reached Channel` columns
+  of every `leads-*.csv` in the folder (not just this topic's) — the
+  once-per-lead set.
 - **How many:** at most 10 leads per run unless the user names a number.
   Ten careful sends beat forty a platform flags.
+
+**A message the user asks for directly** ("message Shahrin on LinkedIn to say
+thanks") still goes through a draft: write it into the plan's `## Drafts`
+under the lead-draft rules (observed channel, cited facts, DESIGN.md's
+tone), show it, then send it with the same one-yes rule below. A person who is
+not a row in any lead list is logged in CHANGELOG.md only. With no plan in the
+folder at all, skip the plan and the list: CHANGELOG.md and TODOS.md carry the
+record.
 
 ## How each channel is reached
 
@@ -123,12 +139,11 @@ ask how they want it handled before typing anything.
 
 **1. Load** the inputs above.
 
-Scratch for this run lives in `work/{date}-{slug}/` — one directory per run, so a new run never clobbers an earlier one. Scratch is disposable; old `work/` run directories may be deleted freely.
-
-**Prior runs:** `ls reached/*-{slug}*.csv 2>/dev/null | sort -rV` — if anything matches, tell the user what already exists (one line per file: date and filename) before proceeding; earlier runs are never overwritten. If nothing matches, say nothing and continue.
+Scratch for this run lives in `.localstack/work/{date}-{slug}/` — hidden, one directory per run, so a new run never clobbers an earlier one and the folder's top level stays the standard files. Scratch is disposable; old run directories may be deleted freely.
 
 **2. Queue.** The `queue` stage goal above is the spec: observed channels
-only, drafts verbatim, once-per-lead against every `reached/*.csv`, capped.
+only, drafts verbatim, once-per-lead against every lead list's `Reached`
+columns, capped.
 Tell the user the queue in one short list (company — channel) before the
 first lead, and how many were dropped as already reached.
 
@@ -144,32 +159,54 @@ Send this?
 
 - **Send:** press it, then confirm it went (the platform's sent
   confirmation, the message visible in the thread, or the sent folder) and
-  take a screenshot into `work/{date}-{slug}/`. No confirmation visible →
+  take a screenshot into `.localstack/work/{date}-{slug}/`. No confirmation visible →
   `failed`, with what you saw.
 - **Edit:** apply the user's change, show the new text, ask again.
 - **Skip:** log `skipped` and move to the next lead.
 
-**4. Log.** `reached/{YYYY-MM-DD}-{slug}.csv` with columns
-`Company,Channel,Channel Value,Status,Sent At,Evidence,Note` — one row per
-queued lead, including skipped, failed and blocked ones.
-Never overwrite an existing artifact: if `reached/{date}-{slug}.csv` already exists, append a sequence suffix before the extension — `reached/{date}-{slug}-2.csv`, then `-3`… (count the existing matches and add one). Beside it,
-`reached/{YYYY-MM-DD}-{slug}.md` with the counts and:
+**4. Record it where every agent will look.**
+
+- `leads-<topic>.csv` — on each sent lead's row, set `Reached`
+  (`YYYY-MM-DD HH:MM`) and `Reached Channel` (`<type> <value>`), in place.
+- `PLAN-<topic>.md` — each queued draft's `Status:` becomes `sent YYYY-MM-DD`,
+  `skipped`, `failed — <what you saw>` or `blocked — <why>`.
+- `CHANGELOG.md` — one line per queued lead, e.g.
+  `- lead-reach austin-dentists: sent to Jane Doe, Acme Dental (email jane@acme.com) — "<the text exactly as sent>" — evidence: .localstack/work/…/acme.png`.
+  Skipped, failed and blocked leads get a line too, with the reason.
+- `TODOS.md` — `- [ ] watch for a reply from <person>, <Company> (<topic>)`
+  per sent lead; a TODO for each blocked channel.
+
+**Standard files.** This folder is kept in files any agent already reads. Update them in place; never scatter output into new folders.
+- **AGENTS.md** — create it if missing. localstack owns only the block between `<!-- localstack:start -->` and `<!-- localstack:end -->`; rewrite that block, never anything outside it. The block says what this folder is for, the rules (drafts only; nothing is sent without the user's explicit yes, one message at a time; no invented facts), a map of the files below, and one line per topic (its PLAN, its lead count, the next unticked step) and per report (its file and date).
+- **PLAN-<topic>.md** — in `## Steps`, tick `- [x] reach` (add today's date after it) once this step is done; leave it unticked if you stopped partway, and say why in CHANGELOG.md.
+- **CHANGELOG.md** — create it if missing (`# Changelog`). Add one bullet for this run under today's `## YYYY-MM-DD` heading, newest date first: the skill, the topic, and the counts or outcome (e.g. `- lead-search austin-dentists: 18 found, 3 skipped as already contacted`).
+- **TODOS.md** — create it if missing (`# TODOs`). Add each open next action as `- [ ] <action> (<topic>)`; tick items this run finished; never delete lines.
+- **DESIGN.md** — decisions meant to last (positioning, tone, channels to use or avoid). Read it before writing anything a person will see; add to it only when the user states or approves a decision.
+
+**5. Remember who was contacted**, so no `/lead-search` in any folder on this
+machine finds them again. For each sent lead with a known domain: with
+`localbrain` on PATH,
 
 ```
-## Chain status
-- stage: reach
-- source-artifact: <outreach file consumed>
-- status: DONE | PARTIAL
-- sent: N / skipped: S / failed: F / blocked: B
-- unresolved: (list or NONE)
+localbrain put "lead-<canonical-domain>" --type lead \
+  --field domain=<canonical-domain> --field reached=<YYYY-MM-DD> \
+  --body "<Company Name> — <canonical domain>. Reached <YYYY-MM-DD> by <channel type> (leads-<topic>.csv). Contact: <Decision Maker Name>, <Title>."
 ```
 
-**5. Report and hand off.** In chat: sent, skipped, failed and blocked
-counts, and anything that stopped the run. Then offer the next stage —
-"Package the final list with `/lead-ship`?" — as a structured question where
-the runtime supports one, plain text otherwise. On yes, invoke `/lead-ship`
-if this runtime can invoke skills directly (Claude Code: the Skill tool);
-otherwise tell the user to type `/lead-ship` (Codex: `$lead-ship`).
+Without a shell, if a `.brain/` directory exists, write the same record as
+`.brain/put/lead-<canonical-domain>.md` — a frontmatter fence with
+`type: lead`, `domain:` and `reached:`, then the body. Neither available →
+note it in the CHANGELOG line. A brain error never undoes a send; note it and
+move on. A lead with no domain gets no record.
+
+**6. Report and hand off.** In chat: sent, skipped, failed and blocked
+counts, and anything that stopped the run. Then offer what comes next — when
+replies have had time to come in, "Look back on this round with
+`/lead-retro`?" — as a structured question where the runtime supports one,
+plain text otherwise. On yes, invoke `/lead-retro` if this runtime can invoke
+skills directly (Claude Code: the Skill tool); otherwise tell the user to type
+`/lead-retro` (Codex: `$lead-retro`). If the list also has to go to someone
+else, mention `/lead-export`.
 
 ## Quality bar
 

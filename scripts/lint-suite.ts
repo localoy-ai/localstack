@@ -14,9 +14,14 @@
  *    (ASCII '-' < '.'), silently feeding stale input to a chain stage.
  *  - sections integrity: manifest, files on disk, and skeleton references
  *    agree in all directions.
- *  - chain wiring: each sales-chain skill still reads its upstream stage's
- *    directory and writes its own — the globs are the whole handoff
- *    mechanism, so a renamed dir is a broken pipeline, not a style choice.
+ *  - chain wiring: each sales-chain skill still reads and writes the
+ *    standard files its neighbours use (PLAN-<topic>.md sections,
+ *    leads-<topic>.csv columns) — those names are the whole handoff
+ *    mechanism, so a renamed section or column is a broken pipeline.
+ *  - standard files: every skill that writes into the working folder keeps
+ *    AGENTS.md / CHANGELOG.md / TODOS.md the shared way, and no skill names a
+ *    pre-0.9 stage folder (briefs/, reviews/, shipped/ …) outside the one
+ *    marked migration block.
  *  - version bumps: a changed skill dir requires a bumped skill version, and
  *    any skill change requires a bumped repo VERSION (installs are pinned by
  *    @publisher/name@version; an unbumped change never reaches users).
@@ -25,6 +30,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { execSync } from 'child_process';
+import { LEADS_HEADER } from './resolvers';
 
 const ROOT = path.resolve(import.meta.dir, '..');
 const failures: string[] = [];
@@ -168,17 +174,15 @@ for (const skill of skillDirs()) {
 
 // --- 5. Chain wiring -----------------------------------------------------
 
-const CSV_HEADER =
-  'Company Name,Location,Website,Decision Maker Name,Title,Profile URL,Evidence URL,Confidence';
 // skill → substrings its corpus (SKILL.md + sections) must contain.
 const CHAIN: Record<string, string[]> = {
-  'prospect-brief': ['briefs/{YYYY-MM-DD}-{slug}.md', 'retros/*.md'],
-  'lead-search': ['briefs/*.md', 'leads/{YYYY-MM-DD}-{slug}.csv', CSV_HEADER],
-  'lead-qualify': ['leads/*.csv', 'briefs/*.md', 'reviews/{YYYY-MM-DD}-{slug}.csv', 'Verdict,Verdict Reason,Verification URL,Verified Date'],
-  'outreach-draft': ['reviews/*.csv', 'outreach/{YYYY-MM-DD}-{slug}.md'],
-  'lead-reach': ['outreach/*.md', 'reached/*.csv', 'reached/{YYYY-MM-DD}-{slug}.csv', 'Status=sent'],
-  'lead-ship': ['reviews/*.csv', 'shipped/*.csv', 'shipped/{YYYY-MM-DD}-{slug}.csv', 'First Shipped Date'],
-  'sales-retro': ['briefs/*.md', 'leads/*.csv', 'reviews/*.csv', 'outreach/*.md', 'reached/*.csv', 'shipped/*.csv', 'retros/{YYYY-MM-DD}-{slug}.md'],
+  'lead-plan': ['PLAN-<topic>.md', '## Steps', '## Disqualifiers', 'Change next time', '/lead-export'],
+  'lead-search': ['PLAN-', 'leads-<topic>.csv', LEADS_HEADER, 'Exported'],
+  'lead-qualify': ['leads-<topic>.csv', 'Verdict,Verdict Reason,Verification URL,Verified Date', 'Channel Evidence', '## Qualify', '## Disqualifiers', 'Bringing your own file', 'Notes'],
+  'lead-draft': ['leads-<topic>.csv', 'Verdict=keep', '## Drafts', 'Status: draft', 'DESIGN.md', 'Channel Evidence'],
+  'lead-reach': ['## Drafts', 'Status: draft', 'Status: sent', 'Reached Channel', 'localbrain put'],
+  'lead-export': ['leads-*.csv', 'Verdict=keep', 'Exported', '## Export', 'leads-<topic>-export-'],
+  'lead-retro': ['PLAN-<topic>.md', 'leads-<topic>.csv', 'CHANGELOG.md', '## Retro', 'Change next time'],
 };
 for (const [skill, needles] of Object.entries(CHAIN)) {
   if (!fs.existsSync(path.join(ROOT, skill, 'SKILL.md'))) {
@@ -191,10 +195,52 @@ for (const [skill, needles] of Object.entries(CHAIN)) {
   }
 }
 
+// --- 5b. Standard files ----------------------------------------------------
+
+// Skills that write into the working folder must keep the shared files the
+// shared way — the STANDARD_FILES resolver's text is the proof.
+const WRITES_FOLDER = [
+  'lead-plan', 'lead-search', 'lead-qualify', 'lead-draft', 'lead-reach',
+  'lead-export', 'lead-retro', 'seo-audit', 'keyword-research', 'on-page-optimizer',
+];
+for (const skill of WRITES_FOLDER) {
+  if (!fs.existsSync(path.join(ROOT, skill, 'SKILL.md'))) continue;
+  const corpus = skillCorpus(skill);
+  for (const needle of ['<!-- localstack:start -->', 'CHANGELOG.md', 'TODOS.md']) {
+    if (!corpus.includes(needle)) fail(`${skill}: standard files not kept — expected '${needle}' (use {{STANDARD_FILES:<step>}})`);
+  }
+}
+
+// No pre-0.9 stage folder outside the marked migration block. Scratch is
+// .localstack/work/, so a bare "work/" is the old layout too.
+const LEGACY = /(?<![\w.-])(briefs|leads|reviews|outreach|reached|shipped|retros|reports)\/|(?<![\w./-])work\//;
+function stripLegacyBlocks(text: string): string {
+  return text.replace(/<!-- legacy-layout[^>]*-->[\s\S]*?<!-- \/legacy-layout -->/g, '');
+}
+const legacyTargets: string[] = [];
+for (const skill of skillDirs()) {
+  legacyTargets.push(`${skill}/SKILL.md`);
+  const sec = path.join(ROOT, skill, 'sections');
+  if (fs.existsSync(sec)) {
+    for (const f of fs.readdirSync(sec)) if (f.endsWith('.md') && !f.endsWith('.md.tmpl')) legacyTargets.push(`${skill}/sections/${f}`);
+  }
+}
+for (const d of fs.readdirSync(path.join(ROOT, 'stacks'), { withFileTypes: true })) {
+  if (d.isDirectory() && fs.existsSync(path.join(ROOT, 'stacks', d.name, 'STACK.md'))) legacyTargets.push(`stacks/${d.name}/STACK.md`);
+}
+legacyTargets.push('README.md');
+for (const f of legacyTargets) {
+  const lines = stripLegacyBlocks(read(f)).split('\n');
+  lines.forEach((line, i) => {
+    const m = line.match(LEGACY);
+    if (m) fail(`${f}: names the pre-0.9 folder '${m[0]}' outside a <!-- legacy-layout --> block — use the standard files`);
+  });
+}
+
 // --- 6. Version bumps vs origin/main ------------------------------------
 
 function git(args: string): string {
-  return execSync(`git ${args}`, { cwd: ROOT, encoding: 'utf-8' }).trim();
+  return execSync(`git ${args}`, { cwd: ROOT, encoding: 'utf-8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
 }
 try {
   git('rev-parse --verify origin/main');

@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: setup-localbrain
-version: 0.1.0
+version: 0.1.1
 publisher: localoy
 capabilities: [files]
 # No localoy stages: install + init + smoke test is one deterministic pass —
@@ -13,7 +13,7 @@ platforms: [linux, macos, windows]
 metadata:
   hermes:
     tags: [memory, brain, setup, localstack]
-    related_skills: [lead-search, lead-ship]
+    related_skills: [lead-search, lead-reach, lead-export]
 allowed-tools:
   - Bash
   - Read
@@ -38,7 +38,7 @@ repairs only what is missing.
 
 A local memory store at `~/.localbrain` (or `$LOCALBRAIN_DIR`): markdown
 files as the source of truth, a derived SQLite search index, no accounts, no
-cloud. The pipeline uses it to remember shipped leads, cut reasons and retro
+cloud. The pipeline uses it to remember leads already contacted or exported, cut reasons and retro
 learnings across runs. Source: https://github.com/localoy-ai/localbrain
 
 ## Procedure
@@ -82,7 +82,7 @@ localbrain: GREEN
 ```
 
 Then one line on what changes: "/lead-search now dedupes against the brain;
-/lead-ship records what ships. The localoy app shows the same records on its
+/lead-reach records who was contacted and /lead-export what was handed over. The localoy app shows the same records on its
 Brain screen."
 
 ## Quality bar

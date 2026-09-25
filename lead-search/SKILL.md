@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: lead-search
-version: 0.8.1
+version: 0.9.0
 publisher: localoy
 capabilities: [files, web]
 # localoy dialect: stages make this runnable on small local models. Each stage
@@ -12,18 +12,18 @@ capabilities: [files, web]
 stages:
   - id: harvest
     goal: >
-      If briefs/*.md exists, read the newest one first for the buyer,
-      territory, list size and disqualifiers.
+      If a PLAN-<topic>.md exists, read it first for the buyer, territory,
+      list size and disqualifiers (with several, the one the user named).
       Run 5 to 8 web searches for the described buyer, each with a DIFFERENT
       angle: direct ("<niche> companies in <place>"), roundups ("best <niche>
       <place>"), neighboring cities by name, and site: queries for gated
       sources read from snippets. Snippets only — fetch NO pages in this
       stage. Record every candidate company as a line: name, the query that
       found it, the result URL. Never repeat an identical query.
-    produces: work/{date}-{slug}/found.md
+    produces: .localstack/work/{date}-{slug}/found.md
   - id: resolve
     goal: >
-      For each candidate in work/{date}-{slug}/found.md, establish its own website (its own
+      For each candidate in .localstack/work/{date}-{slug}/found.md, establish its own website (its own
       domain — a Yelp, Clutch, Facebook or directory page is never the
       website), its location, and its decision maker via one search like
       "<company>" (founder OR CEO OR owner) or site:linkedin.com/in
@@ -31,21 +31,30 @@ stages:
       construct a profile URL — record only URLs a search surfaced. Fetch at
       most 3 pages in this whole stage, and only where snippets left a row
       ambiguous. Write UNKNOWN for anything not observed.
-    produces: work/{date}-{slug}/resolved.md
+    produces: .localstack/work/{date}-{slug}/resolved.md
   - id: report
     goal: >
-      Read this run's work/{date}-{slug}/found.md and resolved.md. Deduplicate by canonical domain
-      (strip www, lowercase, one row per domain). Write the CSV with header
-      "Company Name,Location,Website,Decision Maker Name,Title,Profile URL,
-      Evidence URL,Confidence" — one row per lead, Confidence one of
-      verified/likely/unconfirmed, every row carrying the evidence URL a
-      reader could open. Widen the dedupe with the brain: with shell and
-      `localbrain` on PATH, run `localbrain list --type lead` ONCE; without
-      shell, read `.brain/context.md` in the workspace if it exists. Either
-      way, cut any candidate whose canonical domain appears in a
-      `lead-<domain>` record, logged as "cut: in the brain". Neither
-      available, skip silently. After the rows, add no commentary; the file is data.
-    produces: leads/{date}-{slug}.csv
+      Read this run's .localstack/work/{date}-{slug}/found.md and resolved.md.
+      Deduplicate by canonical domain (strip www, lowercase, one row per
+      domain). Skip any domain already a row in leads-{slug}.csv, logged
+      "skipped: already listed", and any domain already handled — a Reached
+      or Exported value in any leads-*.csv, logged "skipped: already
+      contacted" / "skipped: already exported". Append the new rows to
+      leads-{slug}.csv, creating it with header "Company Name,Location,
+      Website,Decision Maker Name,Title,Profile URL,Evidence URL,Confidence,
+      Verdict,Verdict Reason,Verification URL,Verified Date,Channel,Channel
+      Evidence,Reached,Reached Channel,Exported,Notes" if missing — fill the
+      first eight columns, leave the rest empty for later steps. Confidence
+      is one of verified/likely/unconfirmed; every row carries the evidence
+      URL a reader could open. Widen the dedupe with the brain: with shell
+      and `localbrain` on PATH, run `localbrain list --type lead` ONCE;
+      without shell, read `.brain/context.md` in the workspace if it exists.
+      Either way, skip any candidate whose canonical domain appears in a
+      `lead-<domain>` record, logged as "skipped: in the brain". Neither
+      available, skip silently.
+      The CSV holds rows only, no commentary. Then add today's line to
+      CHANGELOG.md and tick search in the PLAN's Steps.
+    produces: leads-{slug}.csv
 description: Find sales leads on the open web — companies and decision makers with evidence behind every row. (localstack)
 author: localoy
 license: MIT
@@ -53,7 +62,7 @@ platforms: [linux, macos, windows]
 metadata:
   hermes:
     tags: [sales, leads, prospects, localstack]
-    related_skills: [prospect-brief, lead-qualify]
+    related_skills: [lead-plan, lead-qualify]
 allowed-tools:
   - Bash
   - Read
@@ -87,12 +96,12 @@ ends at the list. Use when asked to "find leads", "build a lead list",
 
 ## What you need first
 
-**Check for a brief before asking anything:**
-`ls briefs/*.md 2>/dev/null | sort -rV | head -1`. If one exists, confirm it in one
-line ("Found briefs/2026-08-29-acme.md — sell X in Y, target N. Use it?") and
-take the three facts below, plus the disqualifiers, from it. Anything the user
-says explicitly in this conversation overrides the brief. No brief — written
-by `/prospect-brief` — means the current behavior:
+**Check for a plan before asking anything.** Pick the topic: `ls PLAN-*.md 2>/dev/null`. If the user named a topic, use `PLAN-<topic>.md`. If exactly one PLAN exists, use it. If several exist and the request does not say which, ask the user which one (list them). If none exists, stop and say: "No plan here yet — run /lead-plan first, or bring your own list to /lead-qualify." The topic is the part between `PLAN-` and `.md`; every other file for it uses the same topic: `leads-<topic>.csv`. If a plan
+exists, confirm it in one line ("Found PLAN-acme-austin.md — sell X in Y,
+target N. Use it?") and take the three facts below, plus the disqualifiers,
+from it. Anything the user says explicitly in this conversation overrides the
+plan. No plan at all — written by `/lead-plan` — is still allowed here:
+pick a topic slug from the niche and territory, then:
 
 Three facts. Check the conversation and workspace first; ask for whatever is
 still missing in a SINGLE message, then wait.
@@ -150,25 +159,28 @@ ground rules above.
 
 ## Procedure
 
-Scratch for this run lives in `work/{date}-{slug}/` — one directory per run, so a new run never clobbers an earlier one. Scratch is disposable; old `work/` run directories may be deleted freely.
+Scratch for this run lives in `.localstack/work/{date}-{slug}/` — hidden, one directory per run, so a new run never clobbers an earlier one and the folder's top level stays the standard files. Scratch is disposable; old run directories may be deleted freely.
 
-**Prior runs:** `ls leads/*-{slug}*.csv 2>/dev/null | sort -rV` — if anything matches, tell the user what already exists (one line per file: date and filename) before proceeding; earlier runs are never overwritten. If nothing matches, say nothing and continue.
+**Earlier runs:** if `leads-<topic>.csv` already exists, say how many rows it
+holds before you start ("leads-acme-austin.csv has 18 rows; new finds are
+added, never duplicated"). This run adds to it; it never starts a second list.
 
 **1. Write the buyer down.** One sentence, from what the user told you — not
 from their website's copy. Copy says how they describe themselves, which is
 often not how their buyers look.
 
 **2. Harvest** (read `sections/harvest.md`): 5-8 searches, each a different
-angle, snippets only. Every candidate lands in `work/{date}-{slug}/found.md`
+angle, snippets only. Every candidate lands in `.localstack/work/{date}-{slug}/found.md`
 with its query and result URL.
 
 **3. Resolve** (read `sections/resolve.md`): per candidate — own website,
 location, decision maker from result titles; at most one page fetch per
-candidate. Trail goes to `work/{date}-{slug}/resolved.md`.
+candidate. Trail goes to `.localstack/work/{date}-{slug}/resolved.md`.
 
 **4-6. Dedupe, write, report** (read `sections/report.md`): one row per
-canonical domain, `leads/{YYYY-MM-DD}-{slug}.csv` with the exact canonical
-header, then the short gist in chat naming the brief consumed.
+canonical domain, appended to `leads-<topic>.csv` under the exact canonical
+header, the standard files updated, then the short gist in chat naming the
+plan consumed.
 
 **7. Hand off.** Offer the next stage — "Qualify this list with
 `/lead-qualify`?" — as a structured question where the runtime supports one,

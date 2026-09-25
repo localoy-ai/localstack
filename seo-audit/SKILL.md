@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: seo-audit
-version: 0.4.0
+version: 0.5.0
 publisher: localoy
 capabilities: [files, web]
 author: localoy
@@ -11,7 +11,7 @@ metadata:
   hermes:
     tags: [seo, audit, localstack]
     related_skills: [keyword-research, on-page-optimizer]
-description: Crawls a site's important pages and audits what is actually on them — titles, metas, headings, internal links, canonicals, image and markup flags — then writes a prioritized fix list to reports/. Use when asked to "audit my site", "check my SEO", "is anything broken", or "why am I not ranking". (localstack)
+description: Crawls a site's important pages and audits what is actually on them — titles, metas, headings, internal links, canonicals, image and markup flags — then writes a prioritized fix list to seo-audit-<site>.md. Use when asked to "audit my site", "check my SEO", "is anything broken", or "why am I not ranking". (localstack)
 allowed-tools:
   - Bash
   - Read
@@ -40,7 +40,10 @@ Check what you already know from this workspace and the conversation. Ask for ev
 
 If no answer comes, do not guess your way through. Produce whatever is genuinely useful without the missing facts, state at the top which ones you lacked, and say what would change once you have them.
 
-**Prior runs:** `ls reports/*-seo-audit-{slug}*.md 2>/dev/null | sort -rV` — if anything matches, tell the user what already exists (one line per file: date and filename) before proceeding; earlier runs are never overwritten. If nothing matches, say nothing and continue.
+**Earlier runs:** if `seo-audit-<slug>.md` already exists here (`<slug>` is the site's
+host or path, lowercase, dots and slashes as hyphens — `acme-com`), say when it
+was last written (its `Updated:` line) before you start. This run replaces it;
+CHANGELOG.md and git keep the history.
 
 ## What you decide, and what you do not
 
@@ -133,9 +136,16 @@ Long work gets interrupted. If you cannot complete every step:
    titles, accidental noindex), fix this month (weak metas, heading structure),
    and backlog (markup niceties). Severity comes from what you observed, never
    from a general rule about what usually matters.
-7. **Write the report.** Save to `reports/{date}-seo-audit-{slug}.md`. Summary table first,
+7. **Write the report.** Save to `seo-audit-<slug>.md` at the top of the working folder, starting
+   with `Updated: YYYY-MM-DD`. Summary table first,
    then per-page findings, then the prioritized fix list. Report the path back.
-   Never overwrite an existing artifact: if `reports/{date}-seo-audit-{slug}.md` already exists, append a sequence suffix before the extension — `reports/{date}-seo-audit-{slug}-2.md`, then `-3`… (count the existing matches and add one).
+   Then keep the standard files. Add every "fix this week" item to TODOS.md as `- [ ] <fix> — <URL> (seo-audit <slug>)`; the month and backlog items stay in the report.
+
+**Standard files.** This folder is kept in files any agent already reads. Update them in place; never scatter output into new folders.
+- **AGENTS.md** — create it if missing. localstack owns only the block between `<!-- localstack:start -->` and `<!-- localstack:end -->`; rewrite that block, never anything outside it. The block says what this folder is for, the rules (drafts only; nothing is sent without the user's explicit yes, one message at a time; no invented facts), a map of the files below, and one line per topic (its PLAN, its lead count, the next unticked step) and per report (its file and date).
+- **CHANGELOG.md** — create it if missing (`# Changelog`). Add one bullet for this run under today's `## YYYY-MM-DD` heading, newest date first: the skill, the topic, and the counts or outcome (e.g. `- lead-search austin-dentists: 18 found, 3 skipped as already contacted`).
+- **TODOS.md** — create it if missing (`# TODOs`). Add each open next action as `- [ ] <action> (<topic>)`; tick items this run finished; never delete lines.
+- **DESIGN.md** — decisions meant to last (positioning, tone, channels to use or avoid). Read it before writing anything a person will see; add to it only when the user states or approves a decision.
 
 ## Quality bar
 

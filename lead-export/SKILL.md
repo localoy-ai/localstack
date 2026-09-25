@@ -1,0 +1,155 @@
+---
+# GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
+name: lead-export
+version: 0.1.0
+publisher: localoy
+capabilities: [files]
+# No localoy stages: filter + write + mark is one deterministic pass over
+# files already on disk — no web work, no judgment calls a small model would
+# need extra turns for.
+description: >-
+  Export a lead list to hand to someone else — a client, a sales team, a CRM.
+  Kept rows only, never a lead already contacted or exported, each exported
+  row marked on the list so it is never handed over twice. Optional; not a
+  pipeline step. (localstack)
+author: localoy
+license: MIT
+platforms: [linux, macos, windows]
+metadata:
+  hermes:
+    tags: [sales, export, handoff, localstack]
+    related_skills: [lead-qualify, lead-reach, lead-retro]
+allowed-tools:
+  - Bash
+  - Read
+  - Write
+  - AskUserQuestion
+triggers:
+  - export the lead list
+  - hand off the list
+  - send the list to the client
+  - give me the csv
+  - export for the crm
+  - ship the lead list
+  - finalize the list
+tags: [sales, export, handoff, dedupe]
+---
+
+## When to invoke this skill
+
+Hands a lead list to someone else — a client, a sales team, a CRM import.
+Only when the list leaves this folder: if the user sends the messages
+themselves with `/lead-reach`, there is nothing to export, and `Reached`
+already keeps anyone from being contacted twice. Use when asked to "export",
+"hand off", "give me the CSV", "send the list to the client" (or the old
+"ship / finalize the list").
+
+## What you read first
+
+- **The topic:** Pick the topic: `ls PLAN-*.md 2>/dev/null`. If the user named a topic, use `PLAN-<topic>.md`. If exactly one PLAN exists, use it. If several exist and the request does not say which, ask the user which one (list them). If none exists, stop and say: "No plan here yet — run /lead-plan first, or bring your own list to /lead-qualify." The topic is the part between `PLAN-` and `.md`; every other file for it uses the same topic: `leads-<topic>.csv`.
+- **The list (required):** `leads-<topic>.csv`, rows with `Verdict=keep`.
+  If no row has a Verdict → offer `/lead-qualify` first; export unchecked
+  rows only if the user says so, with an explicit warning in chat and in the
+  file name (`-unchecked`). No list → offer `/lead-search`, or ask for a
+  file. Never fabricate rows.
+- **Already handled:** A lead is **already handled** when its canonical domain (strip `www.`, lowercase) has a `Reached` or `Exported` value in any `leads-*.csv` in this folder, or appears in a `lead-<domain>` brain record (`localbrain list --type lead` with a shell, else `.brain/context.md` if it exists). Those rows are not exported again —
+  someone already has them.
+- **Who it is for:** ask once, if the user has not said — the name goes in
+  the `Exported` column and the CHANGELOG line ("exported to Acme sales").
+
+## Ground rules (non-negotiable)
+
+1. **A lead is handed over once.** A row already reached or exported (here,
+   in any `leads-*.csv`, or in the brain) is left out, and the summary names
+   where it went and when. Re-sending a lead someone already worked is how
+   lists lose trust.
+2. **Rows pass through unedited.** This skill only fills `Exported`; it does
+   not re-check, re-score, or fill in blanks. `UNKNOWN` stays `UNKNOWN`. A row
+   that looks wrong is flagged in the summary, not fixed silently.
+3. **Cut rows do not go out, but the cut is reported.** The summary carries
+   the kept/cut counts so the recipient knows the file is a subset.
+4. **The living list stays the record.** The export file is a copy for the
+   recipient; `leads-<topic>.csv` is where the truth lives.
+
+## Procedure
+
+**1. Load** the inputs above. Note any fallback that fired.
+
+**2. Filter.** `Verdict=keep`, minus already-handled rows, recording (domain,
+where it went, date) per row left out.
+
+**3. Write the export and mark the list.**
+
+- `leads-<topic>-export-YYYY-MM-DD.csv` — the same header, exported rows
+  only, `Exported` filled. Data only, no commentary. If that file already
+  exists today, add `-2`, `-3`… before `.csv`. Offer a different column set
+  only if the recipient needs one (a CRM template), and say which columns were
+  dropped.
+- `leads-<topic>.csv` — set `Exported` to `YYYY-MM-DD <recipient>` on every
+  exported row, in place. Rows, order and every other column stay as they
+  are.
+- `PLAN-<topic>.md` — a dated section after `## Steps`:
+
+```
+## Export — YYYY-MM-DD
+N rows to <recipient> (leads-<topic>-export-YYYY-MM-DD.csv).
+Left out as already handled: domain — reached or exported <date> (or "none")
+Known gaps: UNKNOWN fields, unchecked rows, fallbacks that fired.
+```
+
+**Standard files.** This folder is kept in files any agent already reads. Update them in place; never scatter output into new folders.
+- **AGENTS.md** — create it if missing. localstack owns only the block between `<!-- localstack:start -->` and `<!-- localstack:end -->`; rewrite that block, never anything outside it. The block says what this folder is for, the rules (drafts only; nothing is sent without the user's explicit yes, one message at a time; no invented facts), a map of the files below, and one line per topic (its PLAN, its lead count, the next unticked step) and per report (its file and date).
+- **CHANGELOG.md** — create it if missing (`# Changelog`). Add one bullet for this run under today's `## YYYY-MM-DD` heading, newest date first: the skill, the topic, and the counts or outcome (e.g. `- lead-search austin-dentists: 18 found, 3 skipped as already contacted`).
+- **TODOS.md** — create it if missing (`# TODOs`). Add each open next action as `- [ ] <action> (<topic>)`; tick items this run finished; never delete lines.
+- **DESIGN.md** — decisions meant to last (positioning, tone, channels to use or avoid). Read it before writing anything a person will see; add to it only when the user states or approves a decision.
+
+For this step: the CHANGELOG line gives exported / left-out counts and the
+recipient.
+
+**4. Remember what went out.** If the `localbrain` CLI is on PATH
+(`command -v localbrain`), record each exported row so every future
+`/lead-search` — in any folder, on this whole machine — skips it:
+
+```
+localbrain put "lead-<canonical-domain>" --type lead \
+  --field domain=<canonical-domain> --field exported=<YYYY-MM-DD> \
+  --body "<Company Name> — <canonical domain>. Exported <YYYY-MM-DD> to <recipient> (leads-<topic>.csv). Contact: <Decision Maker Name>, <Title>."
+```
+
+The `--field` pairs make the record structurally queryable
+(`localbrain list --where domain=<domain>`). Requires localbrain >= 0.2.0; on
+an older CLI the flags error — drop them and note "localbrain pre-0.2.0 —
+fields omitted" in the Export section rather than failing.
+
+One record per exported row, named `lead-<canonical-domain>`. A row with no
+observed domain (`Website` UNKNOWN) gets NO record — `lead-unknown` would
+collide across every domainless lead; note it in the Export section instead.
+
+No shell? If a `.brain/` directory exists in the workspace (localoy
+maintains one), stage the same records as files instead — one
+`.brain/put/lead-<canonical-domain>.md` per exported row:
+
+```
+---
+type: lead
+domain: <canonical-domain>
+exported: <YYYY-MM-DD>
+---
+<body as above>
+```
+
+Neither the CLI nor `.brain/` → add one line to the Export section's Known
+gaps: "localbrain unavailable — this export is invisible to other folders
+(run /setup-localbrain)". A brain error never blocks the export — the file is
+already written; note the error and move on.
+
+**5. Report.** In chat: the export file's path, exported and left-out counts,
+gaps. Do not offer another step — exporting is a hand-off, not part of the
+chain.
+
+## Quality bar
+
+- The dedupe test: exporting twice in a row must export zero rows the second
+  time.
+- Every row left out names where it already went and when.
+- The Export section reads in one screen; the export file is the deliverable.

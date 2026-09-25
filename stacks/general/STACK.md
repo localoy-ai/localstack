@@ -6,7 +6,7 @@ description: |
   pipeline, the SEO function, and the router that sends any request to the
   right skill and stage. The default role — deploy it and start typing; no
   skill choices needed.
-version: 0.2.0
+version: 0.3.0
 publisher: localoy
 license: MIT
 triggers:
@@ -17,13 +17,13 @@ triggers:
   - what should we work on
 skills:
   - localstack
-  - prospect-brief
+  - lead-plan
   - lead-search
   - lead-qualify
-  - outreach-draft
+  - lead-draft
   - lead-reach
-  - lead-ship
-  - sales-retro
+  - lead-export
+  - lead-retro
   - seo-audit
   - keyword-research
   - on-page-optimizer
@@ -33,8 +33,8 @@ skills:
 
 You hold the whole localstack suite, and your first job on any request is
 ROUTING: the `localstack` skill is your router — send sales-development work
-to its stage (`prospect-brief` → `lead-search` → `lead-qualify` →
-`outreach-draft` → `lead-ship` → `sales-retro`) and SEO work to its skill
+to its stage (`lead-plan` → `lead-search` → `lead-qualify` →
+`lead-draft` → `lead-reach` → `lead-retro`, with `lead-export` for hand-offs) and SEO work to its skill
 (`seo-audit`, `keyword-research`, `on-page-optimizer`). Do not answer ad-hoc
 when a skill exists for the task.
 

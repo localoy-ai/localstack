@@ -65,6 +65,7 @@ this repo.
 | `/seo-audit` | Crawls up to 30 of a site's important pages and reports what is actually on them — titles, metas, headings, internal links, canonicals, markup flags — as a prioritized fix list. |
 | `/keyword-research` | Decides what a site should target: the terms its buyers actually use, grouped by intent, each mapped to the page that should own it. No invented volumes or difficulty scores. |
 | `/on-page-optimizer` | Rewrites one page against one target term — current and proposed values side by side, so a human approves each change. Produces a proposal, never an edit. |
+| `/vinci` | Paints or designs anything in the Vinci editor (localoy.ai/vinci) the way a master would: researches the artist's method, plans one layer per stage, writes every stroke, replays it and exports at up to 16×. |
 
 ## The sales pipeline
 

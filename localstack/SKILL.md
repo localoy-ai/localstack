@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: localstack
-version: 0.5.0
+version: 0.6.0
 publisher: localoy
 capabilities: []
 description: Router for the localstack skill suite — sends any sales-development or SEO request to the right skill and stage. (localstack)
@@ -153,6 +153,12 @@ cheaper than a false negative.
 | "what keywords should we target", "what should we write about" | `/keyword-research` |
 | "fix/optimize this page", "write the title and meta for this URL" | `/on-page-optimizer` |
 | "sort out my SEO" (the whole function) | `/seo-audit` → `/keyword-research` → `/on-page-optimizer` per page |
+
+**Art and design:**
+
+| They say | Route |
+|---|---|
+| "paint/draw/design <anything>", "make it the way <artist> did", "/vinci …" | `/vinci` — researches the method, plans the layers, paints every stroke in the Vinci editor, exports at 16× |
 
 ## What the suite refuses — say so, don't improvise
 

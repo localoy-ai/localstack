@@ -1,22 +1,25 @@
 ---
 name: vinci
-version: 0.1.0
+version: 0.8.0
 publisher: localoy
-capabilities: [files, web, browser, terminal]
+capabilities: [files, web, terminal]
 author: localoy
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
   hermes:
-    tags: [art, painting, design, vinci, localstack]
+    tags: [creative, design, marketing, social, ecommerce, illustration, editing, vinci, localstack]
     related_skills: []
 description: >-
-  Paints or designs anything in Vinci, the stroke editor at localoy.ai/vinci,
-  the way a master would: researches the subject and the artist's method
-  first, plans one layer per stage, writes every stroke with code, opens the
-  painting in the editor, replays it from the first stroke and exports it at
-  up to 16x. Use when asked to "paint", "draw", "design" something, "/vinci
-  <subject>", or to make a picture "the way <artist> did". (localstack)
+  Makes and edits any visual in Vinci, localoy's editor: social posts, ads and
+  banners, product and e-commerce images, thumbnails, sales one-pagers,
+  logos, diagrams, illustrations and paintings — or changes to a picture the
+  person already has. Works straight in the chat's drawing, which the person
+  watches in the Vinci pane; paints every stroke itself, from what it sees
+  and knows, and checks by eye against the brief and any reference;
+  exports at the size the channel needs.
+  Use for "/vinci <anything visual>", "make a post / ad / banner /
+  thumbnail", "design", "draw", "edit this image". (localstack)
 allowed-tools:
   - Bash
   - Read
@@ -24,106 +27,285 @@ allowed-tools:
   - WebFetch
   - WebSearch
 triggers:
-  - paint this
+  - make a post
+  - design a banner
+  - make an ad
+  - edit this image
   - draw this
-  - design this in vinci
-  - paint it the way
   - /vinci
 ---
 # Vinci
 
-Make the picture the person asked for in Vinci, the way the artist behind it
-would have made it: understand how they worked before the first stroke, then
-build it up in the same stages, every mark a stroke.
+Do the visual job the person asked for, and nothing else: make something new
+to their brief, or change what is already there exactly as far as they asked.
 
-## Read the editor's contract first
+## How you work here
 
-Open **https://localoy.ai/vinci/AGENTS.md** before anything else (a plain
-fetch). It is served with the editor and changes with it: the project file
-format, how to open a file in the editor, Replay, Export. When it disagrees
-with this skill, the contract wins. Menus and buttons may move; the contract
-says where things are now.
+In localoy you have the **vinci** tool. The drawing lives in this chat; the
+person watches it in the Vinci pane as it changes, and can edit it too. There
+is no browser, no file to open and no upload: you work straight in.
 
-## What you need first
+- **size** sets the canvas; **import** brings a picture from the folder (PNG,
+  JPEG or GIF: a product photo, a logo, their image) onto a layer; **paint**
+  adds strokes to a layer (made if new); **layer** sets visibility, opacity
+  and blend mode, renames, clears or removes one; **erase** removes strokes by
+  id or inside a box; **undo** takes back your last batch (never the
+  person's).
+- **look** is how you see: the drawing as Vinci renders it, whole or a box
+  zoomed in. It is the only true preview; never render your own.
+- **compare** shows your drawing beside a reference picture at the same
+  size, to look at by eye, as a painter steps back from the easel.
+- For more than a few hundred strokes, generate them in a script: action
+  **script** gives the address it POSTs JSON commands to during this turn.
+- **export** writes the PNG at 1× to 16×; **save** writes the project file.
 
-- **The subject** — what to paint or design. If the request names it, you have it.
-- **The manner** — whose way ("the way Leonardo did", "like a Van Gogh", "a
-  flat logo"). If none is given, choose the manner that suits the subject
-  best, say which and why, and go on.
-- **The size** — portrait 530 × 770 unless the subject wants another shape
-  (landscape, square). Choose, and say so.
+The tool's description is the contract: when it and this skill disagree, the
+tool wins.
 
-Ask only if the subject itself is unclear. Everything else: decide and flag.
+**You are the painter.** Every stroke's place, shape and colour is your
+decision, from what you see and know — that is what lets you draw anything,
+with or without a reference. **Never read a picture's pixels to make or place
+strokes**: no code that opens an image to sample its colours, trace its edges
+or find its positions, and no importing a reference to paint over. Look at it
+(`compare`, localoy's browser) and decide, the way a painter works from a
+model. A brand value, a size or a fact comes from the brief or a cited
+source; a shape, a proportion or a colour comes from your own eye, checked
+with `look` and `compare` and corrected.
 
-## Before any stroke: research
+## First: which job is it?
 
-1. **The method.** How did this artist (or this kind of design) get made?
-   Materials, the ORDER of the layers or stages, and what the artist was
-   thinking at each: what each stage was for. Use real sources (museum
-   technical studies, conservation papers, the artist's own writing) and cite
-   them in the PLAN. A stage list from memory is not research.
-2. **The reference.** For a known work, find a good public-domain image and
-   save it in the scratch folder. It is a GUIDE for where strokes go and what
-   colour they are — it never goes onto the canvas: do not import it as a
-   layer, do not trace its pixels into flat patches. Every mark is a stroke.
-3. **Never use someone else's strokes.** The editor ships its own Leonardo
-   study (the data behind Replay on an empty canvas); do not load, copy or
-   adapt it. Make your own.
+- **Edit** — the chat already has a drawing, or the person brought a picture
+  (an attachment, in `uploads/`), and wants it changed ("warmer", "remove the
+  clutter behind it", "put our logo bottom right", "fix this"). Go to Edit.
+- **Design** — anything with words, a layout or a brand: a social post, an
+  ad or banner, a thumbnail, a one-pager, a slide, a chart, a diagram, a
+  week of posts. Go to Design.
+- **Make** — a drawing or painting from a brief. Go to Make.
+- Unsure whether they mean change or start over? If there is a drawing or a
+  picture, it is an edit. Ask only when the subject itself is unclear; decide
+  the rest and say what you chose.
 
-## Plan
+## Edit
 
-Write **PLAN-<slug>.md** (`<slug>` = the subject, lowercase, hyphens —
-`mona-lisa`, `starry-night`). At the top, `## Where we are` as a checklist,
-one line per stage (`- [ ] 3 Imprimatura — translucent umber wash…`), so the
-plan can be carried out and resumed. Then a table, one row per editor layer:
-name, what goes on it, brush, typical size, stroke opacity, layer opacity,
-blend mode, stroke count — and the sources. Order the layers as the artist
-worked. Several layers for one stage are fine (by region: face, hands,
-landscape); name them so a person can follow the stages.
+1. **Their picture first.** When they brought one, **import** it onto its own
+   layer, fitted to the canvas (or `size` the canvas to it first when its
+   shape matters). Their file on disk is never changed.
+2. **Read what is there.** `stats` for the layers, then `look` at the whole
+   and at the part in question. When the person shared an area, their message
+   carries its box and the stroke ids inside: that is exactly what to change.
+3. **Change only what was asked.** Work on the layers, box or ids it concerns;
+   put new elements on their own layer. To remove part of an imported
+   picture, paint erase strokes on its layer. Leave everything else as it
+   was.
+4. **Show it.** `look` at the changed part and the whole, and say in one line
+   what changed. If it misses, `undo` your batch and try again rather than
+   piling fixes on top.
 
-## Paint
+## Design
 
-1. **Write the strokes with code** (Python with numpy/PIL is usually fastest),
-   stage by stage, into one project file as the contract describes. Follow
-   form, not grid: stroke direction along the edges and folds, length and
-   width by stage (broad early, fine late), order within a layer as a painter
-   would work. Glazes are many thin, low-opacity strokes on a multiply layer.
-   Tens of thousands of strokes are normal; the contract gives the limits.
-2. **Scratch stays scratch.** {{WORK_DIR}} Scripts, masks and previews go
-   there; the folder's top holds the PLAN, the project file and the exports.
-3. **Open it in the editor.** localoy.ai/vinci → File → Open project… → hand
-   it the file (localoy's browser: action `upload`). Wait for the paint-in,
-   then look (screenshot).
+A design is made of **items** — text Vinci sets exactly, shapes, the
+person's own logo and photos — never letters drawn as strokes. Everything
+stays editable: the person changes a headline in the pane, you change the
+rest to match.
 
-## Look before you finish
+1. **The brand, first, from DESIGN.md.** Read `DESIGN.md` in this chat's
+   folder — only there; other folders are not yours to open — and, for a
+   piece of work done before, its `DESIGN-<topic>.md` (`<topic>` = the job,
+   lowercase, hyphens: `DESIGN-linkedin-week.md`). What they say wins over
+   anything you would pick. When DESIGN.md has no `## Brand` section, build
+   one from what the person gave you — their site (its colours in the CSS,
+   its logo file, its fonts' feel), their files — and add it to DESIGN.md
+   (make the file if there is none), in plain words a person can edit:
+   - **Colours:** each hex and its job (dark ground, light ground, text on
+     each, the one accent, a second accent if the site has one).
+   - **Type:** heading and body, from the fonts Vinci sets: sans (clean,
+     modern), serif (editorial), display (tall caps headlines), hand (a
+     handwritten note), mono (code, numbers); with weights.
+   - **Logo:** each file in the folder and the background it is for
+     ("logo-on-dark.svg: cream mark, for dark grounds").
+   - **Voice:** three or four words, and a line from the site that shows it.
+   Never write the brand anywhere else (no brand.json): DESIGN.md is the
+   file every agent and person already reads.
+   **The logo is the person's own file, never redrawn:** download it as the
+   site serves it — its SVG as it is (Vinci reads SVG, with its
+   transparency), or a PNG that is cut out. Never rebuild a logo from path
+   data or a screenshot; if the `design` answer says a picture has a solid
+   background, fetch the real file instead.
+2. **The words, second.** Write every piece's copy before any layout: one
+   headline (under ten words), one supporting line, one call to action.
+   Facts and numbers come from the person's material or a source you cite
+   in the plan; a chart only from real data.
+3. **Frames.** `frames` with the channel's preset (`linkedin-post`,
+   `instagram-story`, …) and a count: one board per piece, named (post-1…).
+   "This week's posts" is five, one a weekday, unless the person says how
+   many.
+   Each piece's items go inside its frame, on a layer of their own
+   (`post-1`), so a piece can be changed without touching the others.
+4. **Lay it out** with `design`, inside a margin of 6–8% of the frame:
+   - **Hierarchy:** the headline biggest (7–10% of the frame's height for a
+     feed post), the supporting line a third of that, the call to action a
+     button (a rect with radius, its text centred with `align: center,
+     valign: middle` in the same box).
+   - **One idea a frame**, one accent colour, lots of space.
+   - **A week varies:** not five copies of one template. Mix the kinds —
+     a bold statement, a number or chart from real data, a quote or
+     customer line, a how-it-works diagram (shapes and arrows), a product
+     picture — and alternate dark and light frames, with the same logo,
+     type and margins holding them together.
+   - **Contrast:** light text on the dark brand colour or dark on light,
+     never mid on mid.
+   - **The logo** small, in a corner, the same corner on every frame, in
+     the version made for the background under it: the light mark on a
+     dark frame, the dark mark on a light one. The `design` answer says
+     when a picture **barely shows** against what is behind it — swap it.
+   - **Text boxes have a width**; use `fit: "shrink"` for a headline that
+     must fill a fixed box.
+5. **Read the answer before you look.** It gives each item's box, each
+   text's lines, and names any text that **overflows**, any item that **runs
+   outside its frame** or sits **on its edge**, and any label set **flush
+   against the inside** of its card or button — fix those first. Keep one
+   margin and one card padding for the whole set. Then `look` with `frame` at each
+   board and fix what reads wrong at the size people will see it.
+6. **Carry the person's changes.** When they change one frame in the pane
+   (a headline, a colour, where the logo sits), your next vinci call opens
+   with what they changed; apply the same change to every frame it belongs
+   to, by the items' ids. A change that should hold next time (headlines
+   amber on dark frames) goes into DESIGN-<topic>.md too.
+7. **Export** with `frame: "all"` at the channel's size (scale 1 for a
+   preset), and **save** the project.
+8. **Write DESIGN-<topic>.md** for the piece: the channel and preset, the
+   grid (margins, where the headline, logo and button sit), the type sizes,
+   which frames are dark and light, and the rules the person set. The next
+   round of the same work starts from it and looks the same.
 
-A screenshot shows the whole. To judge closely, export at 2× and compare
-with the reference by code, region by region (face, hands, background):
-colour, value, edges. Fix the stage that is off by regenerating its layers,
-and open the project again. Stop when the picture reads as the subject at a
-glance and holds up up close — and say plainly what still falls short.
+## Make
 
-## Show it and export it
+1. **The brief.** What it is for (a channel, a product, a campaign, a wall),
+   who sees it, what it must say, the style, and the size. Use the channel's
+   real size when there is one (a square feed post, a story, an ad slot, a
+   product listing, a video thumbnail): look it up rather than recall it.
+   Brand colours, logo and look come from the person's materials when they
+   give them. Decide and flag what was not given.
+2. **Research what the brief needs.** For a style or an artist's manner: how
+   it was actually made (sources cited in the plan). For marketing and
+   commerce: what works on that channel and its rules (safe areas, legibility
+   at the size people see it, the product shown clearly). For a diagram: the
+   structure it must show.
+3. **The reference**, when there is one (a product photo, a layout the person
+   likes, a work to follow). Save it in the scratch folder as
+   `reference.<ext>`, exactly as you got it, and study it first (`compare`
+   shows it; localoy's browser opens a file in your folder by its path):
+   its big shapes, where the lights and darks fall, the proportions, the
+   colours, how its maker built it. Write what you see in the plan, in your
+   own words and numbers (the face's width against the canvas, the eye line,
+   the palette) — judged by eye, never read off its pixels. Every mark you
+   make is your own.
+   - **Look at it at the size you draw, not closer.** Work from a copy no
+     bigger than your canvas (resized to look at, never to take from), and
+     zoom no further than a whole form: the head, a hand, the neckline. Up
+     close a photographed painting is its surface — cracks, grain, varnish,
+     canvas weave — and that noise hides the edges you are placing. Squint
+     like a painter: the big shapes and the light and dark first; the
+     surface is never the subject.
+4. **Plan** in **PLAN-<slug>.md** (`<slug>` = the job, lowercase, hyphens).
+   At the top, `## Where we are` as a checklist, one line per stage. Then one
+   row per layer: what goes on it, how it is made, opacity, blend mode.
+   - **`## Main aspects`** — every part that makes this piece work, each with
+     its box on the canvas. For a product ad: the product, clear at the size
+     people see it; the brand mark; the space for the message; the
+     background that makes the product stand out. For a portrait or a scene:
+     each feature and region that makes it itself. Found from the brief, the
+     reference and the research, not from memory. If the person set
+     priorities ("the product must pop", "skip the background"), the list
+     follows them, in their order; if not, every aspect counts and none is
+     dropped for time.
+5. **Build it the way a painter does: the drawing first.** Each stage on its
+   own layer, checked by eye before the next. Never stand in for a form with
+   an ellipse or a band of colour: a form is the outline you drew.
+   1. **The drawing.** Lines, not areas: the outlines and features that make
+      the subject itself — for a portrait the head, hairline, eyelids and
+      irises, nose, the mouth's line and corners, jaw, neck, shoulders, each
+      hand finger by finger; for a scene the horizon and every main shape;
+      for a design the layout's edges. Place each point by eye with a grid:
+      the same grid over the reference (a copy with grid lines, for your eyes
+      only) and over the canvas, each point where it sits in its cell. Draw
+      thin (pencil or chalk, 1–3 px on a large canvas) with as many points as
+      the line needs — a curve is dozens of points, never four. Keep the
+      points you placed as data: every later stage reuses them. `compare`
+      box by box and move what is off before anything else; nothing after
+      can save a wrong drawing. **Correct a line, not the drawing:** `erase`
+      the one stroke that misses (its id, or a small box) and draw it again;
+      never clear the layer to start over — each redraw loses what was
+      already right. Write your readings (landmarks, proportions) to a file
+      as you make them, so a long job never has to read them again.
+   2. **Shading by hatching.** Parallel strokes inside the forms you drew,
+      turning with the form: dense and crossed in the shadows, sparse in the
+      half-tones, none in the lights (Leonardo's run diagonally, top left to
+      bottom right). Build a dark by more layers of hatching, never one
+      thick stroke. It now reads as a finished study.
+   3. **Underpainting.** A ground under everything, then the lights and
+      darks in one or two browns, strokes following the form, translucent
+      (multiply), so the drawing still shows through.
+   4. **Colour** in thin, translucent strokes over it, form by form, back to
+      front, from a palette you mixed by looking.
+   5. **Detail** where the eye goes: the eyes, the mouth, the hands; then
+      one look at the whole.
+   - **Many strokes are written in code** from what you drew: hatching
+     bounded by your contours, following the directions you chose, colours
+     you mixed. The script knows only your lines and choices; it never opens
+     an image.
+   - **The style comes from the brief.** Stroke shape is the style: long,
+     thin strokes that follow the form (length about 8× the width or more,
+     alpha under 0.6) read as paint; short, broad, opaque ones as a mosaic.
+   - **A stroke count asked for** is shared out over the stages as you plan
+     them, most of it in the hatching and colour where the eye goes — never
+     spent at the end as a coarse pass over finished work.
+   - **Try on a scratch layer**, and remove it; never clear the whole
+     drawing once you have started — the person is watching it grow.
+   Clean design takes few, precise strokes instead: the flat brush (exact
+   width) on exact geometry, still drawn first.
+6. **Fix the part, not the piece.** When `compare` (with the aspect's `box`)
+   or `look` shows a part off, `erase` that area (a box) on the layers it
+   concerns and redo just that part, painted again by you. Never clear
+   everything to fix a detail: the person is watching,
+   and a full redo looks like starting over. One fault per pass; check a fix
+   before the next.
 
-1. **Replay** it from the first stroke (the Replay tab), so the stages can be
-   watched in order. Take a screenshot partway and at the end.
-2. **Export at 16×** (File → Export PNG…; the dialog opens at 2× — choose
-   16×). The PNG lands in the working folder. Save the project file beside
-   it as `<slug>.project.json`.
+## Finish
+
+Before you call it done, `compare` or `look` at each main aspect on its own
+box, and fix what is off. Stop when every aspect passes (or is one the person
+left out) and the whole reads as asked at a glance, at the size it will be
+seen. **export** at the size the channel needs (or 16× for a picture to zoom
+into) and **save** the project, both named `<slug>`.
+
+## Without the vinci tool
+
+On a host without it (Claude Code, Codex), write the drawing as a project
+file (`<slug>.project.json`, format `monalisa.project`, described at
+https://localoy.ai/vinci/AGENTS.md) and tell the person to open it at
+localoy.ai/vinci (File → Open project…).
 
 ## Files
 
-- **PLAN-<slug>.md** — the research, the layer plan, and `## Where we are`
-  kept current as each stage is done.
-- **AGENTS.md** — one short line per lesson that will help the next painting
-  here (an editor quirk, a stroke recipe that worked). Update, never duplicate.
-- **CHANGELOG.md** — one bullet per run under today's date: subject, layers,
-  strokes, what was exported.
+- **PLAN-<slug>.md** — for a new piece: the brief, the research, the main
+  aspects, the layer plan, `## Where we are` kept current, and at the end a
+  `## Lessons` list: one short line per lesson that will help the next job
+  (for example: "blend mode is per layer: shadows and lights on separate
+  layers"). AGENTS.md holds the folder's standing instructions and changing
+  it asks the person; suggest a line there in the report if one belongs.
+- **DESIGN.md** — the brand (`## Brand`: colours, type, logo files, voice)
+  and lasting decisions; **DESIGN-<topic>.md** — one design job's layout
+  and rules (see Design). Updated in place, never a copy.
+- **CHANGELOG.md** — one bullet per run under today's date: what was made or
+  changed, layers, what was exported.
 - **TODOS.md** — what is left, if anything.
+
+{{WORK_DIR}}
 
 ## Report
 
-A short summary first: what you painted, in whose manner, the stages as
-layers (name, strokes), the total strokes, and the files (project, 16×
-export). Then the sources behind the method, then what still falls short.
-Never claim a likeness score you did not measure.
+A short summary first: what you made or changed, the layers touched, and the
+files. Then each main aspect with where it stands (right, close, or falls
+short and why), as you judge it by eye. Sources behind any method or rule you
+followed.

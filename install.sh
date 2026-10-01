@@ -45,6 +45,7 @@ hermes_root="$HOME/.hermes/skills/localstack"
 
 remove_from() {
   local root="$1" label="$2" name link
+  prune_from "$root" "$label"
   for name in $(skills); do
     # Only remove wrappers that point into THIS repo — never someone else's skill.
     link="$root/$name/SKILL.md"
@@ -57,9 +58,24 @@ remove_from() {
   [ "$label" = hermes ] && rmdir "$root" 2>/dev/null || true
 }
 
+# A skill renamed or dropped upstream leaves its old wrapper pointing at a
+# file `git pull` deleted (v0.9.0 renamed four). Remove those, and only
+# those: a wrapper of ours whose target is gone.
+prune_from() {
+  local root="$1" label="$2" link
+  for link in "$root"/*/SKILL.md; do
+    [ -L "$link" ] || continue
+    [[ "$(readlink "$link")" == "$REPO"/* ]] || continue
+    [ -e "$link" ] && continue
+    rm -rf "$(dirname "$link")"
+    echo "removed $(basename "$(dirname "$link")") ($label): no longer in localstack"
+  done
+}
+
 install_into() {
   local root="$1" label="$2" name
   mkdir -p "$root"
+  prune_from "$root" "$label"
   for name in $(skills); do
     if [ -e "$root/$name" ] && [ ! -L "$root/$name/SKILL.md" ]; then
       echo "skip $name ($label): $root/$name exists and is not ours" >&2

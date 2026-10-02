@@ -21,8 +21,10 @@ cannot see. Neither door available → skip silently; the file checks above
 still stand. Never let a brain error kill the report — note it and
 continue.
 
-**Write the list.** One living list per topic: `leads-<topic>.csv`. Create it
-if missing, with this header exactly:
+**Write the list.** One living list per topic: `leads-<topic>.csv`, at the
+top of the folder (never under `.localstack/`, never a `.md`). Rows were added
+as each lead resolved (Step 3); here, add any still missing. Create it if
+missing, with this header exactly:
 
 `Company Name,Location,Website,Decision Maker Name,Title,Profile URL,Evidence URL,Confidence,Verdict,Verdict Reason,Verification URL,Verified Date,Channel,Channel Evidence,Reached,Reached Channel,Exported,Notes`
 

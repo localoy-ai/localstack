@@ -63,6 +63,11 @@ export const RESOLVERS: Record<string, ResolverFn> = {
   // The full header of the one lead list.
   LEADS_HEADER: () => '`' + LEADS_HEADER + '`',
 
+  // The same header as a frontmatter list, for `columns:` next to a
+  // `produces: leads-{slug}.csv`: localoy opens the list at the end of a
+  // turn and holds it to exactly these columns, at exactly that path.
+  LEADS_COLUMNS: () => '[' + LEADS_HEADER.split(',').join(', ') + ']',
+
   // How every skill keeps the standard files. The argument is the step this
   // skill ticks in the PLAN's checklist ("none" for skills outside it).
   STANDARD_FILES: (arg, ctx) => {

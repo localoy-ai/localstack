@@ -1,6 +1,6 @@
 ---
 name: lead-reach
-version: 0.2.0
+version: 0.2.1
 publisher: localoy
 capabilities: [files, browser]
 # localoy dialect: stages make this runnable on small local models. The reach
@@ -41,6 +41,7 @@ stages:
       sent and the evidence. Add a TODO to watch for each sent lead's reply.
       Tick reach in the PLAN's Steps once no draft is left at Status: draft.
     produces: leads-{slug}.csv
+    columns: {{LEADS_COLUMNS}}
 description: >-
   Reach the leads you drafted for — opens each lead's observed channel in your
   own browser, fills in the draft, and sends it only after you say yes to that

@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: lead-qualify
-version: 0.3.0
+version: 0.4.0
 publisher: localoy
 capabilities: [files, web]
 # localoy dialect: stages make this runnable on small local models. Row-by-row
@@ -27,15 +27,17 @@ stages:
   - id: verify
     goal: >
       For each line in .localstack/work/{date}-{slug}/qualify-queue.md:
-      check the website resolves and is the company's own domain (at most
-      ONE fetch per row, only when a search snippet leaves it ambiguous);
-      re-run one search for the decision maker ("<company>" founder OR CEO
-      OR owner, or site:linkedin.com/in "<company>") and compare names from
-      result titles only; look for an OBSERVED contact channel (an email
-      read on a fetched page, a contact page or form URL, or the row's
-      Profile URL); test each applicable disqualifier against what you
-      observe. Verdict per row: keep or cut, one-sentence reason, and a fresh
-      evidence URL from THIS session. Fill a blank or UNKNOWN only with a
+      check the website resolves and is the company's own domain; open the
+      company's own pages that settle each disqualifier (team, locations,
+      shop, booking, contact) — several per web_extract call; find the
+      decision maker on a page that names them with their title (team or
+      about page, a registry, recent press) and open it; look for an
+      OBSERVED contact channel (an email read on a fetched page, a contact
+      page or form URL). For EVERY plan disqualifier record pass, fail or
+      unknown with the URL and words copied from it. Before a keep, confirm
+      the quotes with web_extract find. Verdict per row: keep only if every
+      disqualifier passed; cut when one failed; UNKNOWN when any is
+      unknown. Fill a blank or UNKNOWN only with a
       value you observed, cited. Never construct URLs or emails, never fetch
       gated sites. Append one line per row.
     produces: .localstack/work/{date}-{slug}/qualify-verdicts.md
@@ -52,6 +54,7 @@ stages:
       not be verified. Add today's line to CHANGELOG.md, tick qualify in the
       PLAN's Steps. No numeric scores anywhere.
     produces: leads-{slug}.csv
+    columns: [Company Name, Location, Website, Decision Maker Name, Title, Profile URL, Evidence URL, Confidence, Verdict, Verdict Reason, Verification URL, Verified Date, Channel, Channel Evidence, Reached, Reached Channel, Exported, Notes]
 description: >-
   Check & fill a lead list — yours or one /lead-search built. Re-checks each
   row against the open web, fills the gaps it can actually observe (website,
@@ -161,10 +164,26 @@ just the rows added since. Re-check every row only when the user asks.
    when you read it this session, cited. Never guess an email pattern
    (`first@domain.com` is fabrication), never construct a profile URL, never
    "resolve" UNKNOWN by inference.
-5. **Same doors as lead-search.** Gated sites via search snippets only; no
-   constructed URLs; at most one page fetch per row, and only when snippets
-   left it ambiguous.
-6. **Partial is partial.** Budget spent at row 30 of 50 → the report says 30
+5. **Open what you cite.** A claim rests on a page you opened this session,
+   never on a search snippet or a memory. Read several pages per
+   `web_extract` call. Gated sites (LinkedIn and the like) only through
+   search results — and a profile URL only when a search returned it; never
+   construct one.
+6. **One check per disqualifier, quoted.** For every bullet in the plan's
+   `## Disqualifiers`, record `pass`, `fail` or `unknown`, with the URL and
+   words copied exactly from that page. **keep** only when every one passed;
+   **cut** when one failed (the reason names it); **UNKNOWN** when any is
+   unknown — never "relaxed" to a keep. Before writing a keep, prove its
+   quotes: `web_extract` with `find` set to them (`find_only: true`); a
+   quote the page does not contain is not evidence — fix the check or the
+   verdict. Put the checks in `Notes`: `checks: 1 pass, 2 pass, 3 fail —
+   <url>`.
+7. **People and titles as stated.** A title is copied from a page that says
+   it ("Owner", "Practice Manager"); never inferred (a founder is not the
+   owner unless a page says so). Prefer sources from the last two years; a
+   name only found in an older source gets `Confidence` `likely` and the
+   year in `Notes`. A second contact needs its own source.
+8. **Partial is partial.** Budget spent at row 30 of 50 → the report says 30
    checked, 20 unchecked, and the unchecked rows keep verdict `UNKNOWN`.
 
 ## Procedure
@@ -175,10 +194,12 @@ list and plan (stage `load` above is the spec).
 Scratch for this run lives in `.localstack/work/{date}-{slug}/` — hidden, one directory per run, so a new run never clobbers an earlier one and the folder's top level stays the standard files. Scratch is disposable; old run directories may be deleted freely.
 
 **2. Check and fill each queued row** (stage `verify` is the spec): website is
-their own domain and alive; decision maker re-searched and compared from
-result titles; an observed contact channel found where one exists; blanks
-filled only from observations; disqualifiers tested against observations. One
-line per row.
+their own domain and alive; every disqualifier checked on a page you opened,
+quoted (rule 6); the decision maker and title read from a page that states
+them (rule 7); an observed contact channel found where one exists; blanks
+filled only from observations. **Write each row's result into
+`leads-<topic>.csv` as soon as it is checked** — a long run never holds its
+findings in memory or scratch only.
 
 **3. Write the results in place.**
 
@@ -220,7 +241,9 @@ the Skill tool); otherwise tell the user to type `/lead-draft` (Codex:
 
 ## Quality bar
 
-- Every verdict and every filled value a reader can check by opening one URL.
+- Every verdict and every filled value a reader can check by opening one URL,
+  and every quote in a check is on its page (`web_extract find` said so).
+- No keep with a failed or unknown check.
 - A cut without a reason, or a keep without fresh evidence, is a failed row —
   fix it or mark it UNKNOWN.
 - An imported file loses nothing: every source column is in a header column

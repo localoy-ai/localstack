@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: lead-search
-version: 0.9.0
+version: 0.10.0
 publisher: localoy
 capabilities: [files, web]
 # localoy dialect: stages make this runnable on small local models. Each stage
@@ -55,6 +55,7 @@ stages:
       The CSV holds rows only, no commentary. Then add today's line to
       CHANGELOG.md and tick search in the PLAN's Steps.
     produces: leads-{slug}.csv
+    columns: [Company Name, Location, Website, Decision Maker Name, Title, Profile URL, Evidence URL, Confidence, Verdict, Verdict Reason, Verification URL, Verified Date, Channel, Channel Evidence, Reached, Reached Channel, Exported, Notes]
 description: Find sales leads on the open web — companies and decision makers with evidence behind every row. (localstack)
 author: localoy
 license: MIT
@@ -173,14 +174,19 @@ often not how their buyers look.
 angle, snippets only. Every candidate lands in `.localstack/work/{date}-{slug}/found.md`
 with its query and result URL.
 
-**3. Resolve** (read `sections/resolve.md`): per candidate — own website,
-location, decision maker from result titles; at most one page fetch per
-candidate. Trail goes to `.localstack/work/{date}-{slug}/resolved.md`.
+**3. Resolve and save as you go** (read `sections/resolve.md`): per
+candidate — own website, location, and the decision maker with their title as
+a page states them (open it; several pages per `web_extract` call). Trail goes
+to `.localstack/work/{date}-{slug}/resolved.md`. **The moment a candidate is
+resolved, append its row to `leads-<topic>.csv`** — at the top of the folder,
+never under `.localstack/`, with the exact header below and no other columns
+(skip a domain already in it). A long run never holds its leads in notes only:
+if it stops, the list holds everything found so far. localoy checks the file
+at the end of the turn and sends it back if the path or header is wrong.
 
-**4-6. Dedupe, write, report** (read `sections/report.md`): one row per
-canonical domain, appended to `leads-<topic>.csv` under the exact canonical
-header, the standard files updated, then the short gist in chat naming the
-plan consumed.
+**4-6. Dedupe, check, report** (read `sections/report.md`): confirm one row
+per canonical domain and the exact canonical header, update the standard
+files, then the short gist in chat naming the plan consumed.
 
 **7. Hand off.** Offer the next stage — "Qualify this list with
 `/lead-qualify`?" — as a structured question where the runtime supports one,

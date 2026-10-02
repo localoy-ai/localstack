@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: lead-qualify
-version: 0.4.0
+version: 0.4.1
 publisher: localoy
 capabilities: [files, web]
 # localoy dialect: stages make this runnable on small local models. Row-by-row
@@ -55,6 +55,15 @@ stages:
       PLAN's Steps. No numeric scores anywhere.
     produces: leads-{slug}.csv
     columns: [Company Name, Location, Website, Decision Maker Name, Title, Profile URL, Evidence URL, Confidence, Verdict, Verdict Reason, Verification URL, Verified Date, Channel, Channel Evidence, Reached, Reached Channel, Exported, Notes]
+    values:
+      Verdict: [keep, cut, UNKNOWN]
+      Confidence: [verified, likely, unconfirmed]
+    required:
+      - when: {Verdict: keep}
+        filled: [Website, Verification URL, Verified Date, Notes]
+      - when: {Verdict: cut}
+        filled: [Verdict Reason, Verification URL]
+    links: [Website, Evidence URL, Verification URL, Channel Evidence, Profile URL]
 description: >-
   Check & fill a lead list — yours or one /lead-search built. Re-checks each
   row against the open web, fills the gaps it can actually observe (website,

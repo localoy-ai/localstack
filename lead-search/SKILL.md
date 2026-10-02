@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: lead-search
-version: 0.10.0
+version: 0.10.1
 publisher: localoy
 capabilities: [files, web]
 # localoy dialect: stages make this runnable on small local models. Each stage
@@ -56,6 +56,9 @@ stages:
       CHANGELOG.md and tick search in the PLAN's Steps.
     produces: leads-{slug}.csv
     columns: [Company Name, Location, Website, Decision Maker Name, Title, Profile URL, Evidence URL, Confidence, Verdict, Verdict Reason, Verification URL, Verified Date, Channel, Channel Evidence, Reached, Reached Channel, Exported, Notes]
+    values:
+      Confidence: [verified, likely, unconfirmed]
+    links: [Website, Evidence URL]
 description: Find sales leads on the open web — companies and decision makers with evidence behind every row. (localstack)
 author: localoy
 license: MIT

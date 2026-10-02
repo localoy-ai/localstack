@@ -99,6 +99,16 @@ export const RESOLVERS: Record<string, ResolverFn> = {
     );
   },
 
+  // The status line every skill ends its chat report with — the same four
+  // words the router uses, so a caller (person or agent) can read the
+  // outcome without parsing prose.
+  COMPLETION_STATUS: () =>
+    '**Completion status.** End the chat report with one of:\n' +
+    '- **DONE** — completed, with the evidence named (files written, counts, URLs).\n' +
+    '- **DONE_WITH_CONCERNS** — completed, and list each concern.\n' +
+    '- **BLOCKED** — cannot proceed; say what blocked it and what was tried.\n' +
+    '- **NEEDS_CONTEXT** — missing information; say exactly what is needed.',
+
   // Per-run scratch directory convention.
   WORK_DIR: () =>
     `Scratch for this run lives in \`.localstack/work/{date}-{slug}/\` — ` +

@@ -1,0 +1,163 @@
+---
+# GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
+name: support-reply
+version: 0.1.0
+publisher: localoy
+capabilities: [files, browser]
+description: >-
+  Drafts replies to customer messages from the business's own rules, FAQ and
+  past replies — never promising what the business has not approved — and
+  sends each one only after the person says yes to it, when a channel is open
+  in their browser; otherwise the drafts stay drafts. (localstack)
+author: localoy
+license: MIT
+platforms: [linux, macos, windows]
+metadata:
+  hermes:
+    tags: [support, customers, replies, drafts, localstack]
+    related_skills: [support-faq, inbox-triage]
+allowed-tools:
+  - Bash
+  - Read
+  - Write
+  - Edit
+  - AskUserQuestion
+triggers:
+  - reply to these customers
+  - answer this customer
+  - draft support replies
+  - help me answer support messages
+  - customer support replies
+tags: [support, customer-service, replies]
+---
+
+## When to invoke this skill
+
+Writes a reply for each customer message the person points at — pasted,
+exported, in a file, or open in their browser's support inbox — built only
+from what the business has already said: its rules, its FAQ, and replies it
+has sent before. Use when asked to "reply to these customers", "answer this
+ticket" or "draft support replies". Mochi's skill; the FAQ side is
+`/support-faq`.
+
+## Never promises, never sends without a yes — the hard boundary
+
+- **Only approved answers.** A refund, a discount, a delivery date, a
+  feature, an exception to policy — a reply offers it only when the rules,
+  the FAQ or a past sent reply already offers it, and the draft names which.
+  Anything not covered gets an honest holding line ("I'm checking this with
+  the team and will come back to you") and a question to the person, never a
+  guess that reads like a promise.
+- **One yes per reply.** Show the customer, the channel and the exact text,
+  then ask. "Send them all", "yes to the rest" and silence are not a yes for
+  the next reply. Auto mode skips ordinary questions, never this one.
+- **The person's own session, never a new one.** Sending happens only in a
+  support inbox, helpdesk or webmail the browser is already signed into.
+  Never type a password, create an account or solve a CAPTCHA; a login wall
+  ends sending and the rest stay drafts.
+- **No channel, no send.** No browser the agent can drive, or the message
+  came from a file → drafts only, and say so. Never fall back to an email
+  tool, an API or a script.
+
+## What you need first
+
+- **The messages** — a path, a paste, or the inbox to open.
+- **The rules** — where the business's policy lives (refunds, delivery,
+  hours, what support may offer). DESIGN.md's `## Support rules` if it has
+  one; else a file the person names; else ask.
+
+Ask for everything still missing in a SINGLE message, then wait. Without
+rules, draft only what the FAQ and past replies already answer, and say at
+the top which rules you lacked.
+
+## What you read first
+
+- **DESIGN.md** — tone, sign-off, and `## Support rules`. It wins over your
+  defaults.
+- **FAQ.md**, if present — approved answers (`/support-faq` keeps it).
+- **Past replies** — `support-<inbox>.md` entries with `Status: sent`, and
+  any past-replies file the person names. A past reply is a precedent only
+  when it was actually sent.
+- **The messages themselves**, every one, start to end. Do not answer the
+  first line of a long message.
+
+## Ground rules (non-negotiable)
+
+1. **Every answer has a source.** Under each draft, list where each fact
+   came from: `rule: <file § heading>`, `FAQ: <question>`, `past reply:
+   <date, customer>`. A sentence with no source is cut or becomes a question
+   to the person.
+2. **The customer's facts are the customer's.** Order numbers, names and
+   dates come from their message; never fill one in.
+3. **Kind and short.** Answer the actual question first, in the business's
+   tone; one clear next step; no filler apology chains.
+4. **Angry or legal is the person's call.** Threats, chargebacks, legal or
+   safety issues, and press get a draft marked `needs you` and no send
+   offer until the person has read it.
+
+## Procedure
+
+**1. Load** the inputs above. Name the inbox slug (`<inbox>`, e.g. `email`,
+`shopify-chat`) — lowercase, hyphens.
+
+Scratch for this run lives in `.localstack/work/{date}-{slug}/` — hidden, one directory per run, so a new run never clobbers an earlier one and the folder's top level stays the standard files. Scratch is disposable; old run directories may be deleted freely.
+
+**2. Read and sort.** One line per message: customer, what they asked, which
+source answers it (or `not covered`), `needs you` if it is rule 4.
+
+**3. Draft** one reply per message under the rules above.
+
+**4. Write them down.** In `support-<inbox>.md` (create it with
+`# Support — <inbox>`; never remove an entry already there), per message:
+
+```
+### <Customer> — <one-line ask> — <date received>
+Status: draft | needs you
+- Sources: <rule/FAQ/past reply for each fact>
+- Not covered: <what the person must decide, or "none">
+
+<the reply text>
+```
+
+**5. Send, one at a time — only if a channel is open.** For each `draft`
+entry the person wants sent, open the conversation in their signed-in
+inbox, put the reply in exactly as written, and stop:
+
+```
+<Customer> — <channel>
+<the exact text that will be sent>
+Send this?
+```
+
+Send only on a yes for THIS reply; confirm it went (it shows in the thread or
+the sent folder). Then set `Status: sent YYYY-MM-DD`, or `skipped`, or
+`failed — <what you saw>`. Edit → show the new text and ask again.
+
+**Standard files.** This folder is kept in files any agent already reads. Update them in place; never scatter output into new folders.
+- **AGENTS.md** — create it if missing. localstack owns only the block between `<!-- localstack:start -->` and `<!-- localstack:end -->`; rewrite that block, never anything outside it. The block says what this folder is for, the rules (drafts only; nothing is sent without the user's explicit yes, one message at a time; no invented facts), a map of the files below, and one line per topic (its PLAN, its lead count, the next unticked step) and per report (its file and date).
+- **CHANGELOG.md** — create it if missing (`# Changelog`). Add one bullet for this run under today's `## YYYY-MM-DD` heading, newest date first: the skill, the topic, and the counts or outcome (e.g. `- lead-search austin-dentists: 18 found, 3 skipped as already contacted`).
+- **TODOS.md** — create it if missing (`# TODOs`). Add each open next action as `- [ ] <action> (<topic>)`; tick items this run finished; never delete lines.
+- **DESIGN.md** — decisions meant to last (positioning, tone, channels to use or avoid). Read it before writing anything a person will see; add to it only when the user states or approves a decision.
+
+For this step: the CHANGELOG line gives drafted / sent / needs-you counts, and
+each sent reply's customer and text exactly as sent. One TODO per `needs you`
+entry and per "not covered" decision (`- [ ] decide: <question> (support
+<inbox>)`). A question asked three or more times → a TODO to run
+`/support-faq`.
+
+**6. Report.** Counts, what needs the person, and anything that stopped a
+send. Offer `/support-faq` when the same question keeps coming back.
+
+**Completion status.** End the chat report with one of:
+- **DONE** — completed, with the evidence named (files written, counts, URLs).
+- **DONE_WITH_CONCERNS** — completed, and list each concern.
+- **BLOCKED** — cannot proceed; say what blocked it and what was tried.
+- **NEEDS_CONTEXT** — missing information; say exactly what is needed.
+
+## Quality bar
+
+- Zero sends without their own yes; zero promises without a named source.
+- A teammate reading `support-<inbox>.md` can see why every reply says what
+  it says.
+- A short holding reply that is true beats a confident one that commits the
+  business to something nobody approved.

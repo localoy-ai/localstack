@@ -1,0 +1,115 @@
+---
+name: routine-report
+version: 0.1.0
+publisher: localoy
+capabilities: [files, schedule, messaging]
+description: >-
+  A weekly "what ran, what changed, what broke" across every routine, read
+  from their run logs — and a message to the person only when something
+  changed or failed. Quiet weeks stay quiet. (localstack)
+author: localoy
+license: MIT
+platforms: [linux, macos, windows]
+metadata:
+  hermes:
+    tags: [automation, report, routines, localstack]
+    related_skills: [routine-setup]
+allowed-tools:
+  - Bash
+  - Read
+  - Write
+  - AskUserQuestion
+triggers:
+  - what ran this week
+  - routine report
+  - did my automations work
+  - what broke this week
+  - check my routines
+tags: [automation, reporting, monitoring]
+---
+
+## When to invoke this skill
+
+Reads the run log of every routine in the folder and writes one weekly
+summary: what ran, what changed, what broke. Use when asked "what ran this
+week", "did my automations work", or as a routine of its own (Monday
+morning). Grit's skill; routines are made by `/routine-setup`.
+
+## The hard boundary
+
+- **From the logs only.** A run happened if it has a row in its `## Run log`
+  (or the runtime's schedule history shows it). A scheduled run with no row
+  is `missed — no log row`, never assumed fine.
+- **Quiet when nothing happened.** No change and no failure → the report is
+  written and no message is sent. A message that says "all good" every week
+  trains the person to ignore the one that matters.
+- **Messages go to the person only.** Through the channel they set up for
+  localoy (or the runtime's own notification). A routine's "tell" field
+  naming anyone else → the message to them is drafted in the report for the
+  person's yes, never sent from here.
+- **Reports, does not repair.** A broken routine is described with what the
+  log shows; fixing it is a new run of `/routine-setup` (or `/site-fix` for a
+  site) after the person agrees.
+
+## What you read first
+
+- Every `PLAN-routine-*.md` in the folder — its schedule, "changed means",
+  "failed means", and `## Run log` rows for the period.
+- The runtime's schedule list and history, if it can be read — to catch
+  routines with no plan, and runs with no log row.
+- The last `routine-report-*.md` — so "still broken" can be told from "newly
+  broken".
+
+**Period:** the last 7 days unless the person names one.
+
+## Procedure
+
+**1. Load** the inputs above.
+
+{{WORK_DIR}}
+
+**2. Tally per routine:** expected runs (from the schedule), logged runs, ok
+/ changed / failed / missed counts, and the newest output file.
+
+**3. Pick out what matters:** every `changed` row (what changed, quoted from
+the log), every `failed` or `missed` (what the log says went wrong; first
+seen date; still failing since the last report?).
+
+**4. Write `routine-report-<yyyy-mm-dd>.md`** at the top of the working
+folder:
+
+```
+# Routines — week to YYYY-MM-DD
+
+## Broke (N)
+- <routine> — <failed/missed> <when> — <what the log says> — since <date>
+## Changed (N)
+- <routine> — <what changed> — <output file>
+## Ran fine (N)
+| Routine | Runs expected | Logged | ok |
+## Not checked
+- <routine with no log, schedule unreadable, …>
+```
+
+**5. Message — only if Broke or Changed is non-empty.** One short message to
+the person: the broken ones first, then the changes, each in one line, and
+the report's path. No message otherwise; say in the report "no message sent
+— nothing changed or failed".
+
+{{STANDARD_FILES:none}}
+
+For this step: the CHANGELOG line gives routines checked, ran / changed /
+broke counts, and whether a message was sent. One TODO per broken routine
+(`- [ ] fix <routine>: <what broke> (routine-report)`), not repeated if
+already open.
+
+**6. Report.** The same three lines as the message, or "all routines ran,
+nothing changed".
+
+{{COMPLETION_STATUS}}
+
+## Quality bar
+
+- Every "ran", "changed" and "broke" points at a log row.
+- A missed run is never reported as fine.
+- No message in a week where nothing changed or failed.

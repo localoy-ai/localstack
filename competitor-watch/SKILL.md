@@ -1,0 +1,141 @@
+---
+# GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
+name: competitor-watch
+version: 0.1.0
+publisher: localoy
+capabilities: [files, web, browser]
+description: >-
+  A sourced comparison of the competitors the person names — offer, price,
+  positioning and recent changes, each value read from a page and dated.
+  Re-run it and it shows what changed since last time. (localstack)
+author: localoy
+license: MIT
+platforms: [linux, macos, windows]
+metadata:
+  hermes:
+    tags: [research, strategy, competitors, localstack]
+    related_skills: [market-research, routine-setup]
+allowed-tools:
+  - Bash
+  - Read
+  - Write
+  - WebSearch
+  - WebFetch
+  - AskUserQuestion
+triggers:
+  - compare our competitors
+  - watch our competitors
+  - what changed at our competitors
+  - competitor analysis
+  - how do we compare to
+tags: [research, competitors, comparison]
+---
+
+## When to invoke this skill
+
+Builds a side-by-side of named competitors — what they offer, what it costs,
+how they position it, what changed recently — every cell read from a page and
+dated. Run it again later and it says what moved. Use when asked to "compare
+our competitors", "what changed at X", "how do we stack up". Umbra's skill;
+for an open market question, use `/market-research`. To run it every week,
+hand it to `/routine-setup`.
+
+## The hard boundary
+
+- **Named competitors only.** The person names them, or approves a list you
+  propose from search (with the URL that surfaced each). Never pad the
+  table with companies nobody asked about.
+- **Every cell is an observation.** A value carries the URL it was read at
+  and the date. Not shown publicly → `UNKNOWN — <where you looked>`. A
+  price behind "contact sales" is `not public`, never an estimate.
+- **Changes are diffs, not impressions.** "Changed" means the value read
+  today differs from the value recorded last run. A change you cannot point
+  to both values for is not a change.
+- **No signing in, no trials, no fake sign-ups.** Public pages and public
+  search results only. Never create an account or start a trial to see a
+  price.
+
+## What you need first
+
+- **The competitors** — names or sites.
+- **What we sell** — DESIGN.md or a `PLAN-*.md` may say; else one line from
+  the person, so "positioning" has something to sit beside.
+
+Ask for what is missing in a SINGLE message, then wait.
+
+## What you read first
+
+- `competitors-<topic>.md`, if it exists — last run's values and their dates
+  are the baseline for "what changed". Say when it was last updated.
+- DESIGN.md — our own positioning.
+
+## Procedure
+
+**1. Load** the inputs above. Slug: `<topic>` from the market
+(`invoicing-tools`).
+
+Scratch for this run lives in `.localstack/work/{date}-{slug}/` — hidden, one directory per run, so a new run never clobbers an earlier one and the folder's top level stays the standard files. Scratch is disposable; old run directories may be deleted freely.
+
+**2. Read each competitor.** Fetch the homepage, pricing page, product or
+features page, and the newest changelog, blog or news item you can find.
+Record per competitor in `.localstack/work/{date}-<topic>/<competitor>.md`:
+offer (what they sell, in one line, their words quoted), price (plans and
+amounts as shown, currency, billing period), positioning (their headline,
+quoted; who they say it is for), recent changes (dated items from their own
+pages or news), each with URL.
+
+**3. Compare against last run.** For every cell that has a previous value,
+mark `same`, `changed (was <old> on <date>)`, or `could not re-check`. A page
+that moved or vanished is itself a change — record it.
+
+**4. Write** `competitors-<topic>.md` at the top of the working folder:
+
+```
+# Competitors — <topic>
+Updated: YYYY-MM-DD · last run: <date or "first run">
+
+## What changed since <last run date>
+- <Competitor>: <field> was "<old>", now "<new>" — <URL>
+(or "Nothing changed in the fields checked.")
+
+## Side by side
+| | Offer | Price | Positioning | Recent changes |
+|---|---|---|---|---|
+| <Competitor> | … (URL) | … (URL) | "…" (URL) | YYYY-MM-DD … (URL) |
+
+## Where we sit
+<3–5 points: where our offer or price differs, from DESIGN.md vs the table —
+each pointing at the cells it rests on>
+
+## Could not check
+- <Competitor — field — why>
+```
+
+The previous run's values survive in git and the CHANGELOG line; keep a copy
+of this run's raw notes in the scratch directory so the next run can diff.
+
+**Standard files.** This folder is kept in files any agent already reads. Update them in place; never scatter output into new folders.
+- **AGENTS.md** — create it if missing. localstack owns only the block between `<!-- localstack:start -->` and `<!-- localstack:end -->`; rewrite that block, never anything outside it. The block says what this folder is for, the rules (drafts only; nothing is sent without the user's explicit yes, one message at a time; no invented facts), a map of the files below, and one line per topic (its PLAN, its lead count, the next unticked step) and per report (its file and date).
+- **CHANGELOG.md** — create it if missing (`# Changelog`). Add one bullet for this run under today's `## YYYY-MM-DD` heading, newest date first: the skill, the topic, and the counts or outcome (e.g. `- lead-search austin-dentists: 18 found, 3 skipped as already contacted`).
+- **TODOS.md** — create it if missing (`# TODOs`). Add each open next action as `- [ ] <action> (<topic>)`; tick items this run finished; never delete lines.
+- **DESIGN.md** — decisions meant to last (positioning, tone, channels to use or avoid). Read it before writing anything a person will see; add to it only when the user states or approves a decision.
+
+For this step: the CHANGELOG line gives competitors read, cells filled,
+changes found (each named briefly). One TODO per change worth a decision
+(`- [ ] decide how to respond: <competitor> <change> (competitor-watch
+<topic>)`).
+
+**5. Report.** Lead with what changed, then where we sit. Offer
+`/routine-setup` to re-run it on a schedule.
+
+**Completion status.** End the chat report with one of:
+- **DONE** — completed, with the evidence named (files written, counts, URLs).
+- **DONE_WITH_CONCERNS** — completed, and list each concern.
+- **BLOCKED** — cannot proceed; say what blocked it and what was tried.
+- **NEEDS_CONTEXT** — missing information; say exactly what is needed.
+
+## Quality bar
+
+- Every cell opens to a page that shows its value on the date given.
+- "What changed" lists only differences with both values on record.
+- A table with honest `UNKNOWN`s beats a full one filled from memory.

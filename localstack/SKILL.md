@@ -1,17 +1,17 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: localstack
-version: 0.6.0
+version: 0.7.0
 publisher: localoy
 capabilities: []
-description: Router for the localstack skill suite — sends any sales-development or SEO request to the right skill and stage. (localstack)
+description: Router for the localstack skill suite — sends any sales-development, SEO, design, support, research, social, finance, operations, automation or web request to the right skill and stage. (localstack)
 author: localoy
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
   hermes:
     tags: [router, sales, seo, localstack]
-    related_skills: [lead-plan, lead-search, lead-qualify, seo-audit]
+    related_skills: [lead-plan, lead-search, lead-qualify, seo-audit, support-reply, market-research, social-plan, reconcile, inbox-triage, routine-setup, site-check]
 allowed-tools:
   - Bash
   - Read
@@ -30,8 +30,10 @@ tags: [router, sales, seo, pipeline]
 
 ## When to invoke this skill
 
-Sends any sales-development or SEO request to the right localstack skill and,
-for sales, the right pipeline stage. Use when you invoke localstack without a
+Sends any request to the right localstack skill — sales development (and,
+for sales, the right pipeline stage), SEO, design, and the field skills each
+of The Locals carries: support, research, social, finance, operations,
+automation, and web. Use when you invoke localstack without a
 specific skill, or ask "which localstack skill fits this?".
 
 ## The standard files
@@ -49,6 +51,11 @@ TODOS.md               open next actions, from every skill
 CHANGELOG.md           dated log of what ran and every message sent
 DESIGN.md              lasting decisions: positioning, tone, channels
 seo-audit-<site>.md    SEO reports, one per site or page (also keywords-, onpage-)
+<kind>-<slug>.md       other reports, one per subject, replaced on rerun: support-,
+                       research-, competitors-, reconcile-, money-, inbox-,
+                       site-check-, fix-, routine-report-; FAQ.md for /support-faq
+PLAN-social-*.md       also PLAN-tidy-<folder>.md and PLAN-routine-<name>.md: other
+                       work with its own ## Steps
 .localstack/work/      hidden scratch, one directory per run
 ```
 
@@ -160,22 +167,49 @@ cheaper than a false negative.
 |---|---|
 | "paint/draw/design <anything>", "make it the way <artist> did", "/vinci …" | `/vinci` — researches the method, plans the layers, paints every stroke in the Vinci editor, exports at 16× |
 
+**The Locals' field skills** (each belongs to one Local; every one drafts
+before it acts, and asks before each send, post, move, deploy or anything
+irreversible):
+
+| They say | Route | Local |
+|---|---|---|
+| "reply to these customers", "draft support replies" | `/support-reply` — drafts from the rules, FAQ and past replies; sends one yes at a time | Mochi |
+| "update the FAQ", "what do customers keep asking" | `/support-faq` — questions asked 3+ times become cited FAQ.md entries | Mochi |
+| "research this market", "should we enter…" | `/market-research` — decision first; true vs guessed with URLs; implications | Umbra |
+| "compare our competitors", "what changed at X" | `/competitor-watch` — sourced side-by-side; reruns show what changed | Umbra |
+| "plan our social posts", "content calendar" | `/social-plan` — a week per channel in PLAN-<topic>.md | Fizz |
+| "write the captions", "post this" | `/social-post` — captions; pictures from Nova; posts one yes at a time | Fizz |
+| "reconcile these", "match invoices to payments" | `/reconcile` — totals, duplicates, missing, line by line | Zorp |
+| "monthly money report", "who still owes us" | `/money-report` — in, out, outstanding, notable, from the files | Zorp |
+| "triage my inbox", "what needs me" | `/inbox-triage` — needs you / can wait / done, drafts, no sends without a yes | Bloop |
+| "tidy this folder", "organise my files" | `/file-tidy` — a plan first, moves after a yes, every move logged, no deletes | Bloop |
+| "automate this", "do this every week" | `/routine-setup` — steps, one run together, then a schedule and a run log | Grit |
+| "what ran this week", "did my automations work" | `/routine-report` — ran / changed / broke; messages only on change or failure | Grit |
+| "check my website", "find broken links" | `/site-check` — pages, links, forms, observed speed signals; a fix list | Blip |
+| "fix this bug on my site", "this page is broken" | `/site-fix` — reproduce, smallest fix, tested twice; asks before going live | Blip |
+
 ## What the suite refuses — say so, don't improvise
 
 These have no localstack path on purpose. Say plainly the suite does not do
 them, and do NOT produce the adjacent artifact as a stand-in:
 
-- **Sending without a yes.** `/lead-reach` is the only thing that sends, and
-  it asks before every message — never "send all", never in bulk, never a
-  lead twice. Anything else that would send (an email tool, an API, a
-  script) the suite does not do.
+- **Sending without a yes.** Every skill that sends or posts — `/lead-reach`,
+  `/support-reply`, `/social-post`, `/inbox-triage` — does it from the user's
+  own signed-in browser and asks before every message or post: never "send
+  all", never in bulk, never a lead twice. `/routine-report` messages only
+  the user. Anything else that would send (an email tool, an API, a script)
+  the suite does not do.
+- **Deleting, moving money, touching production without a yes.** No skill
+  deletes the user's files or messages; `/file-tidy` moves only after a yes
+  and logs every move; `/reconcile` and `/money-report` never move money;
+  `/site-fix` asks before anything goes live.
 - **Invented data.** No constructed emails or profile URLs, no numeric
   scores, no imagined firmographics or keyword volumes. `UNKNOWN` is the
   honest value.
 - **Signing in anywhere.** For research, gated sites (LinkedIn, Crunchbase,
   directories) are read only through what public search results say about
-  them. `/lead-reach` uses a browser session the user is already signed into
-  and never signs in itself.
+  them. Skills that act in a browser use a session the user is already
+  signed into and never sign in themselves.
 - **Paid data.** No purchased lists, no paid enrichment, nothing that spends
   money.
 

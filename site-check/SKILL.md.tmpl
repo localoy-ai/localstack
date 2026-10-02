@@ -1,0 +1,120 @@
+---
+name: site-check
+version: 0.1.0
+publisher: localoy
+capabilities: [files, web, browser]
+description: >-
+  Checks a website's pages, links, forms and the speed signals a browser can
+  actually observe, and writes a prioritised fix list to
+  site-check-<site>.md. Never submits a form, never signs in, never claims a
+  measurement it did not take. (localstack)
+author: localoy
+license: MIT
+platforms: [linux, macos, windows]
+metadata:
+  hermes:
+    tags: [web, qa, links, forms, performance, localstack]
+    related_skills: [site-fix, seo-audit]
+allowed-tools:
+  - Bash
+  - Read
+  - Write
+  - WebFetch
+  - AskUserQuestion
+triggers:
+  - check my website
+  - is my site working
+  - find broken links
+  - test my site
+  - why is my site slow
+tags: [web, site-health, broken-links]
+---
+
+## When to invoke this skill
+
+Walks a site the way a visitor would and records what is broken or slow:
+pages that fail, links that go nowhere, forms that look broken, console
+errors, heavy pages. Use when asked to "check my website", "is anything
+broken", "why is my site slow". Blip's skill; to fix what it finds, use
+`/site-fix`. For titles, metas and rankings, use `/seo-audit`.
+
+## The hard boundary
+
+- **Observed, not assumed.** Every finding names the URL and what was seen —
+  the status code, the console message, the byte count, the element. A page
+  that would not load is reported as such, never described from memory.
+- **Never submits a form.** Submitting sends something to a real business
+  inbox or system. Forms are checked by looking: fields present, labels,
+  required markers, the action target, errors shown when the page loads.
+  Testing a submission is the person's call, per form, and only on a test
+  or staging copy they name.
+- **No signing in.** Pages behind a login are listed as `not checked —
+  login required`. Never type credentials, create an account or solve a
+  CAPTCHA.
+- **Speed is signals, not a score.** Report what the browser measured on
+  this computer, this once: load timing from the page's own performance
+  entries, page weight, request count, the largest images and scripts.
+  Never a "performance score", never a claim about other visitors.
+- **Gentle.** At most 30 pages, one at a time, no load testing.
+
+## What you need first
+
+- **The site URL** (and staging, if the person wants that checked instead).
+- **The pages that matter most** — checkout, booking, contact. Default: the
+  homepage's navigation.
+
+Ask for what is missing in a SINGLE message, then wait. **Earlier runs:** if
+`site-check-<site>.md` exists, say when it was last written; this run
+replaces it and reports which earlier findings are now fixed.
+
+## Procedure
+
+**1. Scope.** Open the homepage in the browser; read `sitemap.xml` if there
+is one. Build the page list (at most 30): the pages the person named, the
+main navigation, key flows. Say how the list was built. `<site>` slug: host,
+lowercase, dots as hyphens (`acme-com`).
+
+{{WORK_DIR}}
+
+**2. Per page, in the browser:** HTTP status and redirects; console errors
+and failed requests; broken images; mobile width (375px) — content cut off
+or overlapping, with a screenshot into scratch; performance entries
+(`navigation` timing, transfer sizes, request count) read from the page.
+
+**3. Links.** Collect every internal link and each distinct external link;
+check each one's status once. Record broken (4xx/5xx), redirect chains, and
+links to `http://` on an `https://` site.
+
+**4. Forms.** For each form: fields, labels, required markers, where it
+submits (same site? `https`?), visible errors on load. Do not submit.
+
+**5. Prioritise.**
+- **Fix now** — a key page or flow broken: 5xx/4xx on a named page, a
+  checkout or contact form that cannot work as built, console errors that
+  stop the page.
+- **Fix soon** — broken links, broken images, mobile layout breaks, very
+  heavy pages (name the file and its size).
+- **Later** — redirect chains, mixed content warnings, minor console noise.
+
+**6. Write `site-check-<site>.md`** at the top of the working folder:
+`Updated: YYYY-MM-DD`, pages checked / failed / not checked (and why), the
+fix list by priority (each: URL, what was seen, evidence — screenshot path
+or quoted message), then per-page notes, then "fixed since last check" on a
+rerun.
+
+{{STANDARD_FILES:none}}
+
+For this step: the CHANGELOG line gives pages checked and fix-now / soon /
+later counts. Every "fix now" item → a TODO (`- [ ] <fix> — <URL>
+(site-check <site>)`).
+
+**7. Report.** The fix-now items first, then counts. Offer `/site-fix` for
+the top item.
+
+{{COMPLETION_STATUS}}
+
+## Quality bar
+
+- Every finding opens to a URL and an observation someone else can repeat.
+- Zero forms submitted, zero logins, zero invented scores.
+- A 12-page check is reported as 12 pages, never as "the site".

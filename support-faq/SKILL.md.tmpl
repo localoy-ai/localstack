@@ -1,0 +1,120 @@
+---
+name: support-faq
+version: 0.1.0
+publisher: localoy
+capabilities: [files]
+description: >-
+  Turns the questions customers ask three or more times into FAQ entries in
+  FAQ.md (and a help-page draft on request), each citing the messages it came
+  from and answered only from what the business has already approved.
+  Publishes nothing. (localstack)
+author: localoy
+license: MIT
+platforms: [linux, macos, windows]
+metadata:
+  hermes:
+    tags: [support, faq, help-center, localstack]
+    related_skills: [support-reply]
+allowed-tools:
+  - Bash
+  - Read
+  - Write
+  - Edit
+  - AskUserQuestion
+triggers:
+  - update the faq
+  - write faq entries
+  - what do customers keep asking
+  - turn support questions into a faq
+  - help page from support messages
+tags: [support, faq, help-page]
+---
+
+## When to invoke this skill
+
+Reads customer messages, finds the questions that keep coming back, and
+writes each one asked **three or more times** as an FAQ entry — the question
+in the customer's words, the business's approved answer, and the messages
+that asked it. Use when asked to "update the FAQ", "what do customers keep
+asking", or after `/support-reply` flags a repeat. Mochi's skill.
+
+## The hard boundary
+
+- **Counted, not felt.** A question earns an entry only with three or more
+  messages you can cite. Two is a watch-list line, not an entry.
+- **Approved answers only.** The answer comes from DESIGN.md's
+  `## Support rules`, a policy file the person names, or a reply that was
+  actually sent (`Status: sent` in `support-<inbox>.md`). No source → the
+  entry is written with `Answer: NEEDED — <what the person must decide>`.
+  Never invent policy to finish an entry.
+- **Publishes nothing.** FAQ.md and the help-page draft are files in this
+  folder. Putting them on a website or helpdesk is the person's step, or a
+  separate request with its own yes.
+- **No customer's private details in an entry.** Cite messages by date and
+  a short id (`2026-09-14 · ticket 4812`), never by email address or full
+  name.
+
+## What you need first
+
+- **The messages** — `support-*.md` files here, an export (CSV, mailbox
+  file, helpdesk export) or a folder. Ask for a path if none is here.
+- **The period** — default: everything given. Ask only if the person said
+  "recent".
+
+Ask in a SINGLE message, then wait.
+
+## What you read first
+
+- **FAQ.md**, if present — existing entries are updated, never duplicated.
+- **DESIGN.md** — tone and `## Support rules`.
+- **Every message in scope**, start to end.
+
+## Procedure
+
+**1. Load** the inputs above.
+
+{{WORK_DIR}}
+
+**2. Extract** one line per message into
+`.localstack/work/{date}-faq/questions.md`: message id, date, the question in
+one plain sentence. A message with several questions gets several lines.
+
+**3. Group** lines that ask the same thing, even in different words. Say the
+grouping rule you used at the top of the scratch file. Count each group.
+
+**4. Answer** each group of 3+ from an approved source (above), quoting the
+source's heading or the sent reply's date. Conflicting sources → the entry
+says both and asks the person to choose.
+
+**5. Write FAQ.md** (create it with `# FAQ` and an `Updated: YYYY-MM-DD`
+line; update existing entries in place, never delete one):
+
+```
+## <The question, in the customer's words>
+<The answer, short, in DESIGN.md's tone — or "Answer: NEEDED — <decision>">
+
+_Asked N times · sources: <id, date>; <id, date>; … · answer from: <rule or sent reply>_
+```
+
+Then `## Watch list` — groups asked twice, one line each with their ids.
+
+**6. Help-page draft — only if asked.** `faq-page-draft.md`: the same
+entries, customer-facing, without the source lines, grouped by topic. Say
+plainly it is a draft for the person to publish.
+
+{{STANDARD_FILES:none}}
+
+For this step: the CHANGELOG line gives messages read, entries added /
+updated, and answers still NEEDED. One TODO per NEEDED answer (`- [ ] decide
+the answer: <question> (support-faq)`).
+
+**7. Report.** Messages read, groups found, entries written, answers the
+person still owes. Point `/support-reply` at FAQ.md — it reads it.
+
+{{COMPLETION_STATUS}}
+
+## Quality bar
+
+- Every entry's count can be checked by opening the cited messages.
+- No answer exists that the business did not already give.
+- Five entries that stop real repeat questions beat thirty that pad a page.

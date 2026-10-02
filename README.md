@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/localoy-ai/localstack/tags"><img src="https://img.shields.io/badge/version-0.7.1-FFA02E" alt="Version"></a>
+  <a href="https://github.com/localoy-ai/localstack/tags"><img src="https://img.shields.io/badge/version-0.11.0-FFA02E" alt="Version"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-EFE6D9" alt="License: MIT"></a>
   <img src="https://img.shields.io/badge/runtimes-Claude%20Code%20%C2%B7%20Codex%20%C2%B7%20Hermes%20%C2%B7%20localoy-161210" alt="Runtimes">
 </p>
@@ -66,6 +66,20 @@ this repo.
 | `/keyword-research` | Decides what a site should target: the terms its buyers actually use, grouped by intent, each mapped to the page that should own it. No invented volumes or difficulty scores. |
 | `/on-page-optimizer` | Rewrites one page against one target term — current and proposed values side by side, so a human approves each change. Produces a proposal, never an edit. |
 | `/vinci` | Paints or designs anything in the Vinci editor (localoy.ai/vinci) the way a master would: researches the artist's method, plans one layer per stage, writes every stroke, replays it and exports at up to 16×. |
+| `/support-reply` | Mochi · Drafts replies to customer messages from the business's rules, FAQ and past replies — never promising what isn't approved; sends one yes at a time from your browser, else drafts. |
+| `/support-faq` | Mochi · Turns questions asked three or more times into FAQ.md entries, each citing the messages it came from. |
+| `/market-research` | Umbra · Agrees the decision first, reads real sources, separates what's true (with URLs) from what's guessed, ends with what it means. |
+| `/competitor-watch` | Umbra · A sourced side-by-side of named competitors — offer, price, positioning, recent changes; reruns show what changed. |
+| `/social-plan` | Fizz · A week of posts per channel as a calendar in `PLAN-<topic>.md`. Plans only. |
+| `/social-post` | Fizz · Writes each caption, asks Nova (`/vinci`) for pictures, posts one yes at a time through your signed-in browser — never signs in. |
+| `/reconcile` | Zorp · Matches invoices, payments and exports in your CSV/XLSX files: totals, duplicates, missing, line by line. Never guesses a number. |
+| `/money-report` | Zorp · A monthly summary — in, out, outstanding, notable changes — with every number from your files. |
+| `/inbox-triage` | Bloop · Sorts waiting messages into needs you / can wait / done and drafts replies; never sends, archives or deletes without a yes. |
+| `/file-tidy` | Bloop · Proposes names and folders, shows the plan, moves only after a yes, logs every move in CHANGELOG.md, never deletes. |
+| `/routine-setup` | Grit · Turns a repeated task into a schedule: steps written, one run with you, then scheduled with a run log. |
+| `/routine-report` | Grit · Weekly "what ran, what changed, what broke" from the run logs; messages you only when something changed or failed. |
+| `/site-check` | Blip · Checks a site's pages, links, forms and observable speed signals; a prioritised fix list. Never submits a form. |
+| `/site-fix` | Blip · Reproduces a bug, fixes the smallest thing, tests twice in the browser, reports what broke and why; asks before touching production. |
 
 ## The sales pipeline
 

@@ -1,0 +1,139 @@
+---
+# GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
+name: market-research
+version: 0.1.0
+publisher: localoy
+capabilities: [files, web, browser]
+description: >-
+  Researches a market for one decision the person names first — reads real
+  sources, separates what is true (with its URL) from what is guessed, and
+  ends with what it means for that decision. No invented market sizes.
+  (localstack)
+author: localoy
+license: MIT
+platforms: [linux, macos, windows]
+metadata:
+  hermes:
+    tags: [research, strategy, market, localstack]
+    related_skills: [competitor-watch, lead-plan]
+allowed-tools:
+  - Bash
+  - Read
+  - Write
+  - WebSearch
+  - WebFetch
+  - AskUserQuestion
+triggers:
+  - research this market
+  - is there a market for
+  - market research
+  - should we enter
+  - who else is in this space
+tags: [research, strategy, market-research]
+---
+
+## When to invoke this skill
+
+Answers a market question in service of one decision: "should we launch in
+Dhaka", "is there demand for a cheaper tier", "who buys this and what do they
+pay". Use when asked to "research this market", "is there a market for…",
+"should we enter…". Umbra's skill. For a standing comparison of named rivals,
+use `/competitor-watch`.
+
+## The decision comes first — the hard boundary
+
+Research without a decision is a pile of links. Before reading a single
+source, agree **the decision** in one sentence ("Decide whether to offer a
+Bangla-language plan by December") and **what would change it** (two or three
+things that, if true, swing it). Write both at the top of the file. Every
+source you read earns its place by bearing on one of them.
+
+- **True vs guessed, always visible.** A fact carries the URL it was read at
+  and the date read. An estimate is labelled `guess:` with the reasoning
+  that produced it. A number you did not read on a page — market size,
+  growth rate, share — is never written as if you had.
+- **UNKNOWN is a finding.** What you looked for and could not find is listed,
+  with where you looked.
+- **No signing in, no paid reports.** Gated reports and sites are read only
+  through what public pages and search results say about them; a paywalled
+  figure quoted second-hand is cited to the page that quoted it, labelled so.
+
+## What you need first
+
+- **The decision**, in one sentence, and the deadline if there is one.
+- **What the business sells**, in their words — DESIGN.md or a
+  `PLAN-*.md` may already say.
+- **Scope** — the place, the customer, the time frame.
+
+Ask for everything still missing in a SINGLE message, then wait. Without a
+decision, propose one from the request and confirm it before researching.
+
+## Procedure
+
+**1. Frame.** Write the decision, what would change it, and the questions
+that follow (at most six). Pick the slug: `<topic>` from the decision
+(`bangla-plan`).
+
+Scratch for this run lives in `.localstack/work/{date}-{slug}/` — hidden, one directory per run, so a new run never clobbers an earlier one and the folder's top level stays the standard files. Scratch is disposable; old run directories may be deleted freely.
+
+**2. Read.** For each question: search, then fetch the pages that actually
+answer it — official statistics, the companies' own pages, reviews and
+forums for what buyers say, job posts and news for direction. Note each
+source in `.localstack/work/{date}-<topic>/sources.md` (URL, date read, what
+it says, which question). Prefer primary sources; a blog repeating a number
+is cited, but the number is traced to where it began when you can.
+
+**3. Sort** every claim into **True** (read, cited), **Guessed** (inferred —
+say from what) or **Unknown** (looked, not found — say where).
+
+**4. Write** `research-<topic>.md` at the top of the working folder:
+
+```
+# Research — <topic>
+Updated: YYYY-MM-DD
+
+## The decision
+<one sentence> — what would change it: <2–3 things>
+
+## What's true
+- <claim> — <URL> (read YYYY-MM-DD)
+
+## What's guessed
+- guess: <estimate> — because <reasoning, citing the true items it rests on>
+
+## Unknown
+- <what> — looked at: <where>
+
+## What it means for the decision
+<3–6 short points, each pointing back at the true items it rests on, and
+which way it pushes the decision; then the one thing to find out next>
+```
+
+A rerun replaces the file; CHANGELOG.md and git keep the history.
+
+**Standard files.** This folder is kept in files any agent already reads. Update them in place; never scatter output into new folders.
+- **AGENTS.md** — create it if missing. localstack owns only the block between `<!-- localstack:start -->` and `<!-- localstack:end -->`; rewrite that block, never anything outside it. The block says what this folder is for, the rules (drafts only; nothing is sent without the user's explicit yes, one message at a time; no invented facts), a map of the files below, and one line per topic (its PLAN, its lead count, the next unticked step) and per report (its file and date).
+- **CHANGELOG.md** — create it if missing (`# Changelog`). Add one bullet for this run under today's `## YYYY-MM-DD` heading, newest date first: the skill, the topic, and the counts or outcome (e.g. `- lead-search austin-dentists: 18 found, 3 skipped as already contacted`).
+- **TODOS.md** — create it if missing (`# TODOs`). Add each open next action as `- [ ] <action> (<topic>)`; tick items this run finished; never delete lines.
+- **DESIGN.md** — decisions meant to last (positioning, tone, channels to use or avoid). Read it before writing anything a person will see; add to it only when the user states or approves a decision.
+
+For this step: the CHANGELOG line gives the decision, sources read, and
+true / guessed / unknown counts. One TODO per unknown that would change the
+decision (`- [ ] find out: <unknown> (research <topic>)`). Record the decision
+in DESIGN.md only when the person makes it.
+
+**5. Report.** Lead with what it means for the decision, then the biggest
+unknown. Offer `/competitor-watch` when named rivals came up.
+
+**Completion status.** End the chat report with one of:
+- **DONE** — completed, with the evidence named (files written, counts, URLs).
+- **DONE_WITH_CONCERNS** — completed, and list each concern.
+- **BLOCKED** — cannot proceed; say what blocked it and what was tried.
+- **NEEDS_CONTEXT** — missing information; say exactly what is needed.
+
+## Quality bar
+
+- Every line under "What's true" opens to a page that says it.
+- No number appears that was not read on a cited page or labelled a guess
+  with its working.
+- The implications answer the decision asked — not a general market essay.

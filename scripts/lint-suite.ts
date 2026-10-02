@@ -91,6 +91,27 @@ for (const skill of skillDirs()) {
     fail(`${skill}/SKILL.md: unfolded description contains ': ' — fold it (>-) or localoy's parser rejects it`);
   }
 
+  // localoy install rules (daemon skill.Manifest.Validate): a skill that
+  // breaks one is skipped at install without a word — vinci 0.8.0 was, for
+  // both (2026-10-02).
+  if (descLine) {
+    let desc = descLine[1];
+    if (/^[>|]/.test(desc)) {
+      const body: string[] = [];
+      for (const l of fm.slice(fm.indexOf(descLine[0]) + descLine[0].length).split('\n').slice(1)) {
+        if (!/^\s/.test(l)) break;
+        body.push(l.trim());
+      }
+      desc = body.join(' ');
+    }
+    if (desc.length > 500) fail(`${skill}/SKILL.md: description is ${desc.length} chars; localoy refuses over 500 (it sits in every prompt)`);
+  }
+  const KNOWN_CAPS = ['files', 'web', 'browser', 'computer', 'shell', 'schedule', 'messaging', 'memory', 'delegate'];
+  const caps = fm.match(/^capabilities:[ \t]*\[(.*)\]/m);
+  for (const c of caps ? caps[1].split(',').map((x) => x.trim()).filter(Boolean) : []) {
+    if (!KNOWN_CAPS.includes(c)) fail(`${skill}/SKILL.md: capability '${c}' is not one localoy knows (${KNOWN_CAPS.join(', ')})`);
+  }
+
   for (const key of ['publisher:', 'author:', 'license:', 'platforms:', 'allowed-tools:', 'triggers:', 'description:']) {
     if (!fm.includes(key)) fail(`${skill}/SKILL.md: missing ${key}`);
   }

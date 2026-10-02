@@ -1,8 +1,8 @@
 ---
 name: vinci
-version: 0.8.0
+version: 0.8.1
 publisher: localoy
-capabilities: [files, web, terminal]
+capabilities: [files, web, shell]
 author: localoy
 license: MIT
 platforms: [linux, macos, windows]
@@ -11,15 +11,12 @@ metadata:
     tags: [creative, design, marketing, social, ecommerce, illustration, editing, vinci, localstack]
     related_skills: []
 description: >-
-  Makes and edits any visual in Vinci, localoy's editor: social posts, ads and
-  banners, product and e-commerce images, thumbnails, sales one-pagers,
-  logos, diagrams, illustrations and paintings — or changes to a picture the
-  person already has. Works straight in the chat's drawing, which the person
-  watches in the Vinci pane; paints every stroke itself, from what it sees
-  and knows, and checks by eye against the brief and any reference;
-  exports at the size the channel needs.
-  Use for "/vinci <anything visual>", "make a post / ad / banner /
-  thumbnail", "design", "draw", "edit this image". (localstack)
+  Makes and edits any visual in Vinci, localoy's editor: posts, ads, banners,
+  product images, thumbnails, one-pagers, logos, diagrams and illustrations,
+  or changes to a picture the person has. Draws in the chat's drawing (the
+  person watches in the Vinci pane), checks by eye against the brief, and
+  exports at each channel's size. Use for "/vinci <anything visual>", "make a
+  post / ad / banner", "design", "draw", "edit this image". (localstack)
 allowed-tools:
   - Bash
   - Read
@@ -136,12 +133,31 @@ rest to match.
    Facts and numbers come from the person's material or a source you cite
    in the plan; a chart only from real data.
 3. **Frames.** `frames` with the channel's preset (`linkedin-post`,
-   `instagram-story`, …) and a count: one board per piece, named (post-1…).
+   `instagram-story`, …) and a count: one board per piece, named for what
+   it is where it goes — its channel (`instagram-post`, `x-post`,
+   `shopify-product`, `site-banner`), or `post-monday`… for a week of one
+   channel — never `launch-1`: the board's name is its exported file's name.
    "This week's posts" is five, one a weekday, unless the person says how
    many.
    Each piece's items go inside its frame, on a layer of their own
    (`post-1`), so a piece can be changed without touching the others.
-4. **Lay it out** with `design`, inside a margin of 6–8% of the frame:
+   **A set of several sizes is one drawing:** call `frames` once per size;
+   each new size goes beside the boards already there. Never `clear` a
+   drawing that holds a finished board — the person edits the whole set
+   later, and you carry their changes across it. Export a finished board
+   and move on to the next size in the same drawing.
+   **Logos and photos are pieces of the board:** `design` with
+   `{type: "image", file: "logo.svg", x, y, w, h}` — not `import`, which
+   makes a whole layer the person cannot select or point at. A photo that
+   grounds a board goes first in the items you send, so the words sit on it.
+   **When a rule needs what you cannot make honestly** — a marketplace's
+   main image must be a real photo of the product, cut out on white; a
+   platform wants a real screenshot — say so and ask: they send the photo,
+   or you make an illustration instead, clearly one. Never draw a stand-in
+   for a real product, person or screenshot on your own.
+4. **Lay it out** with `design` — call `guide {topic: "layout"}` once first
+   and follow it (grid, type scale, spacing, contrast, the check) — inside a
+   margin of 6–8% of the frame:
    - **Hierarchy:** the headline biggest (7–10% of the frame's height for a
      feed post), the supporting line a third of that, the call to action a
      button (a rect with radius, its text centred with `align: center,

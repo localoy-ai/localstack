@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: lead-plan
-version: 0.4.0
+version: 0.5.0
 publisher: localoy
 capabilities: [files, web]
 # No localoy stages: this is one structured conversation plus one document.
@@ -54,13 +54,39 @@ it shares the name: `PLAN-<topic>.md`, `leads-<topic>.csv`.
 3. **DESIGN.md**, if present — positioning, tone and channel decisions
    already made. Do not re-ask what it settles.
 
-None found → interview the user directly: ask for everything still missing
-in a SINGLE message, then wait.
+None found → interview the user directly, then wait.
+
+## Think before you ask — the user will not spell everything out
+
+Users describe the trigger ("whose competitor just raised") and forget the
+shape of a buyer. Do not expect a better prompt; your job is to notice the
+gap. Before asking anything, picture the list a plain search would return
+for their words — the first five names that come to mind. Then ask yourself:
+
+- **Could they actually sell to these?** If the obvious names are giants,
+  household brands, or companies already served by big vendors, company size
+  is the first question.
+- **Would this person answer?** A CEO of a 5,000-person company never reads a
+  cold note. Ask which role really owns the problem at the size they pick.
+- **Is the trigger testable?** Name what counts as proof ("a comparison page
+  either side publishes", "a dated announcement"), and what does not ("both
+  named in one market report").
+- **Is anything doubled?** Many targets resting on one event (one round, one
+  news story) make a thin list — ask whether that is fine.
+
+Every gap that would change who is on the list becomes a question. Ask
+each as a structured question with 2–4 concrete options, your recommended
+one first and marked "(recommended)", and one line saying why it matters.
+Ask the ones that change the list most first; never ask what the user
+already said. A plan written before these are settled records them as
+`UNKNOWN — ask before the run`, and the run does not start.
 
 ## What the brief must pin down
 
 - **What we sell** — in the buyer's words, not the website's copy.
-- **Who buys (ICP)** — role, company shape, the situation that makes them buy.
+- **Who buys (ICP)** — role, company size (a range in people, always —
+  asked if not given), the situation that makes them buy, and the person who
+  would actually reply at that size.
 - **Territory** — "anywhere" is a choice the user makes, not a default.
 - **List size target** — decides the fetch budget downstream.
 - **Disqualifiers** — the cheapest quality lever in the pipeline:
@@ -80,8 +106,9 @@ in a SINGLE message, then wait.
 
 ## Procedure
 
-**1. Seed or interview** per the discovery order above. One message for all
-open questions.
+**1. Seed or interview** per the discovery order above, with the questions
+from "Think before you ask". Company size and the reachable person are
+always settled before the plan is final.
 
 **2. Write the plan.** `PLAN-<topic>.md`. Revising an existing plan edits
 it in place: keep its `## Steps`, `## Drafts`, `## Retro` and other sections

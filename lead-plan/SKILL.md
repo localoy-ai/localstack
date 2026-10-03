@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: lead-plan
-version: 0.5.1
+version: 0.5.2
 publisher: localoy
 capabilities: [files, web]
 # No localoy stages: this is one structured conversation plus one document.
@@ -188,7 +188,9 @@ under a dated line, and record it only on their yes.
 now, the angle and the ask, channel and cadence, success — so a wrong premise
 dies here, where it is cheap.
 
-**4. Hand off.** Offer the next stage — "Run `/lead-search` against this
+**4. Hand off** — only when `## Open questions` says none. Never offer the
+search while a decision is still open, and never ask a question after the
+hand-off. Offer the next stage — "Run `/lead-search` against this
 plan now?" — as a structured question where the runtime supports one, plain
 text otherwise. On yes, invoke `/lead-search` if this runtime can invoke
 skills directly (Claude Code: the Skill tool); otherwise tell the user to

@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: lead-plan
-version: 0.5.4
+version: 0.5.5
 publisher: localoy
 capabilities: [files, web]
 # No localoy stages: this is one structured conversation plus one document.
@@ -9,7 +9,7 @@ capabilities: [files, web]
 # The plan's headings are checked on disk at the end of the turn: a model
 # that skipped the outreach questions is sent back to settle them.
 produces: PLAN-{slug}.md
-sections: [What we sell, Who buys, Territory, List size target, Disqualifiers, Trigger, Angle and ask, Proof we can offer, Channel and sender, Cadence, Success]
+sections: [What we sell, Who buys, Territory, List size target, Disqualifiers, Trigger, Angle and ask, Proof we can offer, Channel and sender, Outreach rules, Cadence, Success]
 description: Plan a whole outreach campaign — who to reach and why now, what we say and offer, the channel, cadence and follow-ups, and what counts as success — as PLAN-<topic>.md, the plan every later sales step reads and ticks off. (localstack)
 author: localoy
 license: MIT
@@ -131,6 +131,14 @@ How
 - **Sender** — whose name the messages go out under, and the tone.
 - **Cadence** — first touch plus how many follow-ups, how many days apart,
   and how many sends a day (deliverability and the user's own time).
+- **Outreach rules** — the cold-outreach law for the territory and channel,
+  named (CAN-SPAM in the US, PECR in the UK, GDPR and UWG §7 in Germany, CASL
+  in Canada, the Spam Act in Australia, LGPD in Brazil, PDPL in Saudi
+  Arabia, Japan's 特定電子メール法…), and what it means for this list in one
+  line: who may be written to cold, what every message must carry (sender
+  identity, an opt-out), what is off limits (personal emails, private
+  individuals). Every outreach plan has it; not knowing the law is a reason
+  to look it up, not to skip it.
 - **Success** — what counts as working (replies, calls booked) and when the
   retro looks at it.
 
@@ -168,6 +176,7 @@ the later steps wrote; change only the brief sections. Template for a new one:
 ## Angle and ask        (one sentence why now; what a yes looks like)
 ## Proof we can offer
 ## Channel and sender
+## Outreach rules       (the law that applies and what it means here)
 ## Cadence              (first touch + follow-ups, days apart, sends a day)
 ## Success              (what counts, when we look)
 ## Search angles        (optional: queries worth starting with)
@@ -201,7 +210,8 @@ dies here, where it is cheap.
 
 **4. Hand off** — only when `## Open questions` says none. Never offer the
 search while a decision is still open, and never ask a question after the
-hand-off. Offer the next stage — "Run `/lead-search` against this
+hand-off. In Plan mode the hand-off IS the mode switch: one switch_mode offer
+to Auto, not a separate "run it?" question first. Offer the next stage — "Run `/lead-search` against this
 plan now?" — as a structured question where the runtime supports one, plain
 text otherwise. On yes, invoke `/lead-search` if this runtime can invoke
 skills directly (Claude Code: the Skill tool); otherwise tell the user to
@@ -209,6 +219,8 @@ type `/lead-search` (Codex: `$lead-search`).
 
 ## Quality bar
 
+- The plan holds decisions, never work: no found companies, search results or
+  progress logs in it — those go to the lead list and the changelog.
 - One current section under each heading — revise in place, never append a
   second "Where we are" or leave answered items under Open questions.
 - A list-only job (no outreach) says so once, and the outreach sections say

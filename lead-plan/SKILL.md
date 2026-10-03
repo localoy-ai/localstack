@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: lead-plan
-version: 0.5.5
+version: 0.5.6
 publisher: localoy
 capabilities: [files, web]
 # No localoy stages: this is one structured conversation plus one document.
@@ -9,6 +9,13 @@ capabilities: [files, web]
 # The plan's headings are checked on disk at the end of the turn: a model
 # that skipped the outreach questions is sent back to settle them.
 produces: PLAN-{slug}.md
+# The user decides these themselves; the app sends a plan back until each
+# was asked (a list-only job asks them too: they decide who is on the list).
+asks:
+  - topic: company size (a range, in the unit that fits)
+    words: [size, how big, how large, employees, people, staff, headcount, outlets, branches, locations, sites, trucks, beds, rooms, seats, revenue]
+  - topic: the person who would reply (role at that size)
+    words: [who should, who would, who replies, who answers, who decides, decision maker, role, title, owner, founder, manager, person]
 sections: [What we sell, Who buys, Territory, List size target, Disqualifiers, Trigger, Angle and ask, Proof we can offer, Channel and sender, Outreach rules, Cadence, Success]
 description: Plan a whole outreach campaign — who to reach and why now, what we say and offer, the channel, cadence and follow-ups, and what counts as success — as PLAN-<topic>.md, the plan every later sales step reads and ticks off. (localstack)
 author: localoy
@@ -62,6 +69,13 @@ it shares the name: `PLAN-<topic>.md`, `leads-<topic>.csv`.
 
 None found → interview the user directly, then wait.
 
+## Outreach or list only?
+
+"to sell to", "we sell X", "for our product", "customers for", a named
+product — the user is going to reach these people: plan the outreach. List
+only when they say so ("just the list", "for research", "to hand to my
+team"). When it is truly unclear, ask once; never decide list-only yourself.
+
 ## Think before you ask — the user will not spell everything out
 
 Users describe the trigger ("whose competitor just raised") and forget the
@@ -85,7 +99,10 @@ for their words — the first five names that come to mind. Then ask yourself:
   KakaoTalk, phone), the language the messages are written in, and the
   cold-outreach law (GDPR and UWG in Germany, PECR in the UK, CASL in
   Canada). Recommend the local channel and ask about the language; name the
-  law in the plan when it limits who can be written to.
+  law in the plan when it limits who can be written to. Germany, one rule:
+  cold email to a business needs prior consent (UWG §7(2) Nr. 3, no
+  "presumed consent" for email); a B2B phone call may rest on presumed
+  consent (§7(2) Nr. 2); a contact form counts as email.
 - **What happens after we find them?** Walk the outreach to the end: what
   the first message says, what it asks for, where it is sent, who sends it,
   how many follow-ups. Every step the user hasn't decided is a question —
@@ -150,9 +167,14 @@ How
 2. **A fact the user did not supply is written as
    `UNKNOWN — ask before the run`** — never guessed. A brief with honest
    holes beats a confident wrong one.
-3. **Light web checks are allowed, cited.** Confirming a niche's vocabulary or
+3. **Light web checks are allowed, cited — never the search itself.** No
+   harvesting candidates, no lists of companies, no lead rows while planning;
+   the search starts after the user's yes. Confirming a niche's vocabulary or
    a territory's shape is one or two searches, each cited inline; this is a
    planning skill, not a research run.
+4. **What we sell is the user's words.** A bare brief with no product gets
+   one question about it; if they still don't say, write "not given — drafts
+   stay generic", never a product, offer, price or sender you made up.
 
 ## Procedure
 

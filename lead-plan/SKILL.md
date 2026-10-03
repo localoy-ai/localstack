@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: lead-plan
-version: 0.5.2
+version: 0.5.3
 publisher: localoy
 capabilities: [files, web]
 # No localoy stages: this is one structured conversation plus one document.
@@ -79,6 +79,13 @@ for their words — the first five names that come to mind. Then ask yourself:
   named in one market report").
 - **Is anything doubled?** Many targets resting on one event (one round, one
   news story) make a thin list — ask whether that is fine.
+- **Where are they, really?** The region decides the channel people answer
+  (WhatsApp in Brazil, India, the Gulf and much of Africa; Facebook pages
+  for small shops in Bangladesh or the UK; contact forms in Japan; LINE,
+  KakaoTalk, phone), the language the messages are written in, and the
+  cold-outreach law (GDPR and UWG in Germany, PECR in the UK, CASL in
+  Canada). Recommend the local channel and ask about the language; name the
+  law in the plan when it limits who can be written to.
 - **What happens after we find them?** Walk the outreach to the end: what
   the first message says, what it asks for, where it is sent, who sends it,
   how many follow-ups. Every step the user hasn't decided is a question —
@@ -197,6 +204,11 @@ skills directly (Claude Code: the Skill tool); otherwise tell the user to
 type `/lead-search` (Codex: `$lead-search`).
 
 ## Quality bar
+
+- One current section under each heading — revise in place, never append a
+  second "Where we are" or leave answered items under Open questions.
+- A list-only job (no outreach) says so once, and the outreach sections say
+  "not part of this job" instead of asking about them.
 
 - Every brief section present; unsupplied facts say `UNKNOWN — ask before the run`.
 - `## Steps` present with all five steps unticked (or kept as they were, on a revision).

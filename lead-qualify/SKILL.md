@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: lead-qualify
-version: 0.4.1
+version: 0.4.2
 publisher: localoy
 capabilities: [files, web]
 # localoy dialect: stages make this runnable on small local models. Row-by-row
@@ -202,7 +202,10 @@ list and plan (stage `load` above is the spec).
 
 Scratch for this run lives in `.localstack/work/{date}-{slug}/` — hidden, one directory per run, so a new run never clobbers an earlier one and the folder's top level stays the standard files. Scratch is disposable; old run directories may be deleted freely.
 
-**2. Check and fill each queued row** (stage `verify` is the spec): website is
+**2. Check and fill each queued row** (stage `verify` is the spec). With a
+`task` tool, give each row to its own helper — the row, the plan's
+disqualifiers and the rules below in the brief, the finished row with its
+Verdict back — several in one step, then write the returned rows in place: website is
 their own domain and alive; every disqualifier checked on a page you opened,
 quoted (rule 6); the decision maker and title read from a page that states
 them (rule 7); an observed contact channel found where one exists; blanks

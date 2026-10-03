@@ -1,5 +1,13 @@
 # Resolve: snippet-first, fetch-budgeted
 
+**One helper per candidate, when your runtime has a `task` tool.** Give
+each candidate to its own helper, several in one step: the brief names the
+company, the plan's buyer, territory and disqualifiers, the rules below,
+and the lead list's path; it returns the finished CSV row (or "cut: reason").
+You then write the returned rows to the list. The helper's searches and
+pages never fill your chat, so the hundredth candidate costs what the first
+did. Without a `task` tool, resolve them yourself as below.
+
 Per candidate, establish three things, writing the trail to
 `.localstack/work/{date}-{slug}/resolved.md`:
 

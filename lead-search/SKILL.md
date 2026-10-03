@@ -1,13 +1,16 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: lead-search
-version: 0.10.3
+version: 0.10.4
 publisher: localoy
 capabilities: [files, web]
 # localoy dialect: stages make this runnable on small local models. Each stage
 # is its own turn with its own time budget and a file that survives it, so a
 # model too slow to finish one monolithic research turn still ships the list.
 # Claude Code ignores this key and runs the Procedure below in one pass.
+# The list serves a planned outreach: with no PLAN-<topic>.md in the folder,
+# the app hands over lead-plan first.
+needs: [lead-plan]
 # The stage goals double as the compressed fallback when sections/ is absent.
 stages:
   - id: harvest

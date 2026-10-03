@@ -1,12 +1,16 @@
 # Resolve: snippet-first, fetch-budgeted
 
-**One helper per candidate, when your runtime has a `task` tool.** Give
-each candidate to its own helper, several in one step: the brief names the
-company, the plan's buyer, territory and disqualifiers, the rules below,
-and the lead list's path; it returns the finished CSV row (or "cut: reason").
-You then write the returned rows to the list. The helper's searches and
-pages never fill your chat, so the hundredth candidate costs what the first
-did. Without a `task` tool, resolve them yourself as below.
+**Helpers verify; you research.** Finding candidates and deciding what they
+are (which company competes with which, who raised) stays with you — that is
+open research and needs the whole picture. With a `task` tool, hand the
+*checking* of named candidates to helpers: 3 to 5 candidates per helper, up
+to 6 helpers at once. Each brief names its companies and asks for the website,
+the decision maker and a channel per company; `done_when`: every company has
+those or a reason it has none; `read`: the plan file (the same list for every
+helper); `returns`: one CSV row per company, or "cut: reason". Write the
+returned rows to the list. A helper that comes back with "Needs" or work left:
+decide yourself, or resume it once with a narrower brief. Without a `task`
+tool, resolve them yourself as below.
 
 Per candidate, establish three things, writing the trail to
 `.localstack/work/{date}-{slug}/resolved.md`:

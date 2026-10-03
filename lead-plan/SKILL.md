@@ -1,11 +1,15 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: lead-plan
-version: 0.5.0
+version: 0.5.1
 publisher: localoy
 capabilities: [files, web]
 # No localoy stages: this is one structured conversation plus one document.
 # A small model finishes it in a single turn; splitting it buys nothing.
+# The plan's headings are checked on disk at the end of the turn: a model
+# that skipped the outreach questions is sent back to settle them.
+produces: PLAN-{slug}.md
+sections: [What we sell, Who buys, Territory, List size target, Disqualifiers, Trigger, Angle and ask, Proof we can offer, Channel and sender, Cadence, Success]
 description: Plan a whole outreach campaign — who to reach and why now, what we say and offer, the channel, cadence and follow-ups, and what counts as success — as PLAN-<topic>.md, the plan every later sales step reads and ticks off. (localstack)
 author: localoy
 license: MIT

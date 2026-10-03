@@ -1,6 +1,6 @@
 ---
 name: lead-plan
-version: 0.5.7
+version: 0.5.8
 publisher: localoy
 capabilities: [files, web]
 # No localoy stages: this is one structured conversation plus one document.
@@ -178,6 +178,24 @@ How
    one question about it; if they still don't say, write "not given — drafts
    stay generic", never a product, offer, price or sender you made up.
 
+## A new round starts from the last
+
+When `leads-<topic>.csv` already exists, the plan opens from it, before any
+question:
+
+- **Already found** — counts by verdict (keep / close / cut), the close rows
+  still waiting on the user's call, and one line: every company in the list
+  is skipped by the next search (matched by its website's domain).
+- **Search angles** — which angles produced keeps, which ran dry (DROPPED,
+  with why); the next round starts with the working ones and new ones, never
+  a dropped one.
+- **What to change** — if most close rows miss the same rule ("over 200
+  people" eight times), ask once whether to loosen it; that question replaces
+  a round of new searching.
+
+Never start a topic's second round from nothing: the list and the angles are
+what the first one paid for.
+
 ## Procedure
 
 **1. Seed or interview** per the discovery order above, with the questions
@@ -203,7 +221,8 @@ the later steps wrote; change only the brief sections. Template for a new one:
 ## Outreach rules       (the law that applies and what it means here)
 ## Cadence              (first touch + follow-ups, days apart, sends a day)
 ## Success              (what counts, when we look)
-## Search angles        (optional: queries worth starting with)
+## Search angles        (a table lead-search keeps: angle | checked | kept | close | status — open, working, DROPPED: why)
+## Already found        (on a new round: what the list holds — see "A new round starts from the last")
 
 ## Steps
 - [ ] search    — /lead-search finds leads into leads-<topic>.csv (or bring your file to /lead-qualify)

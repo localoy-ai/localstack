@@ -16,6 +16,17 @@ If the plan's `Search angles` section (older plans: `Angles to try`) names angle
 honor it: the brief carries what earlier cycles learned. A retro that killed
 an angle outranks this catalog.
 
+**Every company already in `leads-<topic>.csv` is skipped** — matched by
+its website's domain, whatever its verdict. A new round finds new companies.
+
+**Angles are paths you measure.** Keep the plan's `Search angles` table up to
+date as you go: per angle, how many candidates it gave, how many were checked,
+kept and close. After about five checked candidates from one angle with no
+keep and at most one close, mark it `DROPPED: <why>` and open the next angle
+— do not stretch a dry angle to reach the target. When every angle is dry,
+stop and report the count with the close rows; the user decides whether to
+loosen a rule.
+
 Record every candidate as a line in `.localstack/work/{date}-{slug}/found.md`: name, the
 query that found it, the URL of the result. Never repeat an identical query;
 never fetch the same URL twice. Candidates cut on sight (already contacted,

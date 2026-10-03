@@ -1,6 +1,6 @@
 ---
 name: lead-plan
-version: 0.5.9
+version: 0.5.10
 publisher: localoy
 capabilities: [files, web]
 # No localoy stages: this is one structured conversation plus one document.
@@ -129,7 +129,7 @@ Who
   not given), the situation that makes them buy, and the person who would
   actually reply at that size (not the most senior title).
 - **Territory** — "anywhere" is a choice the user makes, not a default.
-- **List size target** — decides the fetch budget downstream.
+- **List size target** — decides the fetch budget downstream; 500 at most per round.
 - **Disqualifiers** — the cheapest quality lever in the pipeline:
   `/lead-qualify` cuts with exactly these.
 
@@ -191,8 +191,10 @@ never start a run that will end in a padded or empty list:
 
 - **Too few exist** ("expect about 3"): widen the one rule that limits most
   (size, region, trigger window), or accept fewer.
-- **Too many to check** (10,000 rows): a sample to prove the fit first, or a
-  narrower segment.
+- **Too many** — a plan's list is **500 at most** (owner, 2026-10-03). Asked
+  for more, offer 500 (recommended: the best-fitting segment first) or a
+  smaller sample to prove the fit; later rounds add the next 500, skipping
+  what was found.
 - **Not something to search for**: private individuals (homeowners,
   patients, job seekers as people), or outreach the territory's law forbids —
   offer the business version (installers who serve homeowners, clinics) and

@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: lead-reach
-version: 0.2.3
+version: 0.2.4
 publisher: localoy
 capabilities: [files, browser]
 # localoy dialect: stages make this runnable on small local models. The reach
@@ -45,7 +45,7 @@ stages:
     produces: leads-{slug}.csv
     columns: [Company Name, Location, Website, Decision Maker Name, Title, Profile URL, Evidence URL, Confidence, Verdict, Verdict Reason, Verification URL, Verified Date, Channel, Channel Evidence, Reached, Reached Channel, Exported, Notes]
     values:
-      Verdict: [keep, cut, UNKNOWN]
+      Verdict: [keep, close, cut, UNKNOWN]
 description: >-
   Reach the leads you drafted for — opens each lead's observed channel in your
   own browser, fills in the draft, and sends it only after you say yes to that

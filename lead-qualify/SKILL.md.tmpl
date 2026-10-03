@@ -1,6 +1,6 @@
 ---
 name: lead-qualify
-version: 0.4.4
+version: 0.4.5
 publisher: localoy
 capabilities: [files, web]
 # localoy dialect: stages make this runnable on small local models. Row-by-row
@@ -55,7 +55,7 @@ stages:
     produces: leads-{slug}.csv
     columns: {{LEADS_COLUMNS}}
     values:
-      Verdict: [keep, cut, UNKNOWN]
+      Verdict: [keep, close, cut, UNKNOWN]
       Confidence: [verified, likely, unconfirmed]
     required:
       - when: {Verdict: keep}
@@ -64,6 +64,8 @@ stages:
         # 2026-10-03: "likely to reply" + "fits the plan exactly").
         without:
           Verdict Reason: [acquired, bought by, subsidiary of, owned by, over the size, too big, outside the window, not independent]
+      - when: {Verdict: close}
+        filled: [Website, Verdict Reason, Verification URL]
       - when: {Verdict: cut}
         filled: [Verdict Reason, Verification URL]
     links: [Website, Evidence URL, Verification URL, Channel Evidence, Profile URL]
@@ -213,6 +215,14 @@ independent) is a cut, even if the rest is strong — and the person is
 observed. No channel, or the wrong person, is a cut or UNKNOWN, never keep.
 Fewer kept rows that meet this beat a full list that does not.
 
+**Close, not padded.** A row that misses the bar by one thing — the rival
+is adjacent rather than head-to-head, a little over the size, no channel
+found yet, the round just outside the window — is `close`, not keep and not
+cut. Its Verdict Reason starts with that one difference ("Close: 230 people,
+plan says up to 200"). Close rows are shown to the user as their own group;
+they decide which to promote (set to keep) or which rule to loosen. Drafts
+and exports use keep rows only. Two or more differences is a cut.
+
 **2. Check and fill each queued row** (stage `verify` is the spec). With a
 `task` tool, give the rows to helpers, 3 to 5 rows each, up to 6 at once —
 the rows in the brief, `read`: the plan file, `done_when`: every row has a
@@ -250,7 +260,10 @@ For this step: the CHANGELOG line gives kept / cut / filled counts (and
 `- [ ] draft outreach for N kept leads (<topic>)` to TODOS.md, and one TODO
 per kept row with no observed channel.
 
-**4. Report and hand off.** In chat: kept/cut counts, what was filled, the
+**4. Report and hand off.** In chat: the strong (keep) rows, then the close
+rows as their own group with each one's difference, then the cut count —
+and ask once whether to promote any close rows or loosen the rule most of
+them miss. Then: kept/close/cut counts, what was filled, the
 dominant cut reasons, what could not be checked. Then offer the next stage —
 "Draft outreach for the kept rows with `/lead-draft`?" — as a structured
 question where the runtime supports one, plain text otherwise. On yes, invoke

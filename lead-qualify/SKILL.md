@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: lead-qualify
-version: 0.4.3
+version: 0.4.4
 publisher: localoy
 capabilities: [files, web]
 # localoy dialect: stages make this runnable on small local models. Row-by-row
@@ -60,7 +60,11 @@ stages:
       Confidence: [verified, likely, unconfirmed]
     required:
       - when: {Verdict: keep}
-        filled: [Website, Verification URL, Verified Date, Notes]
+        filled: [Website, Decision Maker Name, Title, Channel, Verification URL, Verified Date, Notes]
+        # Kept means it fits the plan and the person can be reached (owner,
+        # 2026-10-03: "likely to reply" + "fits the plan exactly").
+        without:
+          Verdict Reason: [acquired, bought by, subsidiary of, owned by, over the size, too big, outside the window, not independent]
       - when: {Verdict: cut}
         filled: [Verdict Reason, Verification URL]
     links: [Website, Evidence URL, Verification URL, Channel Evidence, Profile URL]
@@ -201,6 +205,14 @@ just the rows added since. Re-check every row only when the user asks.
 list and plan (stage `load` above is the spec).
 
 Scratch for this run lives in `.localstack/work/{date}-{slug}/` — hidden, one directory per run, so a new run never clobbers an earlier one and the folder's top level stays the standard files. Scratch is disposable; old run directories may be deleted freely.
+
+**The bar for keep** (the user's, 2026-10-03): the row **fits the plan
+exactly** — every disqualifier checked and none broken; anything you found
+that breaks one (acquired, over the size, outside the window, not
+independent) is a cut, even if the rest is strong — and the person is
+**likely to reply**: the right role at that size, with a real channel you
+observed. No channel, or the wrong person, is a cut or UNKNOWN, never keep.
+Fewer kept rows that meet this beat a full list that does not.
 
 **2. Check and fill each queued row** (stage `verify` is the spec). With a
 `task` tool, give the rows to helpers, 3 to 5 rows each, up to 6 at once —

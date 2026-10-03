@@ -12,7 +12,7 @@ Breadth comes from different query shapes, never from paging one phrasing:
   the niche's events, who wrote about the problem
 - `site:` dorks for gated sources, read from snippets only
 
-If the brief's `Angles to try` section names angles — or marks one DROPPED —
+If the plan's `Search angles` section (older plans: `Angles to try`) names angles — or marks one DROPPED —
 honor it: the brief carries what earlier cycles learned. A retro that killed
 an angle outranks this catalog.
 

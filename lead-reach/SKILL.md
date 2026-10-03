@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: lead-reach
-version: 0.2.2
+version: 0.2.3
 publisher: localoy
 capabilities: [files, browser]
 # localoy dialect: stages make this runnable on small local models. The reach
@@ -9,7 +9,8 @@ capabilities: [files, browser]
 stages:
   - id: queue
     goal: >
-      Read PLAN-{slug}.md's "## Drafts". For each draft with "Status: draft"
+      Read PLAN-{slug}.md's "## Drafts" and its Cadence (sends a day,
+      follow-up spacing); queue no more than that day's sends. For each draft with "Status: draft"
       and an observed channel, take the channel, its evidence URL and the
       draft text exactly as written. Drop every lead whose row in ANY
       leads-*.csv already has a Reached date, or whose channel value appears

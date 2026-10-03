@@ -6,7 +6,7 @@ publisher: localoy
 capabilities: [files, web]
 # No localoy stages: this is one structured conversation plus one document.
 # A small model finishes it in a single turn; splitting it buys nothing.
-description: Plan a round of sales work — what we sell, who buys it, territory, list size, disqualifiers — as PLAN-<topic>.md, the plan every later sales step reads and ticks off. (localstack)
+description: Plan a whole outreach campaign — who to reach and why now, what we say and offer, the channel, cadence and follow-ups, and what counts as success — as PLAN-<topic>.md, the plan every later sales step reads and ticks off. (localstack)
 author: localoy
 license: MIT
 platforms: [linux, macos, windows]
@@ -32,9 +32,11 @@ tags: [sales, plan, icp, brief]
 
 ## When to invoke this skill
 
-Turns "who should we sell to" into a written plan the rest of the sales
-pipeline runs on: what we sell, who buys it, where, how many leads, and what
-disqualifies a candidate. It is `PLAN-<topic>.md` in the working folder — a
+Turns "find me people to sell to" into a plan for the whole outreach the user
+is about to run — not just a search. Who we reach and why now, what we say
+and what we ask for, through which channel, how often and how many times,
+and how we will know it worked. The list exists to serve the message: a lead
+nobody can reach, or nobody would reply to, is not a lead. It is `PLAN-<topic>.md` in the working folder — a
 standard file any agent can open and pick up from. Use when asked to "define
 our ICP", "plan prospecting", or before a lead run.
 
@@ -73,6 +75,10 @@ for their words — the first five names that come to mind. Then ask yourself:
   named in one market report").
 - **Is anything doubled?** Many targets resting on one event (one round, one
   news story) make a thin list — ask whether that is fine.
+- **What happens after we find them?** Walk the outreach to the end: what
+  the first message says, what it asks for, where it is sent, who sends it,
+  how many follow-ups. Every step the user hasn't decided is a question —
+  a list built for a channel the user won't use is wasted work.
 
 Every gap that would change who is on the list becomes a question. Ask
 each as a structured question with 2–4 concrete options, your recommended
@@ -81,16 +87,37 @@ Ask the ones that change the list most first; never ask what the user
 already said. A plan written before these are settled records them as
 `UNKNOWN — ask before the run`, and the run does not start.
 
-## What the brief must pin down
+## What the plan must pin down — the whole outreach
 
+Who
 - **What we sell** — in the buyer's words, not the website's copy.
-- **Who buys (ICP)** — role, company size (a range in people, always —
-  asked if not given), the situation that makes them buy, and the person who
-  would actually reply at that size.
+- **Who buys (ICP)** — company size (a range in people, always — asked if
+  not given), the situation that makes them buy, and the person who would
+  actually reply at that size (not the most senior title).
 - **Territory** — "anywhere" is a choice the user makes, not a default.
 - **List size target** — decides the fetch budget downstream.
 - **Disqualifiers** — the cheapest quality lever in the pipeline:
   `/lead-qualify` cuts with exactly these.
+
+Why now and what we say
+- **The trigger** — the event that makes this the moment (a rival raised, a
+  new hire, a launch), and what counts as proof of it on a page.
+- **The angle** — one sentence connecting their trigger to our product, in
+  their words. If the trigger doesn't lead to a sentence they'd care about,
+  the list is wrong, not the copy.
+- **The ask** — what a yes looks like: a reply, a 15-minute call, a trial, a
+  free audit. One ask per message.
+- **Proof we can offer** — a customer, a number, a demo link the user
+  really has. UNKNOWN if none; never invented.
+
+How
+- **Channel** — email, LinkedIn, contact form, phone; what the user can and
+  will actually send from, and what they never do.
+- **Sender** — whose name the messages go out under, and the tone.
+- **Cadence** — first touch plus how many follow-ups, how many days apart,
+  and how many sends a day (deliverability and the user's own time).
+- **Success** — what counts as working (replies, calls booked) and when the
+  retro looks at it.
 
 ## Ground rules (non-negotiable)
 
@@ -122,7 +149,13 @@ the later steps wrote; change only the brief sections. Template for a new one:
 ## Territory
 ## List size target
 ## Disqualifiers
-## Angles to try        (optional: queries/angles worth starting with)
+## Trigger              (the event, and what proves it on a page)
+## Angle and ask        (one sentence why now; what a yes looks like)
+## Proof we can offer
+## Channel and sender
+## Cadence              (first touch + follow-ups, days apart, sends a day)
+## Success              (what counts, when we look)
+## Search angles        (optional: queries worth starting with)
 
 ## Steps
 - [ ] search    — /lead-search finds leads into leads-<topic>.csv (or bring your file to /lead-qualify)
@@ -147,9 +180,9 @@ When the user states a lasting decision while you interview — "we never cold
 call", "keep it casual", "LinkedIn only" — offer to record it in DESIGN.md
 under a dated line, and record it only on their yes.
 
-**3. Read it back.** Show the user the brief's key lines in chat — the ICP
-sentence, territory, size, disqualifiers — so a wrong premise dies here, where
-it is cheap.
+**3. Read it back.** Show the user the plan's key lines in chat — who, why
+now, the angle and the ask, channel and cadence, success — so a wrong premise
+dies here, where it is cheap.
 
 **4. Hand off.** Offer the next stage — "Run `/lead-search` against this
 plan now?" — as a structured question where the runtime supports one, plain
@@ -164,4 +197,4 @@ type `/lead-search` (Codex: `$lead-search`).
 - AGENTS.md lists this topic; CHANGELOG.md has today's line.
 - Disqualifiers are concrete enough to test against an observation ("no
   physical location listed", "aggregator-only web presence"), not vibes.
-- The brief sections fit on one page. A brief nobody rereads mid-run is decoration.
+- The plan sections fit on one page. A brief nobody rereads mid-run is decoration.

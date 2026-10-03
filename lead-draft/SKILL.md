@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: lead-draft
-version: 0.5.0
+version: 0.5.1
 publisher: localoy
 capabilities: [files, web]
 # localoy dialect: stages make this runnable on small local models. Each stage
@@ -27,9 +27,12 @@ stages:
     produces: .localstack/work/{date}-{slug}/channels.md
   - id: draft
     goal: >
-      Read PLAN-{slug}.md for what we sell (ask the user if it says
-      UNKNOWN) and DESIGN.md, if present, for tone and channels to use or
-      avoid. For each row in .localstack/work/{date}-{slug}/channels.md with an observed channel,
+      Read PLAN-{slug}.md for what we sell, the trigger, the angle and the
+      ask, proof we can offer, channel, sender and cadence (ask the user if
+      one says UNKNOWN) and DESIGN.md, if present, for tone and channels to
+      use or avoid. Each draft opens on the lead's own trigger, makes the
+      plan's one ask, and uses only the plan's proof; write the plan's
+      follow-ups too, each one shorter than the last. For each row in .localstack/work/{date}-{slug}/channels.md with an observed channel,
       write one short draft personalized ONLY from facts observed this
       session or recorded in the chain files, each fact cited with its URL.
       No invented pain points, no "I noticed you..." claims without a page

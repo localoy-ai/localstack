@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: lead-qualify
-version: 0.4.5
+version: 0.4.6
 publisher: localoy
 capabilities: [files, web]
 # localoy dialect: stages make this runnable on small local models. Row-by-row
@@ -70,6 +70,7 @@ stages:
       - when: {Verdict: cut}
         filled: [Verdict Reason, Verification URL]
     links: [Website, Evidence URL, Verification URL, Channel Evidence, Profile URL]
+    unique: [Website]
 description: >-
   Check & fill a lead list — yours or one /lead-search built. Re-checks each
   row against the open web, fills the gaps it can actually observe (website,

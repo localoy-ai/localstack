@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: lead-search
-version: 0.10.7
+version: 0.10.8
 publisher: localoy
 capabilities: [files, web]
 # localoy dialect: stages make this runnable on small local models. Each stage
@@ -63,6 +63,7 @@ stages:
     values:
       Confidence: [verified, likely, unconfirmed]
     links: [Website, Evidence URL]
+    unique: [Website]
 description: Find sales leads on the open web — companies and decision makers with evidence behind every row. (localstack)
 author: localoy
 license: MIT

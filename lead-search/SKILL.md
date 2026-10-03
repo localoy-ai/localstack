@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: lead-search
-version: 0.10.8
+version: 0.10.9
 publisher: localoy
 capabilities: [files, web]
 # localoy dialect: stages make this runnable on small local models. Each stage
@@ -62,6 +62,10 @@ stages:
     columns: [Company Name, Location, Website, Decision Maker Name, Title, Profile URL, Evidence URL, Confidence, Verdict, Verdict Reason, Verification URL, Verified Date, Channel, Channel Evidence, Reached, Reached Channel, Exported, Notes]
     values:
       Confidence: [verified, likely, unconfirmed]
+    required:
+      # Businesses only: every row is a company with its own website.
+      - when: {}
+        filled: [Company Name, Website]
     links: [Website, Evidence URL]
     unique: [Website]
 description: Find sales leads on the open web — companies and decision makers with evidence behind every row. (localstack)
@@ -135,6 +139,11 @@ If no answer comes, produce what is genuinely useful anyway, state at the top
 which facts you lacked, and say what would change once you have them.
 
 ## Ground rules (non-negotiable)
+
+0. **Businesses only.** Every row is a business with its own website, and the
+   person is reached in their work role. No private individuals as leads —
+   not from public records, not as "owners" of a home or a car — whatever the
+   brief says; offer the business version instead.
 
 These come from watching earlier lead tools fail. Each one bans a specific,
 observed failure. They apply in every step, whether or not you read a

@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: lead-plan
-version: 0.5.10
+version: 0.5.11
 publisher: localoy
 capabilities: [files, web]
 # No localoy stages: this is one structured conversation plus one document.
@@ -196,10 +196,15 @@ never start a run that will end in a padded or empty list:
   for more, offer 500 (recommended: the best-fitting segment first) or a
   smaller sample to prove the fit; later rounds add the next 500, skipping
   what was found.
-- **Not something to search for**: private individuals (homeowners,
-  patients, job seekers as people), or outreach the territory's law forbids —
-  offer the business version (installers who serve homeowners, clinics) and
-  say why the original is out.
+- **Private people are never the list.** Homeowners, patients, parents,
+  job seekers, any person as a consumer — even from public records (tax rolls,
+  court filings, licence lists of individuals). Localoy finds businesses and
+  the people who run them in their work role, nothing else (owner, 2026-10-03).
+  Say so in one line and offer the business version as the recommended
+  option: for "homeowners who need solar", the installers, roofers and
+  builders who serve them, or the businesses with roofs. Never offer the
+  private-person list as an option. Outreach the territory's law forbids is
+  out the same way.
 - **Too vague to search** ("100 companies"): the decisions in round one fix
   that; if they don't, ask once more instead of guessing.
 

@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: lead-plan
-version: 0.5.6
+version: 0.5.7
 publisher: localoy
 capabilities: [files, web]
 # No localoy stages: this is one structured conversation plus one document.
@@ -112,11 +112,14 @@ Two questions are always asked, even when you could decide them, because
 they change every row: **company size** (a range in the unit that fits —
 people, outlets, trucks, beds) and **the person who would reply** at that
 size. Ask each with your recommendation first. Every other gap that would
-change who is on the list becomes a question too. Ask
-each as a structured question with 2–4 concrete options, your recommended
-one first and marked "(recommended)", and one line saying why it matters.
-Ask the ones that change the list most first; never ask what the user
-already said. A plan written before these are settled records them as
+change who is on the list becomes a question too — asked in **two rounds
+at most**, never one by one. Round one, in a single ask call: the questions
+that change the list (size, the person who replies, territory, channel — up
+to four). Round two, only if needed: what is still open (proof, sender,
+cadence). Each question has 2–4 concrete options, your recommended one
+first and marked "(recommended)", and a few words on why it matters. Never
+ask what the user already said; anything left after round two, decide
+yourself and mark as your pick. A plan written before these are settled records them as
 `UNKNOWN — ask before the run`, and the run does not start.
 
 ## What the plan must pin down — the whole outreach

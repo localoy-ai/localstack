@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: lead-search
-version: 0.10.9
+version: 0.10.10
 publisher: localoy
 capabilities: [files, web]
 # localoy dialect: stages make this runnable on small local models. Each stage
@@ -198,6 +198,13 @@ often not how their buyers look.
 **2. Harvest** (read `sections/harvest.md`): 5-8 searches, each a different
 angle, snippets only. Every candidate lands in `.localstack/work/{date}-{slug}/found.md`
 with its query and result URL.
+
+**Pick what to resolve, when you have a `decide` tool.** One `decide` over
+`found.md` (one candidate per line) with a yes/no "From this line alone, could
+it be a business that fits the buyer sentence?" and the buyer sentence as
+`context`. Resolve the sure yes first, then the unsure (`?`); leave the sure no
+unresolved and say how many you skipped. It only orders the work: a candidate
+is a lead only after it is resolved.
 
 **3. Resolve and save as you go** (read `sections/resolve.md`): per
 candidate — own website, location, and the decision maker with their title as

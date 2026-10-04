@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: lead-qualify
-version: 0.4.6
+version: 0.4.7
 publisher: localoy
 capabilities: [files, web]
 # localoy dialect: stages make this runnable on small local models. Row-by-row
@@ -224,6 +224,16 @@ cut. Its Verdict Reason starts with that one difference ("Close: 230 people,
 plan says up to 200"). Close rows are shown to the user as their own group;
 they decide which to promote (set to keep) or which rule to loosen. Drafts
 and exports use keep rows only. Two or more differences is a cut.
+
+**Sort the queue first, when you have a `decide` tool.** One `decide` call over
+`leads-<topic>.csv` (`fields`: Company Name, Location, Website, Title, Notes,
+Evidence URL) with one yes/no question per Disqualifier — "Does the row's own
+text show it breaks this rule: <the rule, word for word>?" — and the plan's
+size and territory as `context`. A row with a sure yes (not marked `?`) is
+checked first and only for that rule, on its Evidence URL: confirmed and
+quoted, it is a cut; not confirmed, it gets the full check below. `decide`
+never keeps a row and never cuts one on its own word: it only orders the work.
+No `decide` tool: skip this.
 
 **2. Check and fill each queued row** (stage `verify` is the spec). With a
 `task` tool, give the rows to helpers, 3 to 5 rows each, up to 6 at once —

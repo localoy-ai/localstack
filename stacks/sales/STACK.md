@@ -9,7 +9,7 @@ description: |
   asked to "find leads", "define our ICP", "qualify these leads", "draft
   outreach", "send the outreach", "ship the list", or "what did we learn from
   prospecting".
-version: 0.5.0
+version: 0.6.0
 publisher: localoy
 license: MIT
 triggers:
@@ -32,6 +32,7 @@ skills:
   - lead-reach
   - lead-export
   - lead-retro
+  - fact-check
 ---
 
 # Sales

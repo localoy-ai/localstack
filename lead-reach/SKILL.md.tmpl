@@ -1,6 +1,6 @@
 ---
 name: lead-reach
-version: 0.2.4
+version: 0.3.0
 publisher: localoy
 capabilities: [files, browser]
 # localoy dialect: stages make this runnable on small local models. The reach
@@ -121,8 +121,8 @@ browser or nothing.
 
 **A message the user asks for directly** ("message Shahrin on LinkedIn to say
 thanks") still goes through a draft: write it into the plan's `## Drafts`
-under the lead-draft rules (observed channel, cited facts, DESIGN.md's
-tone), show it, then send it with the same one-yes rule below. A person who is
+under the lead-draft rules (observed channel, cited facts checked by
+`/fact-check` and worded to their grade, DESIGN.md's tone), show it, then send it with the same one-yes rule below. A person who is
 not a row in any lead list is logged in CHANGELOG.md only. With no plan in the
 folder at all, skip the plan and the list: CHANGELOG.md and TODOS.md carry the
 record.
@@ -150,7 +150,10 @@ columns, capped.
 Tell the user the queue in one short list (company — channel) before the
 first lead, and how many were dropped as already reached.
 
-**3. Reach, one lead at a time.** Open the channel, fill in the draft, then
+**3. Reach, one lead at a time.** Before opening the channel, find each fact
+the draft states about the lead in `facts-<topic>.md`: a fact missing there,
+or worded more strongly than its grade, stops this lead — run
+`/fact-check`, fix the wording in the draft, then go on. Open the channel, fill in the draft, then
 stop and ask — as a structured question where the runtime has one
 (Send / Edit / Skip), plain text otherwise:
 

@@ -1,6 +1,6 @@
 ---
 name: lead-draft
-version: 0.5.1
+version: 0.6.0
 publisher: localoy
 capabilities: [files, web]
 # localoy dialect: stages make this runnable on small local models. Each stage
@@ -34,6 +34,10 @@ stages:
       follow-ups too, each one shorter than the last. For each row in .localstack/work/{date}-{slug}/channels.md with an observed channel,
       write one short draft personalized ONLY from facts observed this
       session or recorded in the chain files, each fact cited with its URL.
+      Every fact a draft states about the lead (a round, a launch, a title,
+      a number) is checked first by the fact-check rules into
+      facts-{slug}.md and written no stronger than its grade: Confirmed as
+      fact, Reported only with its hedge and outlet, anything else left out.
       No invented pain points, no "I noticed you..." claims without a page
       that shows it. Append each draft under a heading per company.
     produces: .localstack/work/{date}-{slug}/drafts.md
@@ -119,13 +123,21 @@ This skill has no send path; the draft it writes is exactly what
 2. **Personalization is citation.** Every personalized claim in a draft
    ("your site's pricing page", "your post about X") names the URL it was
    read from. A draft that cannot cite its hook does not use that hook.
-3. **The plan's offer, the evidence's facts.** What we offer comes from the
+3. **Facts are checked before they are said.** A draft that states a fact
+   about the lead — a funding round, a launch, a hire, a title, a number —
+   runs `/fact-check` on it first (into `facts-<topic>.md`) and says it no
+   more strongly than its grade: Confirmed as fact; Reported only with the
+   hedge and the outlet ("congrats on the round TechCrunch reported"), or
+   not at all; Unverified and Contradicted never. Names and titles come from
+   a page that lists people. A source saying something is evidence, not
+   fact.
+4. **The plan's offer, the evidence's facts.** What we offer comes from the
    plan, DESIGN.md or the user; what we know about the lead comes from
    observations. The two never blur.
-4. **Budget: one fetch per lead** while hunting channels, and only where
+5. **Budget: one fetch per lead** while hunting channels, and only where
    search snippets left it ambiguous. Gated sites stay gated — searched
    about, never fetched, never logged into.
-5. **Partial is labeled.** Rows skipped for missing channels are a named
+6. **Partial is labeled.** Rows skipped for missing channels are a named
    list, not a silent omission.
 
 ## Procedure

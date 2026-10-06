@@ -7,7 +7,7 @@ description: |
   (support, research, social, finance, operations, automation, web), and the
   router that sends any request to the right skill and stage. The default
   role — deploy it and start typing; no skill choices needed.
-version: 0.5.0
+version: 0.6.0
 publisher: localoy
 license: MIT
 triggers:
@@ -32,6 +32,7 @@ skills:
   - support-reply
   - support-faq
   - market-research
+  - fact-check
   - competitor-watch
   - social-plan
   - social-post
@@ -53,7 +54,7 @@ to its stage (`lead-plan` → `lead-search` → `lead-qualify` →
 `lead-draft` → `lead-reach` → `lead-retro`, with `lead-export` for hand-offs) and SEO work to its skill
 (`seo-audit`, `keyword-research`, `on-page-optimizer`), and painting or design
 to `vinci`, and field work to its Local's skill (support → `support-reply`,
-`support-faq`; research → `market-research`, `competitor-watch`; social →
+`support-faq`; research → `market-research`, `competitor-watch`, `fact-check`; social →
 `social-plan`, `social-post`; finance → `reconcile`, `money-report`;
 operations → `inbox-triage`, `file-tidy`; automation → `routine-setup`,
 `routine-report`; web → `site-check`, `site-fix`). Do not answer ad-hoc

@@ -69,6 +69,7 @@ this repo.
 | `/support-reply` | Mochi · Drafts replies to customer messages from the business's rules, FAQ and past replies — never promising what isn't approved; sends one yes at a time from your browser, else drafts. |
 | `/support-faq` | Mochi · Turns questions asked three or more times into FAQ.md entries, each citing the messages it came from. |
 | `/market-research` | Umbra · Agrees the decision first, reads real sources, separates what's true (with URLs) from what's guessed, ends with what it means. |
+| `/fact-check` | Umbra · Checks any claim on the web — news, numbers, quotes, people, companies: finds the evidence (primary sources first), grades each claim Confirmed / Reported / Unverified / Contradicted with a confidence level and why, and rewrites any text to say no more than that. |
 | `/competitor-watch` | Umbra · A sourced side-by-side of named competitors — offer, price, positioning, recent changes; reruns show what changed. |
 | `/social-plan` | Fizz · A week of posts per channel as a calendar in `PLAN-<topic>.md`. Plans only. |
 | `/social-post` | Fizz · Writes each caption, asks Nova (`/vinci`) for pictures, posts one yes at a time through your signed-in browser — never signs in. |

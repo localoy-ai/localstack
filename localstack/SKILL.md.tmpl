@@ -1,6 +1,6 @@
 ---
 name: localstack
-version: 0.7.0
+version: 0.8.0
 publisher: localoy
 capabilities: []
 description: Router for the localstack skill suite — sends any sales-development, SEO, design, support, research, social, finance, operations, automation or web request to the right skill and stage. (localstack)
@@ -10,7 +10,7 @@ platforms: [linux, macos, windows]
 metadata:
   hermes:
     tags: [router, sales, seo, localstack]
-    related_skills: [lead-plan, lead-search, lead-qualify, seo-audit, support-reply, market-research, social-plan, reconcile, inbox-triage, routine-setup, site-check]
+    related_skills: [lead-plan, lead-search, lead-qualify, seo-audit, support-reply, market-research, fact-check, social-plan, reconcile, inbox-triage, routine-setup, site-check]
 allowed-tools:
   - Bash
   - Read
@@ -175,6 +175,7 @@ irreversible):
 | "reply to these customers", "draft support replies" | `/support-reply` — drafts from the rules, FAQ and past replies; sends one yes at a time | Mochi |
 | "update the FAQ", "what do customers keep asking" | `/support-faq` — questions asked 3+ times become cited FAQ.md entries | Mochi |
 | "research this market", "should we enter…" | `/market-research` — decision first; true vs guessed with URLs; implications | Umbra |
+| "is this true?", "fact-check this", "did this really happen", "are we sure" | `/fact-check` — any claim on the web: evidence, a grade and a confidence level each; text worded to the grade | Umbra |
 | "compare our competitors", "what changed at X" | `/competitor-watch` — sourced side-by-side; reruns show what changed | Umbra |
 | "plan our social posts", "content calendar" | `/social-plan` — a week per channel in PLAN-<topic>.md | Fizz |
 | "write the captions", "post this" | `/social-post` — captions; pictures from Nova; posts one yes at a time | Fizz |

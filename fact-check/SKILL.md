@@ -1,0 +1,215 @@
+---
+# GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
+name: fact-check
+version: 0.1.0
+publisher: localoy
+capabilities: [files, web, browser]
+description: >-
+  Checks any claim against the web — news, numbers, quotes, people,
+  companies, science, history — finds the evidence (primary sources first),
+  grades each claim Confirmed, Reported, Unverified or Contradicted with a
+  confidence level and the reason, and makes any text that uses it say no
+  more than the evidence allows. A source saying something is evidence, not
+  fact. (localstack)
+author: localoy
+license: MIT
+platforms: [linux, macos, windows]
+metadata:
+  hermes:
+    tags: [research, verification, facts, localstack]
+    related_skills: [market-research, lead-draft, lead-reach, social-post]
+allowed-tools:
+  - Bash
+  - Read
+  - Write
+  - WebSearch
+  - WebFetch
+  - AskUserQuestion
+triggers:
+  - fact-check this
+  - is this true
+  - check these facts
+  - verify before we send
+  - are we sure
+  - is this news real
+  - did this really happen
+  - how confident are we
+tags: [research, verification, fact-check]
+---
+
+## When to invoke this skill
+
+Any time a claim needs checking, whatever it is about: a news story, a
+number, a quote, a statistic, a scientific finding, a historical date, a
+person's title, a company's round, a viral post. Two uses:
+
+- **Asked directly** — "is this true?", "did this really happen?", "how sure
+  are we?": answer each claim with its grade, a confidence level and why.
+- **Before saying it** — before saying something as true to someone outside — a note that
+congratulates a founder on a round, a post that quotes a number, an email
+that names a customer — and whenever someone asks "is this true?" or "are we
+sure?". Other skills call it before they write a fact into anything that
+leaves the folder: `/lead-draft` before a draft states a fact about a lead,
+`/social-post` before a caption states a number.
+
+## Evidence is not fact — the hard boundary
+
+A page saying something is **evidence that it was said**, by someone, on a
+date. Whether it is **true** is a judgement about that evidence, and the
+judgement is the grade. Three mistakes this skill exists to stop (all seen
+on 2026-10-06, congratulating five founders on their rounds):
+
+- **The hedge that disappears.** An article said Corgi "reportedly raised";
+  the summary said "raised". Every hedge in a source — reportedly, according
+  to, sources say, is said to, rumoured, plans to — travels with the claim to
+  the last word written.
+- **The sentence out of context.** "Aayush, JP and Aditya" read as three
+  people when the founder list two lines below says "Aditya (JP)
+  Jayaprakash". A person's name, title and company come from the source that
+  lists people (the company's team or founder page, the person's own
+  profile), never from a passing mention.
+- **One source, said twice.** Two outlets repeating one report are one
+  source. Trace a claim to where it began; independence means each found it
+  out for itself.
+
+Never upgrade a grade to make the writing easier. Never write a claim more
+strongly than its grade allows.
+
+## The grades
+
+| Grade | When | How it may be written |
+|---|---|---|
+| **Confirmed** | A primary source states it (the company's own post, filing, official page, the person's own words), or two independent sources each reported it themselves | As fact: "raised a $75M Series B" |
+| **Reported** | One secondary source, or any source that hedges | With the hedge, named: "reportedly raised, per TechCrunch" — or left out |
+| **Unverified** | Nothing found beyond the claim itself | Not written as fact; ask, or leave it out |
+| **Contradicted** | Sources disagree | Not written; show both sides to the person |
+
+Every claim also gets a **confidence level** — how sure you are of the
+grade, given everything found, in one plain line of why:
+
+- **High** — the evidence is direct and strong: a primary source, or
+  independent sources that agree, and nothing credible against it.
+- **Medium** — the evidence is real but thin or indirect: one good outlet,
+  a hedge, a primary source that is vague, or a detail (amount, date) that
+  sources state differently.
+- **Low** — little to go on: one weak or partisan source, an anonymous post,
+  a very fresh story still changing, or credible sources against it.
+
+The grade says what the evidence is; the confidence says how much to trust
+that reading. A Confirmed claim from an official page is High; Reported by
+one careful outlet doing its own reporting is often Medium; a viral post
+with no source is Unverified, Low.
+
+Also note **Stale** beside a grade when the evidence is older than the claim
+needs (a "recent" round announced a year ago; a title from an old profile):
+say the date, and write it in the past.
+
+## What you need first
+
+- **The claims**, or the text to check (a draft, a list, a table), and **what
+  it will be used for** — a public post needs Confirmed; an internal note can
+  carry Reported with its hedge.
+- **The topic** for the file name: `<topic>` (`yc-founders`, `launch-post`).
+
+If the text is in the folder already (a draft under `PLAN-<topic>.md`'s
+"## Drafts", a `leads-<topic>.csv`, `research-<topic>.md`), read it there.
+Ask for anything still missing in a SINGLE message, then wait.
+
+## Procedure
+
+**1. Split into claims.** One checkable statement per line: who, what,
+number, date ("Corgi raised at a $4B valuation in July 2026"; "Aditya
+Jayaprakash is CEO of Blacksmith"; "Weave's Series A was $13.5M"). Names and
+titles are claims too. Opinions and the sender's own news are not checked.
+
+Scratch for this run lives in `.localstack/work/{date}-{slug}/` — hidden, one directory per run, so a new run never clobbers an earlier one and the folder's top level stays the standard files. Scratch is disposable; old run directories may be deleted freely.
+
+**2. Gather evidence, primary first.** Search the open web, then read the
+pages themselves (a search snippet is a pointer, not evidence). For each
+claim, look in this order and stop when it is Confirmed:
+1. The primary source — whoever the claim is about or who made it: the
+   company's own announcement or filing; the government agency, court,
+   regulator or statistics office's own page; the study or paper itself
+   (not the press release about it); the full speech, video or transcript
+   for a quote; the person's own profile or post; an official directory
+   (for YC companies: the company's ycombinator.com page lists founders and
+   batch).
+2. Independent reporting — an outlet that did its own reporting (an
+   interview, a document seen, a reporter on the scene), not a rewrite. For
+   claims already doing the rounds, an established fact-checker's verdict
+   (Reuters, AP, AFP Fact Check, Snopes, PolitiFact, Full Fact) counts, with
+   its date.
+3. Anything else, labelled for what it is: an aggregator, a wire repost,
+   Wikipedia (a pointer to its own citations, which you then read), a
+   forum, a social post.
+
+Search both ways: for the claim, and for it being false ("<claim> false",
+"<claim> denied", "correction"). A correction or retraction outranks the
+story it corrects. For fresh news, note the time: early reports change, and
+a story under a day old is rarely High.
+
+For each piece of evidence record, in
+`.localstack/work/{date}-<topic>/evidence.md`: the claim, the URL, who
+published it, its date, the date read, and the **exact words** (at most 40)
+that bear on the claim — including any hedge. Read the words in their
+context: the sentence before and after, and for people the list or heading
+they sit under.
+
+**3. Grade** each claim from its evidence by the table above. A claim whose
+primary source and reporting disagree is Contradicted, even if the reporting
+is louder.
+
+**4. Rewrite to the grade.** Go through the text that will be used and change
+every sentence so it says no more than its claims' grades allow: drop the
+amount that is only Reported, add "reportedly" and the outlet, take out the
+Unverified, write a Stale fact in the past. Show each change.
+
+**5. Write** `facts-<topic>.md` at the top of the working folder:
+
+```
+# Facts — <topic>
+Checked: YYYY-MM-DD · for: <what the text is used for>
+
+| Claim | Grade | Confidence — why | Evidence (exact words) | Source | Published | Read |
+|---|---|---|---|---|---|---|
+| Firecrawl raised a $75M Series B | Confirmed | High — the company's own post, signed by its CEO | "We raised a $75M Series B led by Smash Capital" | https://… (Firecrawl blog) | 2026-09-22 | 2026-10-06 |
+| Corgi raised at a $4B valuation | Reported | Medium — one outlet, citing another, hedged | "reportedly raised more money at $4B" (citing Forbes) | https://… (TechCrunch) | 2026-07-23 | 2026-10-06 |
+
+## Changes to the text
+- <before> → <after> — because <claim> is <grade>
+
+## Could not check
+- <claim> — looked at: <where>
+```
+
+A rerun replaces the file; CHANGELOG.md and git keep the history.
+
+**Standard files.** This folder is kept in files any agent already reads. Update them in place; never scatter output into new folders.
+- **AGENTS.md** — create it if missing. localstack owns only the block between `<!-- localstack:start -->` and `<!-- localstack:end -->`; rewrite that block, never anything outside it. The block says what this folder is for, the rules (drafts only; nothing is sent without the user's explicit yes, one message at a time; no invented facts), a map of the files below, and one line per topic (its PLAN, its lead count, the next unticked step) and per report (its file and date).
+- **CHANGELOG.md** — create it if missing (`# Changelog`). Add one bullet for this run under today's `## YYYY-MM-DD` heading, newest date first: the skill, the topic, and the counts or outcome (e.g. `- lead-search austin-dentists: 18 found, 3 skipped as already contacted`).
+- **TODOS.md** — create it if missing (`# TODOs`). Add each open next action as `- [ ] <action> (<topic>)`; tick items this run finished; never delete lines.
+- **DESIGN.md** — decisions meant to last (positioning, tone, channels to use or avoid). Read it before writing anything a person will see; add to it only when the user states or approves a decision.
+
+For this step: the CHANGELOG line gives the topic and the count per grade.
+One TODO per Unverified or Contradicted claim the text still needs
+(`- [ ] confirm: <claim> (fact-check <topic>)`).
+
+**6. Report.** For a direct question, lead with the answer per claim —
+grade, confidence and the one-line why, with the best source. For a text,
+lead with what changed in it and why, then the grade counts. Say plainly which claims cannot be said as fact and what would
+confirm them.
+
+**Completion status.** End the chat report with one of:
+- **DONE** — completed, with the evidence named (files written, counts, URLs).
+- **DONE_WITH_CONCERNS** — completed, and list each concern.
+- **BLOCKED** — cannot proceed; say what blocked it and what was tried.
+- **NEEDS_CONTEXT** — missing information; say exactly what is needed.
+
+## Quality bar
+
+- Every claim in the final text has a row, and its wording matches its grade.
+- Every row has a confidence level with a reason a person can check.
+- The claim was searched for being false too, and any correction is shown.
+- Every Confirmed row quotes a primary source or two independent ones.
+- No hedge in a source is missing from the text that relies on it.
+- Every person's name and title is quoted from a page that lists people.

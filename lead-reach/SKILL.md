@@ -31,12 +31,13 @@ stages:
       text must be the one shown, word for word; anything different needs
       its own yes. With "Approved: one by one", STOP and ask for this lead:
       send, edit, or skip; press send only on a yes for THIS lead. Leave
-      about a minute between sends. After sending, confirm it went (a sent
-      confirmation, the message in the thread, the sent folder) and take a
-      screenshot. Stop the whole run at a CAPTCHA, a login wall, a rate or
+      about a minute between sends. After sending, confirm it went by
+      reading the page's text (a sent confirmation, the message in the
+      thread, "Pending" on the profile, the sent folder) — a screenshot only
+      when no text says so. Stop the whole run at a CAPTCHA, a login wall, a rate or
       spam warning, or an account-safety notice. Append one line per lead to
       the stage file: company, channel, status (sent|skipped|failed|blocked),
-      time, evidence (screenshot path or confirmation text), note.
+      time, evidence (the confirmation text, or a screenshot path), note.
     produces: .localstack/work/{date}-{slug}/reach.md
   - id: log
     goal: >
@@ -151,7 +152,7 @@ record.
 |---|---|---|---|
 | email (address read on a page) | the user's webmail compose (for Gmail: `https://mail.google.com/mail/?view=cm&to=<addr>&su=<subject>`) | subject and body fields | the compose Send button |
 | contact form / contact page | the form URL from the draft | name, email, message as the form asks — the sender fields are the user's own details, asked once per run | the form's submit button |
-| profile (LinkedIn and the like) | the profile URL from the draft | the platform's Message box; if messaging needs a connection, the connection note (trimmed to its limit, told to the user) | Send |
+| profile (LinkedIn and the like) | the profile URL from the draft | the platform's Message box; if messaging needs a connection, the connection note (trimmed to its limit, told to the user) | Send — for a LinkedIn connection the dialog's own buttons: "Send" after adding the note, or "Send without a note" when the draft has none (not "Add a note") |
 
 A channel the table does not cover: open it, show the user what you see, and
 ask how they want it handled before typing anything.
@@ -191,10 +192,17 @@ draft. With "send all", press send if the text is exactly what was shown;
 with "one by one", first stop and ask (Send / Edit / Skip) with the
 recipient, the channel and the exact text. Then:
 
-- **Sent:** confirm it went (the platform's sent confirmation, the message
-  visible in the thread, or the sent folder) and take a screenshot into
-  `.localstack/work/{date}-{slug}/`. No confirmation visible → `failed`,
-  with what you saw.
+- **Sent:** confirm it went by reading the page's text — the platform's sent
+  confirmation, the message in the thread, "Pending" where the button was,
+  or the sent folder — and log that text as the evidence. Take a screenshot
+  into `.localstack/work/{date}-{slug}/` only when no text confirms it. No
+  confirmation at all → `failed`, with what you saw.
+
+Work the page by its text, not by pictures: read it to find the button,
+read it again to confirm. A screenshot after every click is the most
+expensive way to look — every later step re-reads it — and a long queue
+runs out of room for the turn. Look at a picture only when the text can't
+answer.
 - **Edit (one by one):** apply the user's change, show the new text, ask again.
 - **Skip:** log `skipped` and move to the next lead.
 
@@ -247,8 +255,8 @@ else, mention `/lead-export`.
 
 ## Quality bar
 
-- Every `sent` row has evidence a reader can check: a screenshot path or the
-  platform's confirmation text.
+- Every `sent` row has evidence a reader can check: the platform's
+  confirmation text, or a screenshot path when no text confirmed it.
 - Zero sends the user did not see and say yes to (all at once or one by
   one), zero sends of a text that differs from the one shown, zero sends to a channel the draft did
   not name, zero second contacts — any one of these is a failed run, not a

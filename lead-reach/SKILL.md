@@ -1,11 +1,12 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: lead-reach
-version: 0.3.0
+version: 0.4.0
 publisher: localoy
 capabilities: [files, browser]
-# localoy dialect: stages make this runnable on small local models. The reach
-# stage is one lead at a time on purpose: every send waits for its own yes.
+# localoy dialect: stages make this runnable on small local models. The user
+# sees every message before any is sent and says yes once for the whole
+# queue, or lead by lead (owner, 2026-10-07: a yes per person was annoying).
 stages:
   - id: queue
     goal: >
@@ -17,15 +18,20 @@ stages:
       in any Reached Channel — a lead is contacted once. Drop leads under
       "No observed channel". Write the queue, one block per lead (company,
       channel type, channel value, evidence URL, draft), at most 10 leads
-      unless the user named another number.
+      unless the user named another number. Show the user the whole queue,
+      each lead with its exact final text, and ask once: send all, one by
+      one, or stop. Write the answer at the top of the queue file
+      ("Approved: all N, as shown" / "Approved: one by one" / "Stopped").
     produces: .localstack/work/{date}-{slug}/queue.md
   - id: reach
     goal: >
       For each lead in .localstack/work/{date}-{slug}/queue.md, in order: open its channel in
-      the browser (the user's own signed-in session), put the draft in
-      exactly as written, and STOP. Show the user the recipient, the channel
-      and the final text, and ask: send, edit, or skip. Press send only on
-      an explicit yes for THIS lead. After sending, confirm it went (a sent
+      the browser (the user's own signed-in session) and put the draft in
+      exactly as written. With "Approved: all N, as shown", press send — the
+      text must be the one shown, word for word; anything different needs
+      its own yes. With "Approved: one by one", STOP and ask for this lead:
+      send, edit, or skip; press send only on a yes for THIS lead. Leave
+      about a minute between sends. After sending, confirm it went (a sent
       confirmation, the message in the thread, the sent folder) and take a
       screenshot. Stop the whole run at a CAPTCHA, a login wall, a rate or
       spam warning, or an account-safety notice. Append one line per lead to
@@ -47,9 +53,10 @@ stages:
     values:
       Verdict: [keep, close, cut, UNKNOWN]
 description: >-
-  Reach the leads you drafted for — opens each lead's observed channel in your
-  own browser, fills in the draft, and sends it only after you say yes to that
-  one message. Every send is verified and logged. (localstack)
+  Reach the leads you drafted for — shows you every message first, then on one
+  yes (or lead by lead, if you prefer) opens each lead's observed channel in
+  your own browser and sends the draft. Every send is verified and logged.
+  (localstack)
 author: localoy
 license: MIT
 platforms: [linux, macos, windows]
@@ -74,19 +81,29 @@ tags: [sales, outreach, send, browser]
 
 Sends the outreach `/lead-draft` wrote: one lead at a time, through the
 channel that lead was actually observed on, from the user's own browser, and
-only after the user says yes to that exact message. Use after
+only after the user has seen that exact message and said yes to it — once for
+the whole queue, or lead by lead. Use after
 `/lead-draft`, or when asked to "send the outreach", "reach out to these
 leads", or "send the drafts".
 
-## One yes per message — the hard boundary
+## A yes for exactly what was shown — the hard boundary
 
 This is the one skill in the stack that sends, so it sends narrowly:
 
-- **Every send waits for its own yes.** Show the recipient, the channel and
-  the exact final text, then ask. "Send all", "yes to the rest" and silence
-  are not a yes for the next lead — ask again. This holds in every mode,
-  including an agent's auto mode: auto skips questions about ordinary work,
-  never this one.
+- **Nothing is sent before the user has seen it and said yes.** Show the
+  whole queue first — each lead's recipient, channel and exact final text —
+  then ask once: **send all**, **one by one**, or **stop**. "Send all" is a
+  yes for exactly those messages, word for word, and nothing else: a message
+  the user edits, a lead added later, or a text that differs from what was
+  shown needs its own yes. "One by one" asks before each send. Silence is not
+  a yes. This holds in every mode, including an agent's auto mode: auto skips
+  questions about ordinary work, never this one.
+- **The app may ask before the first click on a site.** In localoy that is
+  the click permission; the user can answer "Allow everything on <site> in
+  this chat" so the rest of the queue does not stop again. Say so once,
+  before the first send — never answer it for them.
+- **Sent one at a time, about a minute apart.** A burst of identical actions
+  is what platforms flag; the pace is part of the yes.
 - **Only the drafted text, only the observed channel.** The message is the
   draft in the plan's `## Drafts` word for word, unless the user edits it
   here. The
@@ -145,31 +162,44 @@ ask how they want it handled before typing anything.
 
 Scratch for this run lives in `.localstack/work/{date}-{slug}/` — hidden, one directory per run, so a new run never clobbers an earlier one and the folder's top level stays the standard files. Scratch is disposable; old run directories may be deleted freely.
 
-**2. Queue.** The `queue` stage goal above is the spec: observed channels
-only, drafts verbatim, once-per-lead against every lead list's `Reached`
-columns, capped.
-Tell the user the queue in one short list (company — channel) before the
-first lead, and how many were dropped as already reached.
-
-**3. Reach, one lead at a time.** Before opening the channel, find each fact
-the draft states about the lead in `facts-<topic>.md`: a fact missing there,
-or worded more strongly than its grade, stops this lead — run
-`/fact-check`, fix the wording in the draft, then go on. Open the channel, fill in the draft, then
-stop and ask — as a structured question where the runtime has one
-(Send / Edit / Skip), plain text otherwise:
+**2. Queue and one yes.** The `queue` stage goal above is the spec:
+observed channels only, drafts verbatim, once-per-lead against every lead
+list's `Reached` columns, capped. Before asking, check each fact every draft
+states about its lead in `facts-<topic>.md`: a fact missing there, or worded
+more strongly than its grade, means `/fact-check` and a fixed draft first —
+the user approves the text that will really be sent. Then show the whole
+queue and ask once — as a structured question where the runtime has one
+(Send all N / One by one / Stop), plain text otherwise:
 
 ```
-<Company> — <channel type> <channel value>
-<the exact text that will be sent>
-Send this?
+<N> messages, <dropped> dropped as already reached.
+
+1. <Company> — <channel type> <channel value>
+   <the exact text that will be sent>
+2. …
+
+Send all <N>, one by one, or stop?
 ```
 
-- **Send:** press it, then confirm it went (the platform's sent
-  confirmation, the message visible in the thread, or the sent folder) and
-  take a screenshot into `.localstack/work/{date}-{slug}/`. No confirmation visible →
-  `failed`, with what you saw.
-- **Edit:** apply the user's change, show the new text, ask again.
+- **Send all:** the yes covers these N messages exactly as shown.
+- **One by one:** ask before each send, as in step 3.
+- **An edit to any message:** apply it, show that message again, ask again.
+- **Stop:** nothing is sent; log the queue as `skipped`.
+
+**3. Reach, one lead at a time.** Open the lead's channel and fill in the
+draft. With "send all", press send if the text is exactly what was shown;
+with "one by one", first stop and ask (Send / Edit / Skip) with the
+recipient, the channel and the exact text. Then:
+
+- **Sent:** confirm it went (the platform's sent confirmation, the message
+  visible in the thread, or the sent folder) and take a screenshot into
+  `.localstack/work/{date}-{slug}/`. No confirmation visible → `failed`,
+  with what you saw.
+- **Edit (one by one):** apply the user's change, show the new text, ask again.
 - **Skip:** log `skipped` and move to the next lead.
+
+Wait about a minute before the next lead. A CAPTCHA, a login wall, or a rate,
+spam or account-safety notice stops the whole run, whatever the yes said.
 
 **4. Record it where every agent will look.**
 
@@ -219,7 +249,8 @@ else, mention `/lead-export`.
 
 - Every `sent` row has evidence a reader can check: a screenshot path or the
   platform's confirmation text.
-- Zero sends without their own yes, zero sends to a channel the draft did
+- Zero sends the user did not see and say yes to (all at once or one by
+  one), zero sends of a text that differs from the one shown, zero sends to a channel the draft did
   not name, zero second contacts — any one of these is a failed run, not a
   caveat.
 - A run that stopped at a warning and said so beats one that finished.

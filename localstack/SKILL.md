@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: localstack
-version: 0.8.0
+version: 0.8.1
 publisher: localoy
 capabilities: []
 description: Router for the localstack skill suite — sends any sales-development, SEO, design, support, research, social, finance, operations, automation or web request to the right skill and stage. (localstack)
@@ -69,8 +69,8 @@ Each skill feeds into the next, through the topic's plan and lead list:
 ```
 plan  →  find leads  ─┐
          or bring     ├→  check & fill  →  draft  →  reach  →  retro
-         your file  ──┘   (qualify +          (one yes
-                          fill gaps)           per message)
+         your file  ──┘   (qualify +          (you see each
+                          fill gaps)           message; one yes)
 
                           export — only when you hand the list to someone else
 ```
@@ -80,7 +80,7 @@ Plan     /lead-plan   → PLAN-<topic>.md (brief + ## Steps)   (its interview IS
 Find     /lead-search      → leads-<topic>.csv rows   (or bring your own file to /lead-qualify)
 Check    /lead-qualify     → Verdict + Channel columns filled, ## Qualify in the plan
 Draft    /lead-draft       → ## Drafts in the plan   (drafts only)
-Reach    /lead-reach       → Reached columns + CHANGELOG lines   (sends each draft after your yes)
+Reach    /lead-reach       → Reached columns + CHANGELOG lines   (sends the drafts you saw, after your yes)
 Reflect  /lead-retro      → ## Retro in the plan, changes to DESIGN.md and TODOS.md
 Export   /lead-export      → optional hand-off file + Exported column   (not a step)
 ```

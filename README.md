@@ -59,7 +59,7 @@ this repo.
 | `/lead-search` | Finds leads on the open web only — companies and decision makers, every row carrying the URL it came from and an honest confidence — into `leads-<topic>.csv`. No accounts, no logins, no paid data. |
 | `/lead-qualify` | Check & fill: takes the list, or a file you bring, re-checks each row against the open web, fills the gaps it can observe (website, decision maker, contact channel), and keeps or cuts with a reason — never a score. |
 | `/lead-draft` | Drafts outreach for the kept rows — drafts only. Channels and personalization come only from pages actually observed. |
-| `/lead-reach` | Sends the drafts from your own browser, one lead at a time: opens the observed channel, fills in the draft, and sends only after you say yes to that message. Every send verified and logged; no lead contacted twice. |
+| `/lead-reach` | Sends the drafts from your own browser: shows you every message first, then on one yes (or lead by lead) opens each observed channel, fills in the draft and sends it, a minute apart. Every send verified and logged; no lead contacted twice. |
 | `/lead-export` | Optional hand-off: exports the kept rows for a client, a team or a CRM, never a lead already contacted or exported, and marks them on the list. |
 | `/lead-retro` | Looks back on the round: the funnel with counts read from the files, what got rows cut, and what to change next time. |
 | `/seo-audit` | Crawls up to 30 of a site's important pages and reports what is actually on them — titles, metas, headings, internal links, canonicals, markup flags — as a prioritized fix list. |
@@ -89,8 +89,8 @@ Each skill feeds into the next, through the topic's plan and lead list:
 ```
 plan  →  find leads  ─┐
          or bring     ├→  check & fill  →  draft  →  reach  →  retro
-         your file  ──┘   (qualify +          (one yes
-                          fill gaps)           per message)
+         your file  ──┘   (qualify +          (you see each
+                          fill gaps)           message; one yes)
 
                           export — only when you hand the list to someone else
 ```
@@ -154,9 +154,10 @@ Every skill holds the same line, learned the expensive way in earlier projects:
 - **Partial work is reported as partial.** A subset is never described as the
   whole, and what was cut ships alongside what was kept.
 - **Nothing sends without your yes.** `/lead-draft` only writes drafts.
-  `/lead-reach` sends them from your own signed-in browser, one message at a
-  time, each after you approve it — never in bulk, never a lead twice, and a
-  platform's spam or rate warning stops the run.
+  `/lead-reach` sends them from your own signed-in browser after you have seen
+  every message and said yes — once for the whole list, or one by one. It
+  sends one at a time, a minute apart, never a lead twice, and a platform's
+  spam or rate warning stops the run.
 
 ## One suite, several runtimes
 

@@ -1,0 +1,103 @@
+{
+  "skill": "video-craft",
+  "version": 1,
+  "note": "PASSIVE registry. The SKILL.md table and the phase skills decide when a file is read.",
+  "sections": [
+    {
+      "id": "short-form",
+      "file": "short-form.md",
+      "title": "Short-form: reels, shorts, ads",
+      "trigger": "writing or cutting anything under about 90 seconds"
+    },
+    {
+      "id": "screenwriting",
+      "file": "screenwriting.md",
+      "title": "Screenwriting: scenes and dialogue",
+      "trigger": "writing scenes, dialogue or narration"
+    },
+    {
+      "id": "series",
+      "file": "series.md",
+      "title": "Series: planning a show, writing episodes",
+      "trigger": "planning a series or writing an episode"
+    },
+    {
+      "id": "formats",
+      "file": "formats.md",
+      "title": "Formats: documentary, explainer, ad, adaptation, podcast",
+      "trigger": "the piece is a documentary, explainer, ad, adaptation or podcast"
+    },
+    {
+      "id": "styles",
+      "file": "styles.md",
+      "title": "Animation and styles: looks, prompt recipes, the comic recipe",
+      "trigger": "picking or keeping a look; writing a picture prompt prefix"
+    },
+    {
+      "id": "characters",
+      "file": "characters.md",
+      "title": "Characters: design, casting, consistency, voice casting",
+      "trigger": "designing or casting characters; keeping faces the same"
+    },
+    {
+      "id": "cinematography",
+      "file": "cinematography.md",
+      "title": "Cinematography: shots, angles, movement, composition, light",
+      "trigger": "planning shots or writing a picture prompt for a scene"
+    },
+    {
+      "id": "directing",
+      "file": "directing.md",
+      "title": "Directing: staging, performance, tone",
+      "trigger": "staging a scene, directing expressions, setting tone"
+    },
+    {
+      "id": "choreography",
+      "file": "choreography.md",
+      "title": "Choreography and movement on screen",
+      "trigger": "dance, fights, group movement, or motion built from stills"
+    },
+    {
+      "id": "sound",
+      "file": "sound.md",
+      "title": "Sound: voices, music, effects, the mix",
+      "trigger": "casting or directing voices, choosing music, planning sound, mixing"
+    },
+    {
+      "id": "editing",
+      "file": "editing.md",
+      "title": "Editing: pace, cuts, rhythm, transitions",
+      "trigger": "cutting the timeline, pacing, transitions, montage, trailers"
+    },
+    {
+      "id": "finishing",
+      "file": "finishing.md",
+      "title": "Finishing: captions, titles, colour, the final check",
+      "trigger": "captions, on-screen text, title and end cards, the check before export"
+    },
+    {
+      "id": "production-design",
+      "file": "production-design.md",
+      "title": "Production design: places, props, costume, colour",
+      "trigger": "describing places, props or costume; planning colour across a piece"
+    },
+    {
+      "id": "podcast",
+      "file": "podcast.md",
+      "title": "Podcast production: the show, episodes, interviews, editing speech, delivery",
+      "trigger": "planning or making a podcast or a video podcast"
+    },
+    {
+      "id": "platforms",
+      "file": "platforms.md",
+      "title": "Platforms and delivery: sizes, lengths, safe zones, loudness (dated)",
+      "trigger": "choosing size or length, placing text, exporting or posting"
+    },
+    {
+      "id": "rights",
+      "file": "rights.md",
+      "title": "Rights and care: music, pictures, faces and voices, labels, claims",
+      "trigger": "using music, real people, claims, or realistic material"
+    }
+  ]
+}

@@ -106,7 +106,7 @@ for (const skill of skillDirs()) {
     }
     if (desc.length > 500) fail(`${skill}/SKILL.md: description is ${desc.length} chars; localoy refuses over 500 (it sits in every prompt)`);
   }
-  const KNOWN_CAPS = ['files', 'web', 'browser', 'computer', 'shell', 'schedule', 'messaging', 'memory', 'delegate'];
+  const KNOWN_CAPS = ['files', 'web', 'browser', 'computer', 'shell', 'schedule', 'messaging', 'memory', 'delegate', 'pictures', 'videos'];
   const caps = fm.match(/^capabilities:[ \t]*\[(.*)\]/m);
   for (const c of caps ? caps[1].split(',').map((x) => x.trim()).filter(Boolean) : []) {
     if (!KNOWN_CAPS.includes(c)) fail(`${skill}/SKILL.md: capability '${c}' is not one localoy knows (${KNOWN_CAPS.join(', ')})`);

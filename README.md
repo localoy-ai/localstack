@@ -81,6 +81,14 @@ this repo.
 | `/routine-report` | Grit · Weekly "what ran, what changed, what broke" from the run logs; messages you only when something changed or failed. |
 | `/site-check` | Blip · Checks a site's pages, links, forms and observable speed signals; a prioritised fix list. Never submits a form. |
 | `/site-fix` | Blip · Reproduces a bug, fixes the smallest thing, tests twice in the browser, reports what broke and why; asks before touching production. |
+| `/video-brief` | Starts a video, series or podcast: what it's for, who watches, where it goes, length, size, feel and what good means, as `PLAN-<topic>.md` with the job's phases. |
+| `/video-story` | Writes the story from the brief: the hook, the beats, numbered scenes with timings and every spoken line, in `script-<topic>.md`, from options you pick. |
+| `/video-cast` | Fixes the look and the cast: 2–3 style frames to pick from, a style sheet every picture follows, and a reference picture per character so faces stay the same in every scene and episode. |
+| `/video-shots` | Plans every shot like a director and cinematographer — size, angle, camera move, framing, who, how long — with test frames you approve before the scenes are made. |
+| `/video-sound` | Casts the voices from samples you hear, directs every line, picks the music from two options, lists the sound effects, then records the script. |
+| `/video-edit` | Cuts the video in VertX from the approved plan: scenes in the picked style and cast, synced to the voice, paced like an editor, frames checked as it goes. |
+| `/video-finish` | Captions, titles and the end card, a frame-by-frame check against the brief (Bangla letters included), then the export, ready to post on your yes. |
+| `/video-craft` | The studio's craft library, read when a phase needs it: story, styles, characters, cinematography, directing, choreography, production design, sound, editing, finishing, podcast, platforms, rights. |
 
 ## The sales pipeline
 

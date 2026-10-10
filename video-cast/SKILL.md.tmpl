@@ -1,0 +1,113 @@
+---
+name: video-cast
+version: 0.1.0
+publisher: localoy
+capabilities: [files, pictures]
+description: >-
+  Cast a video or series and fix its look: one style sheet every picture
+  follows, and a reference picture per character so faces and clothes stay
+  the same in every scene and episode, picked by the person from real
+  drafts. (localstack)
+author: localoy
+license: MIT
+platforms: [linux, macos, windows]
+metadata:
+  hermes:
+    tags: [video, casting, characters, style, localstack]
+    related_skills: [video-story, video-shots, video-craft]
+allowed-tools:
+  - Read
+  - Write
+  - AskUserQuestion
+triggers:
+  - cast the characters
+  - make the character references
+  - pick the look
+  - what style should it be
+tags: [video, cast, style]
+---
+
+## When to invoke this skill
+
+After the story, before any scene is drawn. Two things are decided here
+and then never improvised again: **the look** (the style every picture
+shares) and **the cast** (who each person is and what they look like).
+Most of what makes AI video look cheap — a face that changes between
+shots, a style that drifts, a palette that jumps — is a casting phase
+that was skipped.
+
+## What you read first
+
+1. `PLAN-<topic>.md` (the brief: feel, platform, must-use) and
+   `script-<topic>.md` (who appears, where, in how many scenes).
+2. For a series: the series plan's style and cast. **An episode never
+   recasts**; it reuses what the series picked.
+3. What's already in the folder: `ls characters/ style-*.md`. Reuse a
+   character that exists rather than drawing a new one.
+4. `video-craft`: `sections/styles.md` (the look recipes) and
+   `sections/characters.md` (character design and consistency).
+
+## The look: the style sheet
+
+Draft **2–3 style frames**: the same key moment from the script (the
+hook scene is best), each in a different look that fits the brief (for
+example comic inks, painterly cinematic, flat graphic). Same subject,
+different style, so the person compares the style and not the content.
+Each is a paid picture: the person agrees to the credit first.
+
+When they pick, write `style-<topic>.md` (a series: `style-<series>.md`):
+
+- **Name of the look** and one line on its feel.
+- **Prompt prefix**: the exact words that open every picture prompt
+  (medium, line, colour, light, texture), from `styles.md`'s recipe,
+  adjusted to the pick.
+- **Palette**: 4–6 colours as hex, and what each is for (night, warmth,
+  danger, the brand).
+- **Light**: the default (soft daylight, hard neon, low-key night).
+- **Lettering** (on-screen text): font (sans, display or serif),
+  colours, style (box, plain, outline).
+- **Never**: what breaks the look (photoreal skin in a comic, lens flares
+  in a flat style, text inside the picture).
+- **The frame it was picked from**, linked.
+
+## The cast: a reference per character
+
+For every person in **more than one scene**, and every recurring object
+that must not change (the ship, the mascot, the product):
+
+1. Write a **character sheet** in `style-<topic>.md` under `## Cast`:
+   name, role, age, build, face, hair, skin, clothes (exact colours),
+   one distinguishing detail, how they move, how they sound (for the
+   voice phase).
+2. Make the **reference picture** with VertX `character {name, prompt}`:
+   the style prefix + the sheet's look, plain background, full figure or
+   head and shoulders, neutral expression. One per character.
+3. Show them together; ask the person to pick or change each one in one
+   ask. A changed character is redrawn, not patched in later scenes.
+4. Mark `3. Cast and look — ✓ style-<topic>.md` in the plan when the
+   style and every character are picked.
+
+People who appear once (a crowd, a passer-by) get no reference; describe
+them in the scene's prompt.
+
+## Ground rules
+
+1. **No real people** without their consent: no celebrity lookalikes, no
+   faces of people the user named unless they say it's them or they have
+   permission. A real person's photo the user gives as "this is me" is
+   fine for them.
+2. **The style prefix and the cast go into every picture.** Name each
+   character who appears with `with` on every `picture` they are in.
+3. **One look per piece.** A style change mid-piece is a story choice
+   (a dream, a flashback) and is written in the script, not drifted into.
+4. **Spend once.** Style frames and references are the cheapest place to
+   be sure; a wrong face found in the edit means redrawing every scene.
+
+## The check
+
+- Every recurring character has a sheet and a picked reference.
+- Two references side by side look like the same world (same style, same
+  light, same palette).
+- The prompt prefix alone, on a new subject, gives the same look (try it
+  on the first scene in the shots phase).
+- Nothing in the cast is a real person used without consent.

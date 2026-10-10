@@ -1,0 +1,120 @@
+---
+# GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
+name: video-brief
+version: 0.1.0
+publisher: localoy
+capabilities: [files, web]
+description: >-
+  Start a video, series or podcast: pin down what it is for, who watches,
+  where it goes, how long, what size, the feel, and what good means, as
+  PLAN-<topic>.md with the job's phases, the plan every later video step
+  reads. (localstack)
+author: localoy
+license: MIT
+platforms: [linux, macos, windows]
+metadata:
+  hermes:
+    tags: [video, brief, planning, localstack]
+    related_skills: [video-story, video-craft]
+allowed-tools:
+  - Read
+  - Write
+  - WebSearch
+  - WebFetch
+  - AskUserQuestion
+triggers:
+  - make a video
+  - make a reel
+  - plan a series
+  - make a podcast
+  - video brief
+tags: [video, brief, plan]
+---
+
+## When to invoke this skill
+
+First, for any new video, series or podcast, before anything is written
+or drawn. A good brief is the cheapest quality lever in the whole job: a
+script for the wrong audience, a cast for the wrong platform, a cut at the
+wrong length all cost credit and time, and all trace back to a missing
+brief line.
+
+A **topic** is one piece of work as a short lowercase slug:
+`brew-lane-reel`, `arunima-ep1`, `founders-podcast-3`. Its files share the
+name: `PLAN-<topic>.md`, `script-<topic>.md`.
+
+## What you read first
+
+1. **What the user gave you:** a script, a post, a product page, a story,
+   photos, earlier episodes. Their material is the brief's raw stuff.
+2. **An existing plan:** `ls PLAN-*.md`. If one is this job (or this
+   series), revise it; never start a second plan for the same thing.
+3. **DESIGN.md**, if present: brand, voice, colours, what never to do.
+4. **A series bible**, if this is an episode: the series plan's cast,
+   style and story so far. An episode never contradicts it.
+
+## What the brief must pin down
+
+| Line | What it settles | If missing |
+|---|---|---|
+| **For** | The one thing it must do: sell X, explain Y, grow the series, entertain | Ask; it decides everything else |
+| **Who watches** | Who, what they already know, why they'd stop scrolling | Ask |
+| **Where** | Platform(s), and so the size and length (below) | Ask |
+| **Length** | Seconds or minutes | Platform's sweet spot, said as your pick |
+| **Size** | VertX preset: `reel-9x16` (Reels, TikTok, Shorts), `portrait` (4:5 feed), `square`, `wide-16x9` (YouTube, web), `wide-720p`, `reel-720` | From the platform |
+| **Feel** | Tone and style in a few words: warm doc, comic, slick ad, eerie thriller | Ask, with 2–3 options |
+| **Language** | Spoken and on-screen (Bangla, English, both) | From how they wrote to you, as your pick |
+| **Must use / must avoid** | People, voices, logo, music, claims, words | Ask once |
+| **Good means** | How we'll know it worked: the check at the end ("hook lands by 2 s; product named; under 30 s; captions readable on a phone") | Write your proposal; they confirm |
+| **Budget** | Credit they're happy to spend on pictures, clips, voices, music | Ask; estimate first |
+
+Ask everything still missing in **one** ask, with short choices and your
+recommendation first. "Up to you" is an answer: write your pick and why.
+
+## The phases
+
+Write the job's phases into the plan, in this order, keeping only the ones
+this job has:
+
+```
+## Phases
+1. Brief — ✓ this file
+2. Story — open
+3. Cast and look — open
+4. Shots — open
+5. Voice and sound — open
+6. Edit and finish — open
+```
+
+A voice-over: brief, story, voice. A podcast episode: brief, story
+(outline), voices, music and sound, edit. A series: the brief is the
+series plan (premise, episodes, cast, style); each episode then gets its
+own `PLAN-<series>-ep<n>.md` that points back to it.
+
+## Ground rules
+
+1. **The brief records what the user said**, plus anything you looked up,
+   with its link. No invented audience data or "studies show".
+2. **One plan per job.** Revise, don't fork.
+3. **Platform numbers change.** Read `video-craft` → platforms before you
+   state a length or a safe zone, and say it's today's guidance.
+4. **No drafting yet.** The brief is words. Pictures, voices and clips
+   come in their phases, after the person picks.
+
+## Procedure
+
+1. Read what's there (above). Name the topic.
+2. Fill every brief line you can from it; ask the rest in one ask.
+3. Write `PLAN-<topic>.md`: `# <title>`, `## Brief` (the table's lines as
+   bullets), `## Phases` (as above), `## Steps` (the run as `- [ ]` lines:
+   make the scenes, record the voices, cut, finish, export, post only on
+   a yes).
+4. Reply in a few lines: what it's for, the length and size, the feel,
+   and that the next phase is the story.
+
+## The check
+
+- Every brief line has an answer or a stated pick.
+- "Good means" is concrete enough to fail.
+- The phases match the job (a podcast has no shots).
+- The plan reads cold: another agent could pick it up.

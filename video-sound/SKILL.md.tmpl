@@ -1,0 +1,107 @@
+---
+name: video-sound
+version: 0.1.0
+publisher: localoy
+capabilities: [files]
+description: >-
+  Cast the voices, direct every line, pick the music and plan the sound of
+  a video or podcast, from samples the person hears and picks, then record
+  the whole script; written into the plan as the voice and sound phase.
+  (localstack)
+author: localoy
+license: MIT
+platforms: [linux, macos, windows]
+metadata:
+  hermes:
+    tags: [video, sound, voice, music, localstack]
+    related_skills: [video-story, video-edit, video-craft]
+allowed-tools:
+  - Read
+  - Write
+  - AskUserQuestion
+triggers:
+  - record the voice-over
+  - cast the voices
+  - pick the music
+  - add sound
+tags: [video, sound, voice, music]
+---
+
+## When to invoke this skill
+
+After the script (and, for a video, after the shots), before the edit. In
+short video, sound is half the piece: a good voice and the right music
+carry weak pictures; bad sound sinks good ones. When the voice is the
+clock (`sync`), this phase also sets the timing of everything.
+
+## What you read first
+
+1. `script-<topic>.md`: every line, who says it, how; sounds that matter.
+2. `style-<topic>.md`: each character's voice notes; the feel.
+3. `PLAN-<topic>.md`: language, budget, must-use (a brand voice, the
+   person's own recording).
+4. `video-craft`: `sections/sound.md` (voices, music, effects, the mix);
+   `sections/characters.md` → voice casting.
+
+## Voices
+
+1. **Cast each voice** to its character: age, energy, warmth or edge,
+   pace, and the language (Bangla needs a voice that reads Bangla well;
+   test it on a real line with joined letters and numbers).
+2. **Sample first**: record **one short real line** per voice option, 2–3
+   options per main voice, and let the person pick in one ask. Samples are
+   paid; the person agrees to the credit first.
+3. **Direct every line** with `how`: the emotion, pace and intent
+   ("whispered, afraid, slow", "bright, smiling, quick"). Same character,
+   same voice name every line.
+4. **Record the script**: one voice clip per line (or per paragraph of
+   narration), in script order. Keep each line's text exactly as written;
+   fix the script first if a line must change.
+5. **Listen back** (play the timings with `show`): too fast, a wrong
+   stress, a mispronounced name → re-record that line only.
+
+The person's own voice: if they give a recording, use it (`add` it as a
+voice); never imitate a real person's voice.
+
+## Music
+
+- **Pick the feel from the brief and the story's shape**: tempo, mood,
+  instruments, where it lifts and drops. Write it as a prompt (no words,
+  no artist names).
+- **Make 2 short options** (15–20 s each) and let the person pick; then
+  make the bed at the full length.
+- **Under a voice, music sits low**: VertX lowers it under any voice by
+  itself; still choose music without busy melody in the voice's range.
+- **Structure**: music that starts with the hook, lifts at the turn,
+  resolves at the end. Silence before a reveal is part of the score.
+
+## Sound effects and ambience
+
+List the sounds the script and shots need (the knock, the radio crackle,
+room tone of the station). VertX can't make or fetch sound effects yet:
+use a sound file the person provides or owns (`add` with `role`), or
+carry the moment with music and picture, and say which effects are
+missing in the plan.
+
+## Write it down
+
+In `PLAN-<topic>.md`, mark `5. Voice and sound — ✓` with the picked
+voices (character → voice name, how), the music file, and any missing
+effects. Add the recording steps to `## Steps` if the run does them.
+
+## Ground rules
+
+1. **No real person's voice** without their consent; no imitations.
+2. **The line as written.** A voice that changes the words changes the
+   script; fix the script, then record.
+3. **Samples before the whole script.** Voicing 30 lines in the wrong
+   voice is the most expensive mistake in this phase.
+4. **Music rights**: use music VertX makes, the person's own, or music
+   licensed for this use; nothing ripped from elsewhere.
+
+## The check
+
+- Every line has a voice, and each character keeps one voice.
+- Names, numbers and Bangla read correctly (listen to those lines).
+- The music fits the feel and is low enough under every voice.
+- Missing sound effects are listed, not silently dropped.

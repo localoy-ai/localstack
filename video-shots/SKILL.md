@@ -1,0 +1,111 @@
+---
+# GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
+name: video-shots
+version: 0.1.0
+publisher: localoy
+capabilities: [files, pictures, videos]
+description: >-
+  Plan every shot of a video like a director and cinematographer: shot size,
+  angle, camera movement, framing, who is in it and how long it holds, as
+  shots-<topic>.md, with a few test frames the person approves before the
+  scenes are made. (localstack)
+author: localoy
+license: MIT
+platforms: [linux, macos, windows]
+metadata:
+  hermes:
+    tags: [video, shots, storyboard, cinematography, localstack]
+    related_skills: [video-cast, video-story, video-craft]
+allowed-tools:
+  - Read
+  - Write
+  - AskUserQuestion
+triggers:
+  - plan the shots
+  - make a storyboard
+  - shot list
+  - how should we film this
+tags: [video, shots, storyboard]
+---
+
+## When to invoke this skill
+
+After the cast and look are picked, before scenes are made. The shot list
+turns the script into pictures: what the camera sees in each moment, and
+why. A list made here makes every picture prompt in the run concrete; a
+run without one draws the same medium shot twenty times.
+
+## What you read first
+
+1. `script-<topic>.md`: the scenes, their times and lines.
+2. `style-<topic>.md`: the prompt prefix, palette, light, the cast.
+3. `video-craft`: `sections/cinematography.md` (shots, angles, movement,
+   composition, light) and `sections/directing.md` (blocking, performance,
+   eyelines). For dance, fights or any staged movement,
+   `sections/choreography.md`.
+
+## The shot list
+
+`shots-<topic>.md`, one row per shot (a scene may have several):
+
+| # | Time | Shot | Angle | Camera | Who | What we see | Says |
+|---|---|---|---|---|---|---|---|
+| 1 | 0.0–2.0 | ECU | eye level | push in | tania | her eyes widen; console glow on her face, blue and amber | "সময় নাকি" |
+| 2 | 2.0–4.5 | WS | high | slow pan right | tania | the station's control room, tiny figure at the radio, Mars red through the window | … |
+
+- **Shot**: ECU, CU, MCU, MS, MWS, WS, EWS, insert, OTS, POV, two-shot.
+- **Angle**: eye level, high, low, top-down, Dutch tilt, over the shoulder.
+- **Camera**: static, push in, pull out, pan left/right, tilt, a real moving
+  shot (clip). On a still, "push in" and "pull out" are VertX `motion`
+  zoom-in and zoom-out; pans are pan-left and pan-right.
+- **Who**: the cast names for `with`.
+- **What we see**: one sentence a picture can be made from: subject,
+  action, place, light, mood. The style prefix is added when it's made.
+- **Says**: the first words of the line this shot plays under, for `sync`.
+
+## Directing the sequence
+
+- **Vary shot sizes.** Wide to set the place, closer as tension rises,
+  close-up for the turn. Two shots of the same size and angle in a row
+  look like a jump.
+- **The 180° rule**: in a conversation, keep the camera on one side of the
+  line between the two people, so they keep facing each other across cuts.
+- **Eyelines** match: if she looks right at the radio, the radio shot is
+  seen from her left.
+- **Motivate movement**: push in on a realisation, pull out on loneliness,
+  pan to follow a look. No movement for its own sake.
+- **Hold**: a still with motion reads for 2–3 s in a fast piece, up to
+  ~5 s in a slow one; longer needs a new shot or real motion.
+- **Real motion (a clip)** only where the moment needs it (a door opening,
+  a hand shaking, a dance step): clips cost most and take longest. Plan at
+  most a few, and say why each.
+
+## Test frames, then the pick
+
+Make **2–3 test frames** from the list (the hook shot and the hardest
+shot, the one with the most characters or the trickiest light), each a
+paid picture after the person agrees, in the picked style with the cast.
+Show them with their rows; ask in one ask whether the list is right or
+what to change. Then mark `4. Shots — ✓ shots-<topic>.md` in the plan.
+
+For a long piece, also lay out a **text storyboard**: the shot list read
+in order is the storyboard; no picture per row until the run.
+
+## Ground rules
+
+1. **Every row is makeable**: one still or one short clip, in the style,
+   with known cast. A shot that needs something VertX can't do (a long
+   continuous move, a crowd dancing in sync, split screen beyond picture
+   in picture) is flagged with the workaround.
+2. **Continuity across rows**: same clothes, props, time of day, the side
+   of the frame each character holds, unless the script changes them.
+3. **No text inside pictures.** Words on screen are VertX `text` and
+   `captions`, so they're sharp, correct and editable (Bangla especially).
+
+## The check
+
+- The times add up to the script's, every shot has a size, angle and
+  camera, and no two neighbours are the same size and angle.
+- Every line in the script is covered by a shot.
+- The test frames match the style sheet and the cast references.
+- Clips are few, each with a reason.

@@ -1,0 +1,112 @@
+---
+# GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
+name: podcast-plan
+version: 0.1.0
+publisher: localoy
+capabilities: [files, web]
+description: >-
+  Plan a podcast show or one episode: who it's for, the format, the hosts
+  and their voices, the sound identity, and the episode's outline with
+  timed segments, as PLAN-<topic>.md and outline-<topic>.md the person
+  picks from. (localstack)
+author: localoy
+license: MIT
+platforms: [linux, macos, windows]
+metadata:
+  hermes:
+    tags: [podcast, audio, planning, localstack]
+    related_skills: [podcast-make, video-craft]
+allowed-tools:
+  - Read
+  - Write
+  - WebSearch
+  - WebFetch
+  - AskUserQuestion
+triggers:
+  - plan a podcast
+  - start a podcast
+  - plan an episode
+  - podcast outline
+tags: [podcast, plan, outline]
+---
+
+## When to invoke this skill
+
+For a new podcast (the show) or a new episode of one. A show is planned
+once and kept true; each episode is planned against it. Read
+`video-craft` → `sections/podcast.md` and `sections/formats.md` (podcast
+shapes) first.
+
+## What you read first
+
+1. What the person gave you: the topic, notes, an article, an interview
+   transcript or recording, earlier episodes.
+2. `ls PLAN-*.md`: an existing show plan. An episode never contradicts
+   it (format, hosts, voices, theme, intro and outro lines).
+3. DESIGN.md: the brand's voice and what never to say.
+
+## The show plan (once)
+
+`PLAN-<show>.md`:
+
+- **Premise**: who it's for and what they get each episode, one line.
+- **Format**: solo, interview, co-hosts, panel, narrative, audio drama.
+- **Length and rhythm**: typical minutes; how often, which day.
+- **Hosts**: each host's role, personality, how they talk; a real person
+  hosting in their own recorded voice, or an AI voice picked from samples
+  (never imitating a real person).
+- **Sound identity**: the theme (feel, instruments, 5–15 s), the sting
+  between segments, the intro line, the outro line.
+- **Language**: Bangla, English, both; how numbers and names are read.
+- **Show art**: square cover in the brand's style (a paid picture, after a
+  yes).
+- **Episode list**: one line per planned episode.
+
+## The episode plan
+
+`PLAN-<show>-ep<n>.md` (or `PLAN-<topic>.md` for a one-off), phases:
+
+```
+## Phases
+1. Brief — ✓ this file
+2. Outline — open
+3. Voices — open
+4. Music and sound — open
+5. Edit — open
+```
+
+Then `outline-<topic>.md`:
+
+- **The promise**: the one question this episode answers.
+- **Cold open**: the best line or moment, 10–30 s.
+- **Intro**: the show's line + this episode's promise.
+- **Segments** (2–4): title, minutes, the points or questions, the turn
+  each one makes; for an interview, the question blocks and follow-ups;
+  for a narrative, the scenes and the tape.
+- **Mid-episode hook**: a "coming up" before the halfway point.
+- **Takeaway and outro**: what to remember; next episode's teaser.
+- **Script or notes**: a full script when voices are AI hosts (every line
+  written, with who says it and how); talking points when the person
+  records themselves.
+
+Draft **two outline directions** when the angle is open (different
+promise or shape); the person picks in one ask. Mark the outline phase ✓
+when picked.
+
+## Ground rules
+
+1. **Real people's words are real.** Quotes and guests' answers come from
+   their actual recording or text, never invented; an AI host never plays
+   a real guest.
+2. **Facts with sources.** A claim the outline makes is one the person
+   gave or one you found, with the link in the plan.
+3. **Plan the length honestly**: about 140–160 spoken words a minute for
+   conversation, slower for narration.
+
+## The check
+
+- The promise is one clear question.
+- Segment minutes add up to the planned length.
+- Every AI host line has a speaker and a delivery; every guest line is
+  real.
+- The episode matches the show plan's format, hosts and sound identity.

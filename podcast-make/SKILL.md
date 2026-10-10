@@ -1,0 +1,104 @@
+---
+# GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
+name: podcast-make
+version: 0.1.0
+publisher: localoy
+capabilities: [files, pictures]
+description: >-
+  Make a podcast episode in VertX from its approved plan: voices recorded
+  or brought in, theme, beds and stings, speech edited and levelled, the
+  audio exported, with show notes, chapters, and optional video and
+  social clips. (localstack)
+author: localoy
+license: MIT
+platforms: [linux, macos, windows]
+metadata:
+  hermes:
+    tags: [podcast, audio, vertx, localstack]
+    related_skills: [podcast-plan, video-sound, video-craft]
+allowed-tools:
+  - Read
+  - Write
+  - AskUserQuestion
+triggers:
+  - make the episode
+  - record the podcast
+  - edit the podcast
+  - make podcast clips
+tags: [podcast, make, audio]
+---
+
+## When to invoke this skill
+
+When the episode's outline and voices are picked (the run). It builds the
+episode in VertX as an audio project, then the notes; a video podcast and
+short clips are extra on request.
+
+## What you read first
+
+1. `PLAN-<show>.md` and the episode plan; `outline-<topic>.md`.
+2. `video-craft`: `sections/podcast.md` (editing speech, music, delivery),
+   `sections/sound.md` (voices, the mix).
+
+## Voices
+
+- **Sample first** (if not picked yet): one real line per voice option
+  for each AI host; the person picks (paid, after a yes).
+- **AI hosts**: one `voice` clip per line of the script, in order, each
+  with the host's voice name and a `how` that fits the moment.
+- **The person's own recording**: `add` it with `role voice`; cut it with
+  `cut` and `remove` (false starts, long tangents, ums that break the
+  flow), keeping natural breaths and rhythm.
+- **Guests**: only their real recording, edited for length, never
+  reworded.
+- **Listen** to names, numbers and Bangla lines; re-record or re-cut the
+  wrong ones.
+
+## Music and sound
+
+- The show's **theme** at the top (cold open → theme → intro), the
+  **sting** between segments, the **outro** theme. Make them once per show
+  with `music` (2 options to pick from), and reuse the files every
+  episode with `add`.
+- A **bed** under the intro and outro only; music stays out of the way of
+  talk (VertX lowers it under voices by itself).
+
+## Assemble
+
+1. `new` an audio project for the episode (any preset; only the sound is
+   exported).
+2. Place in outline order: cold open, theme, intro, segments with stings,
+   mid hook, takeaway, outro.
+3. Pace: trim long gaps between lines, keep the meaningful pauses.
+4. `show` the timeline: total length against the plan.
+5. `export {format: m4a}` (and `wav` if the person wants an archive),
+   named `<show>-ep<n>`.
+
+## Show notes and chapters
+
+`notes-<topic>.md`: a 2–3 sentence summary, what listeners take away,
+guest bio and links, sources for the facts, and chapters with times
+(`00:00 Cold open`, …) read from the timeline. A transcript when the
+episode came from a script.
+
+## Video podcast and clips (on request)
+
+- A picture per speaker (or the cover art) with slow `motion`, `captions`
+  on the voices, exported as mp4 at `wide-16x9`.
+- **Clips**: 30–60 s of the best moments, `reel-9x16`, with a hook line as
+  `text` and captions; each a separate export.
+
+## Ground rules
+
+1. **Spend what the plan said**: samples and theme are the only paid
+   extras unless the person agrees to more.
+2. **Never reword a real person.** Edits shorten; they don't change
+   meaning.
+3. **Publish only on a yes**, to the host the person names.
+
+## The check
+
+- The episode follows the outline and the show's sound identity.
+- Every voice is clear over music; no clipped or missing line.
+- Length within the plan's ±10%.
+- Chapters' times match the export; notes cite their facts.

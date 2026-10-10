@@ -7,7 +7,7 @@ description: >-
   and made in VertX. Reels, shorts, ads, explainers, series episodes,
   podcasts and voice-overs. Use when asked to "make a video", "make a
   reel", "plan a series", "make a podcast", or "edit this video".
-version: 0.3.0
+version: 0.4.0
 publisher: localoy
 license: MIT
 triggers:
@@ -31,6 +31,8 @@ skills:
   - video-sound
   - video-edit
   - video-finish
+  - podcast-plan
+  - podcast-make
   - video-craft
 ---
 
@@ -85,7 +87,9 @@ picked, then `— ✓ <file or choice>`.
 | Finish | `video-finish` | captions, titles, end card, the frame-by-frame check, the exported file |
 
 Not every job needs every phase: a voice-over needs brief, story and
-sound; a podcast episode has its own path (coming). Skip a phase only when
+sound. A podcast has its own path: `podcast-plan` (the show once, then
+each episode's outline) and `podcast-make` (voices, theme and stings, the
+edit, notes and chapters, optional video and clips). Skip a phase only when
 the brief says it doesn't apply, and say so in the plan.
 
 ## The craft

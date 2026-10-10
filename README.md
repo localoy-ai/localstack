@@ -88,6 +88,8 @@ this repo.
 | `/video-sound` | Casts the voices from samples you hear, directs every line, picks the music from two options, lists the sound effects, then records the script. |
 | `/video-edit` | Cuts the video in VertX from the approved plan: scenes in the picked style and cast, synced to the voice, paced like an editor, frames checked as it goes. |
 | `/video-finish` | Captions, titles and the end card, a frame-by-frame check against the brief (Bangla letters included), then the export, ready to post on your yes. |
+| `/podcast-plan` | Plans a podcast show once (premise, format, hosts, sound identity) and each episode's outline with timed segments, from two directions you pick. |
+| `/podcast-make` | Makes the episode in VertX: voices recorded or brought in, theme and stings, speech edited and levelled, audio exported, with show notes, chapters, and optional video and clips. |
 | `/video-craft` | The studio's craft library, read when a phase needs it: story, styles, characters, cinematography, directing, choreography, production design, sound, editing, finishing, podcast, platforms, rights. |
 
 ## The sales pipeline

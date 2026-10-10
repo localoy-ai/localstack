@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: video-edit
-version: 0.1.0
+version: 0.1.1
 publisher: localoy
 capabilities: [files, pictures, videos]
 description: >-
@@ -75,6 +75,10 @@ plan's `## Steps`; they run when the person presses Start.
 3. **Every scene moves.** A still with no motion and no reason is a bug.
 4. **Fix at the source.** A wrong face is remade from the reference, not
    covered with text.
+5. **Say what you're about to change**, in one plain sentence, before each
+   change to the timeline, so the person can follow and stop you.
+6. **A make that fails** (a model busy or down): try once more, then carry
+   on without it and say so. A story without music is still a story.
 
 ## The check
 

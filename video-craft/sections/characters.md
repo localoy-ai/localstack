@@ -68,8 +68,9 @@ photo, their recorded voice) is fine.
 
 - `character {name, prompt}` makes the reference once; `picture {with:
   [names]}` draws them from it in every scene.
-- A new project should reuse the folder's existing references by name.
-  (Known gap: a new project may not see `characters/` from another
-  project; reuse the same name and check with `look`.)
+- A new project reuses the folder's characters by name: any character
+  made in another project here, or a picture in `characters/`, is found
+  when you name it in `with`. Never redraw someone who already has a
+  reference.
 - Voices: `voice {voice, how}` per line; keep a character's voice name and
   `how` the same all piece long.

@@ -65,9 +65,8 @@ later) reads it first.
 
 - **Characters belong to the series, not one episode**: make each
   character once with `character` (a reference picture), and name them in
-  `with` on every picture so they're drawn the same. (A new project not
-  seeing the folder's characters is a known gap; until it's fixed, reuse
-  the same reference files by name and check with `look`.)
+  `with` on every picture so they're drawn the same. Every episode's
+  project in the folder finds them by name.
 - Use the same `preset`, palette, fonts and lettering style in every
   episode's project; copy them from the bible, not from memory.
 - The title card and end card are `text` pieces with the series' fonts;

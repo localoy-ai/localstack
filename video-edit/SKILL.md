@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: video-edit
-version: 0.1.1
+version: 0.1.2
 publisher: localoy
 capabilities: [files, pictures, videos]
 description: >-
@@ -28,10 +28,11 @@ tags: [video, edit, vertx]
 
 ## When to invoke this skill
 
-Once the plan's phases are picked: this is the run. It makes the scenes
-the shot list describes, puts them on the timeline against the voice and
-music, and cuts it like an editor. In Plan, this skill's steps are the
-plan's `## Steps`; they run when the person presses Start.
+Once the plan's phases are picked and the person pressed Start: this is
+the run. It makes the scenes the shot list describes, puts them on the
+timeline against the voice and music, and cuts it like an editor. While
+planning, don't start it: its steps are the plan's `## Steps`, and VertX
+renders only a short test clip until Start.
 
 ## What you read first
 

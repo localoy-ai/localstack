@@ -74,7 +74,8 @@ through, and that is yours to answer.
 
 Each phase is a decision the person makes on a real draft. In Plan, list
 them under `## Phases` in `PLAN-<topic>.md` as `<n>. <phase> — open` until
-picked, then `— ✓ <file or choice>`.
+picked, then `— ✓ <file or choice>`. Plan ends at approved drafts: the
+edit and finish are the run, after Start.
 
 | Phase | Skill | Produces |
 |---|---|---|

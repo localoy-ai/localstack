@@ -10,8 +10,11 @@ picture.
 
 Then the shot: `<shot size> of <who> <doing what> in <where>, <mood>`.
 
-Keep the prefix identical across pictures; change only the shot part. Put
-no words for on-screen text in the prompt (text is added in VertX).
+Keep the prefix identical across pictures; change only the shot part. End
+every prefix with **"no words, letters or writing anywhere in the
+picture"**: image models draw sound effects, signs and menus as text, often
+gibberish (real test 2026-10-10: "CHIRP", "YAWN", scribbles on a sign).
+Text on screen is added in VertX.
 
 ## Recipes
 

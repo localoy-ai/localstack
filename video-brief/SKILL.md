@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: video-brief
-version: 0.1.0
+version: 0.1.1
 publisher: localoy
 capabilities: [files, web]
 description: >-
@@ -83,11 +83,15 @@ this job has:
 3. Cast and look — open
 4. Shots — open
 5. Voice and sound — open
-6. Edit and finish — open
 ```
 
+The phases are what gets decided on drafts. Making every scene, the edit,
+the finish and the export are the run: they go in `## Steps` and happen
+after the person presses Start (VertX renders only a short test clip while
+planning).
+
 A voice-over: brief, story, voice. A podcast episode: brief, story
-(outline), voices, music and sound, edit. A series: the brief is the
+(outline), voices, music and sound. A series: the brief is the
 series plan (premise, episodes, cast, style); each episode then gets its
 own `PLAN-<series>-ep<n>.md` that points back to it.
 
@@ -107,8 +111,8 @@ own `PLAN-<series>-ep<n>.md` that points back to it.
 2. Fill every brief line you can from it; ask the rest in one ask.
 3. Write `PLAN-<topic>.md`: `# <title>`, `## Brief` (the table's lines as
    bullets), `## Phases` (as above), `## Steps` (the run as `- [ ]` lines:
-   make the scenes, record the voices, cut, finish, export, post only on
-   a yes).
+   make the remaining scenes, record the rest of the voice, cut, finish,
+   export, post only on a yes).
 4. Reply in a few lines: what it's for, the length and size, the feel,
    and that the next phase is the story.
 

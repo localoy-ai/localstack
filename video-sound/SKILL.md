@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: video-sound
-version: 0.1.1
+version: 0.1.2
 publisher: localoy
 capabilities: [files]
 description: >-
@@ -87,8 +87,9 @@ missing in the plan.
 ## Write it down
 
 In `PLAN-<topic>.md`, mark `5. Voice and sound — ✓` with the picked
-voices (character → voice name, how), the music file, and any missing
-effects. Add the recording steps to `## Steps` if the run does them.
+voices (character → voice name, how) and the paths of the picked sample
+and music files (`audio/…`), and any missing effects. Start waits until
+the line links a real sample. Add the recording steps to `## Steps` if the run does them.
 
 ## Ground rules
 

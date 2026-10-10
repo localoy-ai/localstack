@@ -10,11 +10,16 @@ picture.
 
 Then the shot: `<shot size> of <who> <doing what> in <where>, <mood>`.
 
-Keep the prefix identical across pictures; change only the shot part. End
-every prefix with **"no words, letters or writing anywhere in the
-picture"**: image models draw sound effects, signs and menus as text, often
-gibberish (real test 2026-10-10: "CHIRP", "YAWN", scribbles on a sign).
-Text on screen is added in VertX.
+Keep the prefix identical across pictures; change only the shot part.
+
+**Words in pictures**, in any style: put in only the words the design
+calls for (a title, a sign, lettering in the art), write them in the
+prompt exactly as they should read, and say "no other writing". Image
+models add signs, menus and labels of their own, often garbled or making
+claims nobody made (real test 2026-10-10: "Coffee & Pastries" on a window,
+gibberish in speech bubbles). Look at every picture that has words and
+remake any with a wrong or garbled word. Spoken lines are captioned in
+VertX, sharp and editable.
 
 ## Recipes
 

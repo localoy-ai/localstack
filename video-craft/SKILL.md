@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: video-craft
-version: 0.4.2
+version: 0.4.3
 publisher: localoy
 capabilities: [files]
 description: >-

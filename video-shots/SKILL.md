@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: video-shots
-version: 0.1.3
+version: 0.1.4
 publisher: localoy
 capabilities: [files, pictures, videos]
 description: >-
@@ -100,10 +100,7 @@ is the storyboard.
    in picture) is flagged with the workaround.
 2. **Continuity across rows**: same clothes, props, time of day, the side
    of the frame each character holds, unless the script changes them.
-3. **No text inside pictures.** Every picture prompt ends with "no words,
-   letters or writing anywhere in the picture" (signs, menus and sound
-   effects included). Words on screen are VertX `text` and `captions`, so
-   they're sharp, correct and editable (Bangla especially).
+3. **Words in pictures** only as the design asks. Words inside a picture only when the design calls for them (a title, a sign, lettering), written in the prompt exactly as they should read, and never any other writing (no made-up signs, menus or claims). Look at every picture with words and remake it if any word is wrong or garbled. Spoken lines are captioned in VertX.
 
 ## The check
 

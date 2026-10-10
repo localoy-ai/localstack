@@ -1,6 +1,6 @@
 ---
 name: video-cast
-version: 0.1.2
+version: 0.1.4
 publisher: localoy
 capabilities: [files, pictures]
 description: >-
@@ -67,8 +67,8 @@ When they pick, write `style-<topic>.md` (a series: `style-<series>.md`):
 - **Lettering** (on-screen text): font (sans, display or serif),
   colours, style (box, plain, outline).
 - **Never**: what breaks the look (photoreal skin in a comic, lens flares
-  in a flat style), and always: no words, letters or writing in the
-  picture (the prefix ends with it).
+  in a flat style), and no writing the design didn't ask for (the prefix
+  ends with "no other writing").
 - **The frame it was picked from**, linked.
 
 ## The cast: a reference per character
@@ -85,8 +85,10 @@ that must not change (the ship, the mascot, the product):
    head and shoulders, neutral expression. One per character.
 3. Show them together; ask the person to pick or change each one in one
    ask. A changed character is redrawn, not patched in later scenes.
-4. Mark `3. Cast and look — ✓ style-<topic>.md` in the plan when the
-   style and every character are picked.
+4. Mark `3. Cast and look — ✓ style-<topic>.md, images/<picked frame>,
+   characters/<name>.png …` in the plan when the style and every
+   character are picked: the picked pictures' paths on the line. Start
+   waits until it links them (a look picked on words alone isn't picked).
 
 People who appear once (a crowd, a passer-by) get no reference; describe
 them in the scene's prompt.

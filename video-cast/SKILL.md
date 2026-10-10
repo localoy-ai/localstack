@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: video-cast
-version: 0.1.0
+version: 0.1.1
 publisher: localoy
 capabilities: [files, pictures]
 description: >-
@@ -54,7 +54,7 @@ Draft **2–3 style frames**: the same key moment from the script (the
 hook scene is best), each in a different look that fits the brief (for
 example comic inks, painterly cinematic, flat graphic). Same subject,
 different style, so the person compares the style and not the content.
-Each is a paid picture: the person agrees to the credit first.
+Each is a paid picture. The app asks the person before any credit is used; never ask about the cost or "shall I draw them?" in words too.
 
 When they pick, write `style-<topic>.md` (a series: `style-<series>.md`):
 

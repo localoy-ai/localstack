@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: podcast-make
-version: 0.1.0
+version: 0.1.1
 publisher: localoy
 capabilities: [files, pictures]
 description: >-
@@ -43,7 +43,7 @@ short clips are extra on request.
 ## Voices
 
 - **Sample first** (if not picked yet): one real line per voice option
-  for each AI host; the person picks (paid, after a yes).
+  for each AI host; the person picks. The app asks the person before any credit is used; never ask about the cost or "shall I draw them?" in words too.
 - **AI hosts**: one `voice` clip per line of the script, in order, each
   with the host's voice name and a `how` that fits the moment.
 - **The person's own recording**: `add` it with `role voice`; cut it with

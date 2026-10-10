@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: video-sound
-version: 0.1.0
+version: 0.1.1
 publisher: localoy
 capabilities: [files]
 description: >-
@@ -51,7 +51,7 @@ clock (`sync`), this phase also sets the timing of everything.
    test it on a real line with joined letters and numbers).
 2. **Sample first**: record **one short real line** per voice option, 2–3
    options per main voice, and let the person pick in one ask. Samples are
-   paid; the person agrees to the credit first.
+   paid. The app asks the person before any credit is used; never ask about the cost or "shall I draw them?" in words too.
 3. **Direct every line** with `how`: the emotion, pace and intent
    ("whispered, afraid, slow", "bright, smiling, quick"). Same character,
    same voice name every line.

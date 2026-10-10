@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: video-shots
-version: 0.1.0
+version: 0.1.1
 publisher: localoy
 capabilities: [files, pictures, videos]
 description: >-
@@ -84,7 +84,7 @@ run without one draws the same medium shot twenty times.
 
 Make **2–3 test frames** from the list (the hook shot and the hardest
 shot, the one with the most characters or the trickiest light), each a
-paid picture after the person agrees, in the picked style with the cast.
+paid picture, in the picked style with the cast. The app asks the person before any credit is used; never ask about the cost or "shall I draw them?" in words too.
 Show them with their rows; ask in one ask whether the list is right or
 what to change. Then mark `4. Shots — ✓ shots-<topic>.md` in the plan.
 

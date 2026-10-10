@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: video-edit
-version: 0.1.2
+version: 0.1.3
 publisher: localoy
 capabilities: [files, pictures, videos]
 description: >-
@@ -48,8 +48,10 @@ renders only a short test clip until Start.
    episode.
 2. **Voices** first, in script order, if they aren't on the timeline yet:
    they are the clock.
-3. **Scenes**: for each row of the shot list, one `picture` (or a `video`
-   for the rows marked as moving), with:
+3. **Scenes**: for each row of the shot list, one VertX `picture` (or a
+   `video` for the rows marked as moving). Use VertX, not the general
+   picture tool: only VertX draws the cast from their reference pictures,
+   and a face drawn without one changes from shot to shot. Each with:
    - the prompt = the style prefix + the row's "what we see";
    - `with` = the row's cast;
    - `motion` from the row's camera;

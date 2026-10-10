@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: video-cast
-version: 0.1.4
+version: 0.1.5
 publisher: localoy
 capabilities: [files, pictures]
 description: >-
@@ -74,8 +74,10 @@ When they pick, write `style-<topic>.md` (a series: `style-<series>.md`):
 
 ## The cast: a reference per character
 
-For every person in **more than one scene**, and every recurring object
-that must not change (the ship, the mascot, the product):
+For every person in **more than one scene** (the app checks the shot
+list: anyone in two or more shots without a reference keeps Start
+waiting), and every recurring object that must not change (the ship, the
+mascot, the product):
 
 1. Write a **character sheet** in `style-<topic>.md` under `## Cast`:
    name, role, age, build, face, hair, skin, clothes (exact colours),

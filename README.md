@@ -81,6 +81,10 @@ this repo.
 | `/routine-report` | Grit · Weekly "what ran, what changed, what broke" from the run logs; messages you only when something changed or failed. |
 | `/site-check` | Blip · Checks a site's pages, links, forms and observable speed signals; a prioritised fix list. Never submits a form. |
 | `/site-fix` | Blip · Reproduces a bug, fixes the smallest thing, tests twice in the browser, reports what broke and why; asks before touching production. |
+| `/code-build` | Blip · Builds a feature in your repo: reads how it's built and tested, a small plan, its own branch, tests, seen working, the diff; commits on your yes. |
+| `/code-fix` | Blip · Fixes a bug in code: reproduces it, finds the cause with evidence, writes a failing test first, the smallest fix, the whole suite green. |
+| `/code-review` | Blip · Reviews a branch, your uncommitted work or a pull request: findings worst first with file:line, why and the fix. Changes nothing. |
+| `/code-ship` | Blip · Takes a finished branch to a pull request: up to date, green, committed, pushed and described — each push and post after your yes. |
 | `/video-brief` | Starts a video, series or podcast: what it's for, who watches, where it goes, length, size, feel and what good means, as `PLAN-<topic>.md` with the job's phases. |
 | `/video-story` | Writes the story from the brief: the hook, the beats, numbered scenes with timings and every spoken line, in `script-<topic>.md`, from options you pick. |
 | `/video-cast` | Fixes the look and the cast: 2–3 style frames to pick from, a style sheet every picture follows, and a reference picture per character so faces stay the same in every scene and episode. |

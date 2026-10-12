@@ -1,0 +1,115 @@
+---
+# GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
+name: code-ship
+version: 0.1.0
+publisher: localoy
+capabilities: [files, web, browser, shell]
+description: >-
+  Ships a finished branch — checks it is up to date and green, commits what
+  is left with a clear message, pushes the branch and opens the pull request
+  with a description of what changed and how it was tested. Each push asks
+  first; never force-pushes, never merges or deploys without a yes.
+  (localstack)
+author: localoy
+license: MIT
+platforms: [linux, macos, windows]
+metadata:
+  hermes:
+    tags: [code, dev, git, pull-request, release, localstack]
+    related_skills: [code-review, code-build, code-fix]
+allowed-tools:
+  - Bash
+  - Read
+  - AskUserQuestion
+triggers:
+  - ship it
+  - open a pull request
+  - push this branch
+  - make a PR
+  - get this merged
+tags: [code, git, pull-request, release]
+---
+
+## When to invoke this skill
+
+Takes a branch that is done to a pull request someone can merge: up to
+date, tests green, committed, pushed, described. Use when asked to "ship",
+"open a PR", "push this". Blip's skill. Merging and deploying happen only
+when the person asks for them by name.
+
+## The hard boundary
+
+- **Never force-push, never rewrite shared history, never push to the
+  main branch.** Push only the feature branch, and only after the person's
+  yes to that push.
+- **Green or say so.** Run the tests and linters before pushing. A failure
+  stops the ship: report it and offer `/code-fix`; never skip, disable or
+  loosen a check to get past it.
+- **No secrets.** Before committing, look at what is staged: no `.env`,
+  keys, tokens, credentials or large generated files. Found one → stop and
+  say so.
+- **Merging and deploying are separate yeses.** Opening the pull request
+  is the end of this skill unless the person asks to merge or deploy; then
+  each is shown first (the exact command) and done only on a yes to it.
+- **Writing as the person.** The pull request title and description are
+  posted in their name: show them first, post on a yes.
+
+## What you need first
+
+- **Which branch** — default: the current one. Not the main branch: if the
+  work is on main, offer to move it to a new branch first.
+- **Where it merges** — default: the repo's main branch.
+
+## Procedure
+
+**1. Check the branch.** `git status`, the branch, its upstream, and `git
+log --oneline <base>..HEAD`. Fetch, then bring the branch up to date with
+its base (a merge, or a rebase only for a branch nobody else has). Conflicts
+→ resolve the ones whose intent is clear, list the rest and stop.
+
+Scratch for this run lives in `.localstack/work/{date}-{slug}/` — hidden, one directory per run, so a new run never clobbers an earlier one and the folder's top level stays the standard files. Scratch is disposable; old run directories may be deleted freely.
+
+**2. Run the checks.** The full test suite, the linters and the type checker
+the repo uses, and the build. Note each result. Any failure → stop and
+report.
+
+**3. Commit what is left.** Look at `git diff --cached` and the untracked
+files; stage only what belongs to this change. A message in the repo's
+style (check `git log` for it): a short summary line, then why.
+
+**4. Push — ask first.** Show the branch, the remote and the commits that
+will go up. On a yes: `git push -u origin <branch>`.
+
+**5. Open the pull request — ask first.** Draft the title and description:
+
+```
+<summary line>
+
+## What changed
+- <change, in plain words>
+## Why
+<the reason or the issue it closes>
+## How it was tested
+- <tests run and results> · <what was checked by hand>
+## Notes
+<anything a reviewer should look at first, or follow-ups>
+```
+
+Show it; on a yes, open it with `gh pr create` (or the hosting site's own
+page in the browser when gh is missing or signed out — never sign in for
+the person). Give the link.
+
+**6. Report.** The branch, the commits, the checks and their results, and
+the pull request link. Offer `/code-review` on it.
+
+**Completion status.** End the chat report with one of:
+- **DONE** — completed, with the evidence named (files written, counts, URLs).
+- **DONE_WITH_CONCERNS** — completed, and list each concern.
+- **BLOCKED** — cannot proceed; say what blocked it and what was tried.
+- **NEEDS_CONTEXT** — missing information; say exactly what is needed.
+
+## Quality bar
+
+- The pull request can be merged as it is: up to date, green, described.
+- Nothing was force-pushed, merged or deployed without a yes to it.
+- No secret or stray file went into a commit.

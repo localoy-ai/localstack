@@ -1,6 +1,6 @@
 ---
 name: localstack
-version: 0.8.1
+version: 0.9.0
 publisher: localoy
 capabilities: []
 description: Router for the localstack skill suite — sends any sales-development, SEO, design, support, research, social, finance, operations, automation or web request to the right skill and stage. (localstack)
@@ -187,6 +187,10 @@ irreversible):
 | "what ran this week", "did my automations work" | `/routine-report` — ran / changed / broke; messages only on change or failure | Grit |
 | "check my website", "find broken links" | `/site-check` — pages, links, forms, observed speed signals; a fix list | Blip |
 | "fix this bug on my site", "this page is broken" | `/site-fix` — reproduce, smallest fix, tested twice; asks before going live | Blip |
+| "build this feature", "add X to my app" | `/code-build` — reads the repo, small plan, own branch, tests, seen working; commits on a yes | Blip |
+| "fix this bug" (code here), "the tests fail" | `/code-fix` — reproduce, cause with evidence, a failing test first, smallest fix | Blip |
+| "review my code", "is this ready to merge" | `/code-review` — findings worst first with file:line and the fix; changes nothing | Blip |
+| "ship it", "open a pull request" | `/code-ship` — up to date, green, pushed and described; each push and post asks first | Blip |
 
 ## What the suite refuses — say so, don't improvise
 
@@ -202,7 +206,9 @@ them, and do NOT produce the adjacent artifact as a stand-in:
 - **Deleting, moving money, touching production without a yes.** No skill
   deletes the user's files or messages; `/file-tidy` moves only after a yes
   and logs every move; `/reconcile` and `/money-report` never move money;
-  `/site-fix` asks before anything goes live.
+  `/site-fix` asks before anything goes live; the `/code-*` skills work on
+  their own branch, never push without a yes, and never force-push, merge or
+  deploy unless asked by name.
 - **Invented data.** No constructed emails or profile URLs, no numeric
   scores, no imagined firmographics or keyword volumes. `UNKNOWN` is the
   honest value.

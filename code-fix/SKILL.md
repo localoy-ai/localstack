@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: code-fix
-version: 0.1.0
+version: 0.1.1
 publisher: localoy
 capabilities: [files, web, browser, shell]
 description: >-
@@ -71,7 +71,10 @@ the browser, until you see the bug. Save the exact command and output (or a
 screenshot) into scratch. Note the branch and `git status`; ask before
 going on if the person has unsaved work in the files involved.
 
-Scratch for this run lives in `.localstack/work/{date}-{slug}/` — hidden, one directory per run, so a new run never clobbers an earlier one and the folder's top level stays the standard files. Scratch is disposable; old run directories may be deleted freely.
+Scratch for this run (logs, screenshots, notes) never goes into the repo:
+put it in `$SCRATCH` when it is set, else a folder from `mktemp -d`. The
+repo holds only the change, so `git status` shows nothing that isn't part
+of it.
 
 **2. Find the cause.** Read the error to its file and line; read that code
 whole and what calls it. Narrow it down: a smaller input, a log line, a

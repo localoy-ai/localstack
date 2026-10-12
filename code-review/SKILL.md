@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: code-review
-version: 0.1.0
+version: 0.1.1
 publisher: localoy
 capabilities: [files, web, shell]
 description: >-
@@ -66,7 +66,10 @@ diff <base>...HEAD` plus `git diff` for uncommitted work), or `gh pr diff
 change is for. Read the pull request's description or the commit messages:
 what it claims to do is what you check it against.
 
-Scratch for this run lives in `.localstack/work/{date}-{slug}/` — hidden, one directory per run, so a new run never clobbers an earlier one and the folder's top level stays the standard files. Scratch is disposable; old run directories may be deleted freely.
+Scratch for this run (logs, screenshots, notes) never goes into the repo:
+put it in `$SCRATCH` when it is set, else a folder from `mktemp -d`. The
+repo holds only the change, so `git status` shows nothing that isn't part
+of it.
 
 **2. Read it in context.** For each changed file, read the whole function
 or component around each hunk, and what calls it. Read the repo's rules

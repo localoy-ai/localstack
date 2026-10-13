@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: routine-setup
-version: 0.1.0
+version: 0.1.1
 publisher: localoy
 capabilities: [files, shell, schedule]
 description: >-
@@ -70,7 +70,7 @@ Ask for what is missing in a SINGLE message, then wait.
 **1. Write the steps.** Watch or ask how the person does it now; write each
 step as something a fresh agent can follow with no memory of this chat:
 inputs (paths, URLs), the skill to call when one exists (`/competitor-watch`,
-`/money-report`, `/site-check`…), what to write, and what counts as
+`/money-report`, `/qa-only`…), what to write, and what counts as
 "changed" and "failed". Slug: `<routine>` (`monday-competitors`).
 
 Scratch for this run lives in `.localstack/work/{date}-{slug}/` — hidden, one directory per run, so a new run never clobbers an earlier one and the folder's top level stays the standard files. Scratch is disposable; old run directories may be deleted freely.

@@ -225,7 +225,7 @@ const WRITES_FOLDER = [
   'lead-export', 'lead-retro', 'seo-audit', 'keyword-research', 'on-page-optimizer',
   // The Locals' field skills (v0.11.0).
   'support-reply', 'support-faq', 'market-research', 'fact-check', 'competitor-watch', 'social-plan', 'social-post', 'reconcile',
-  'money-report', 'inbox-triage', 'file-tidy', 'routine-setup', 'routine-report', 'site-check', 'site-fix',
+  'money-report', 'inbox-triage', 'file-tidy', 'routine-setup', 'routine-report',
 ];
 for (const skill of WRITES_FOLDER) {
   if (!fs.existsSync(path.join(ROOT, skill, 'SKILL.md'))) continue;

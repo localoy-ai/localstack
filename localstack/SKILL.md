@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: localstack
-version: 0.9.0
+version: 0.10.0
 publisher: localoy
 capabilities: []
 description: Router for the localstack skill suite — sends any sales-development, SEO, design, support, research, social, finance, operations, automation or web request to the right skill and stage. (localstack)
@@ -11,7 +11,7 @@ platforms: [linux, macos, windows]
 metadata:
   hermes:
     tags: [router, sales, seo, localstack]
-    related_skills: [lead-plan, lead-search, lead-qualify, seo-audit, support-reply, market-research, fact-check, social-plan, reconcile, inbox-triage, routine-setup, site-check]
+    related_skills: [lead-plan, lead-search, lead-qualify, seo-audit, support-reply, market-research, fact-check, social-plan, reconcile, inbox-triage, routine-setup]
 allowed-tools:
   - Bash
   - Read
@@ -53,7 +53,7 @@ DESIGN.md              lasting decisions: positioning, tone, channels
 seo-audit-<site>.md    SEO reports, one per site or page (also keywords-, onpage-)
 <kind>-<slug>.md       other reports, one per subject, replaced on rerun: support-,
                        research-, competitors-, reconcile-, money-, inbox-,
-                       site-check-, fix-, routine-report-; FAQ.md for /support-faq
+                       routine-report-; FAQ.md for /support-faq
 PLAN-social-*.md       also PLAN-tidy-<folder>.md and PLAN-routine-<name>.md: other
                        work with its own ## Steps
 .localstack/work/      hidden scratch, one directory per run
@@ -186,12 +186,11 @@ irreversible):
 | "tidy this folder", "organise my files" | `/file-tidy` — a plan first, moves after a yes, every move logged, no deletes | Bloop |
 | "automate this", "do this every week" | `/routine-setup` — steps, one run together, then a schedule and a run log | Grit |
 | "what ran this week", "did my automations work" | `/routine-report` — ran / changed / broke; messages only on change or failure | Grit |
-| "check my website", "find broken links" | `/site-check` — pages, links, forms, observed speed signals; a fix list | Blip |
-| "fix this bug on my site", "this page is broken" | `/site-fix` — reproduce, smallest fix, tested twice; asks before going live | Blip |
-| "build this feature", "add X to my app" | `/code-build` — reads the repo, small plan, own branch, tests, seen working; commits on a yes | Blip |
-| "fix this bug" (code here), "the tests fail" | `/code-fix` — reproduce, cause with evidence, a failing test first, smallest fix | Blip |
-| "review my code", "is this ready to merge" | `/code-review` — findings worst first with file:line and the fix; changes nothing | Blip |
-| "ship it", "open a pull request" | `/code-ship` — up to date, green, pushed and described; each push and post asks first | Blip |
+| "check my website", "test this site" | `/qa-only` (report) or `/qa` (test and fix) — gstack, Blip's own pack | Blip |
+| "fix this bug", "the tests fail", "this page is broken" | `/investigate` — root cause first, then the fix — gstack | Blip |
+| "build this feature", "add X to my app" | `/plan-eng-review` for the plan, then build on a branch — gstack | Blip |
+| "review my code", "is this ready to merge" | `/review` — gstack's pre-landing review | Blip |
+| "ship it", "open a pull request" | `/ship` — gstack; each push and post asks first | Blip |
 
 ## What the suite refuses — say so, don't improvise
 
@@ -207,9 +206,8 @@ them, and do NOT produce the adjacent artifact as a stand-in:
 - **Deleting, moving money, touching production without a yes.** No skill
   deletes the user's files or messages; `/file-tidy` moves only after a yes
   and logs every move; `/reconcile` and `/money-report` never move money;
-  `/site-fix` asks before anything goes live; the `/code-*` skills work on
-  their own branch, never push without a yes, and never force-push, merge or
-  deploy unless asked by name.
+  Blip's gstack skills (`/ship`, `/qa`, `/investigate`) work on a branch and
+  ask before a push, a pull request or anything that goes live.
 - **Invented data.** No constructed emails or profile URLs, no numeric
   scores, no imagined firmographics or keyword volumes. `UNKNOWN` is the
   honest value.

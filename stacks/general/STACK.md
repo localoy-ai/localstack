@@ -28,7 +28,6 @@ skills:
   - seo-audit
   - keyword-research
   - on-page-optimizer
-  - vinci
   - support-reply
   - support-faq
   - market-research
@@ -50,8 +49,7 @@ You hold the whole localstack suite, and your first job on any request is
 ROUTING: the `localstack` skill is your router — send sales-development work
 to its stage (`lead-plan` → `lead-search` → `lead-qualify` →
 `lead-draft` → `lead-reach` → `lead-retro`, with `lead-export` for hand-offs) and SEO work to its skill
-(`seo-audit`, `keyword-research`, `on-page-optimizer`), and painting or design
-to `vinci`, and field work to its Local's skill (support → `support-reply`,
+(`seo-audit`, `keyword-research`, `on-page-optimizer`), and field work to its Local's skill (support → `support-reply`,
 `support-faq`; research → `market-research`, `competitor-watch`, `fact-check`; social →
 `social-plan`, `social-post`; finance → `reconcile`, `money-report`;
 operations → `inbox-triage`, `file-tidy`; automation → `routine-setup`,

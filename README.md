@@ -65,7 +65,6 @@ this repo.
 | `/seo-audit` | Crawls up to 30 of a site's important pages and reports what is actually on them — titles, metas, headings, internal links, canonicals, markup flags — as a prioritized fix list. |
 | `/keyword-research` | Decides what a site should target: the terms its buyers actually use, grouped by intent, each mapped to the page that should own it. No invented volumes or difficulty scores. |
 | `/on-page-optimizer` | Rewrites one page against one target term — current and proposed values side by side, so a human approves each change. Produces a proposal, never an edit. |
-| `/vinci` | Paints or designs anything in the Vinci editor (localoy.ai/vinci) the way a master would: researches the artist's method, plans one layer per stage, writes every stroke, replays it and exports at up to 16×. |
 | `/support-reply` | Mochi · Drafts replies to customer messages from the business's rules, FAQ and past replies — never promising what isn't approved; sends one yes at a time from your browser, else drafts. |
 | `/support-faq` | Mochi · Turns questions asked three or more times into FAQ.md entries, each citing the messages it came from. |
 | `/market-research` | Umbra · Agrees the decision first, reads real sources, separates what's true (with URLs) from what's guessed, ends with what it means. |
@@ -80,17 +79,6 @@ this repo.
 | `/routine-setup` | Grit · Turns a repeated task into a schedule: steps written, one run with you, then scheduled with a run log. |
 | `/routine-report` | Grit · Weekly "what ran, what changed, what broke" from the run logs; messages you only when something changed or failed. |
 | gstack | Blip · Apps, websites and code come from [gstack](https://github.com/garrytan/gstack), built for Localoy as its own pack ([localoy-ai/gstack](https://github.com/localoy-ai/gstack)): `/investigate`, `/review`, `/ship`, `/qa`, `/qa-only`, `/design-review` and more. |
-| `/video-brief` | Starts a video, series or podcast: what it's for, who watches, where it goes, length, size, feel and what good means, as `PLAN-<topic>.md` with the job's phases. |
-| `/video-story` | Writes the story from the brief: the hook, the beats, numbered scenes with timings and every spoken line, in `script-<topic>.md`, from options you pick. |
-| `/video-cast` | Fixes the look and the cast: 2–3 style frames to pick from, a style sheet every picture follows, and a reference picture per character so faces stay the same in every scene and episode. |
-| `/video-shots` | Plans every shot like a director and cinematographer — size, angle, camera move, framing, who, how long — with test frames you approve before the scenes are made. |
-| `/video-sound` | Casts the voices from samples you hear, directs every line, picks the music from two options, lists the sound effects, then records the script. |
-| `/video-edit` | Cuts the video in VertX from the approved plan: scenes in the picked style and cast, synced to the voice, paced like an editor, frames checked as it goes. |
-| `/video-finish` | Captions, titles and the end card, a frame-by-frame check against the brief (Bangla letters included), then the export, ready to post on your yes. |
-| `/video-motion` | Motion graphics: animated titles, logo stings, kinetic type and product animations, designed from the brand and rendered frame-exact with LM. |
-| `/podcast-plan` | Plans a podcast show once (premise, format, hosts, sound identity) and each episode's outline with timed segments, from two directions you pick. |
-| `/podcast-make` | Makes the episode in VertX: voices recorded or brought in, theme and stings, speech edited and levelled, audio exported, with show notes, chapters, and optional video and clips. |
-| `/video-craft` | The studio's craft library, read when a phase needs it: story, styles, characters, cinematography, directing, choreography, production design, sound, editing, finishing, podcast, platforms, rights. |
 
 ## The sales pipeline
 

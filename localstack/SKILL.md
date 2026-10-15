@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: localstack
-version: 0.10.0
+version: 0.10.1
 publisher: localoy
 capabilities: []
 description: Router for the localstack skill suite — sends any sales-development, SEO, design, support, research, social, finance, operations, automation or web request to the right skill and stage. (localstack)
@@ -165,7 +165,6 @@ cheaper than a false negative.
 
 | They say | Route |
 |---|---|
-| "paint/draw/design <anything>", "make it the way <artist> did", "/vinci …" | `/vinci` — researches the method, plans the layers, paints every stroke in the Vinci editor, exports at 16× |
 
 **The Locals' field skills** (each belongs to one Local; every one drafts
 before it acts, and asks before each send, post, move, deploy or anything

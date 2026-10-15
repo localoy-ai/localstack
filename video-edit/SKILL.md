@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: video-edit
-version: 0.1.3
+version: 0.3.1
 publisher: localoy
 capabilities: [files, pictures, videos]
 description: >-
@@ -39,7 +39,10 @@ renders only a short test clip until Start.
 1. `PLAN-<topic>.md`, `script-<topic>.md`, `style-<topic>.md`,
    `shots-<topic>.md`: everything already decided. Don't redecide it.
 2. `video-craft`: `sections/editing.md` (pace, cuts, transitions, rhythm);
-   `sections/short-form.md` for anything short.
+   `sections/effects.md` (which transition, speed, grade, effects, moving
+   text, sound effects); `sections/short-form.md` for anything short;
+   `sections/music-edit.md` when cutting to music; `sections/talking-head.md`
+   when someone talks; `sections/motion-design.md` for scenes.
 
 ## Build order
 
@@ -59,14 +62,28 @@ renders only a short test clip until Start.
    Make in order; look at each picture as it comes (you see it): a wrong
    face, a wrong style, text in the picture → make it again before going
    on.
+   **Footage the person gave** (screen recordings, clips): `look` at it
+   before placing it. When its shape isn't the frame's (VertX says how
+   much a crop cuts when you `add` it), choose per shot by `effects.md`,
+   "Wide footage in a tall frame": crop to what matters (`focus` on it,
+   a `keys` punch-in so its text reads on a phone) or blur fill when the
+   whole frame matters. A word or button sliced by the frame's edge is a
+   fault, never a style.
 4. **`sync`**: scenes start when the voice says their words.
 5. **Music** under it, from the sound phase.
 6. **Pace**: read the timeline (`show`) against `editing.md`: no still
    holding past its limit, no two same-size neighbours, the hook short, a
    beat of silence where the script wants one. Fix with `edit`, `cut`,
    `move`.
-7. **Look** at one frame per scene (`look {at: [...]}`) and fix what's
-   wrong before the finish phase.
+7. **The edit's language**, by `effects.md`: one transition family on the
+   joins that need one (`transition`), cuts on the music's beats (`beats`),
+   speed ramps or a freeze where the story peaks, one grade for the whole
+   piece (`edit {id: "video", grade}`), an `sfx` on each transition and
+   pop. Fit the brief's tone: a calm documentary gets dissolves and a soft
+   grade, a hype reel whips, punch-ins and word-by-word captions.
+8. **Look** at one frame per scene and one at the middle of each
+   transition (`look {at: [...]}`), and fix what's wrong before the finish
+   phase.
 
 ## Ground rules
 
@@ -90,3 +107,6 @@ renders only a short test clip until Start.
 - No still holds longer than ~3 s (fast) or ~5 s (slow) without a new
   shot or real motion.
 - Faces and style match the references in every looked-at frame.
+- No word, button or face cut by the frame's edge in any looked-at frame.
+- Titles are as strong as the brief says: "bold" is big (about two
+  thirds of the frame's width) and heavy, not a small label.

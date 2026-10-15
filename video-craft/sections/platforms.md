@@ -84,5 +84,6 @@ gains nothing; clarity does.
 - `new {preset}` from the table; `look` at frames to check the safe zone
   (VertX doesn't draw platform overlays yet; judge by the margins above).
 - `export` is H.264 MP4 at the project's size.
-- Can't do yet: a loudness target for the mix, platform overlay previews,
+- Every export is levelled to −14 LUFS, true peak −1.5 dB.
+- Can't do yet: platform overlay previews,
   cover/thumbnail export (make a `picture` for the cover).

@@ -71,5 +71,9 @@ People forgive a rough picture; they leave at bad sound.
 - `add {file, role: voice | music, volume, fade_in, fade_out}` for sound
   files the person gives (effects, their own voice, licensed music).
 - `export {format: m4a | wav}` for audio-only.
-- Can't do yet: making or finding sound effects, a loudness target for the
-  mix, EQ or noise removal.
+- `sfx {kind, at, volume}`: whoosh, swoosh, swipe, riser, impact, boom,
+  click, pop, ding, glitch, shutter, tick, typing (made by VertX, free).
+- Sound `effects` on a clip: voice (clean speech), denoise-sound, echo,
+  reverb, telephone, radio, deep, high, robot, muffle, bass, wide.
+- `beats {id}` for the music's tempo and beats; `tighten {id}` cuts long
+  pauses from speech. Every export is levelled to −14 LUFS.

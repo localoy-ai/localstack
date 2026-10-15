@@ -107,4 +107,6 @@ is a deliberate effect.
 - Real movement (tracking, handheld, a crane) needs a `video` clip, 4–8 s,
   costly: keep for the moments that need it; `from` a picture to keep the
   look.
-- Can't do yet: tilt, rack focus, speed ramps, camera shake as an effect.
+- `motion` also moves videos: pan-up and pan-down (tilts), punch-in,
+  shake; `speed` and `reverse` for slow motion and ramps.
+- Can't do yet: rack focus (fake it with a `blur` effect on a cut).

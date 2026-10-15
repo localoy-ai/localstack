@@ -65,5 +65,7 @@ never overwrite a version the person has seen; note what changed.
 - `look {at: [...]}` renders frames exactly as the export; check every
   caption change and every scene.
 - `export {name, format}` into `videos/` (or `audio/`).
-- Can't do yet: a colour grade for the whole video, a separate subtitle
-  file export, animated title templates.
+- Colour for the whole video: `edit {id: "video", grade, lut, effects}`.
+- Moving titles: `text {animate, animate_out}`; reel captions word by word:
+  `captions {words: 1–3, highlight: "#RRGGBB", animate: "pop"}`.
+- Can't do yet: a separate subtitle file export.

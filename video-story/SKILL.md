@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: video-story
-version: 0.1.0
+version: 0.2.0
 publisher: localoy
 capabilities: [files, web]
 description: >-
@@ -49,7 +49,10 @@ isn't in it isn't made.
    - `sections/screenwriting.md` for anything with scenes and dialogue;
    - `sections/series.md` for an episode or a series plan;
    - `sections/formats.md` for documentary, explainer, ad, adaptation or
-     podcast structure.
+     podcast structure;
+   - `sections/ads.md` for an ad, `sections/explainer.md` for teaching or
+     a tutorial, `sections/trailer.md` for a product demo or trailer,
+     `sections/talking-head.md` when someone talks to camera.
 
 ## What the script must have
 

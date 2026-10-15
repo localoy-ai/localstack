@@ -70,6 +70,18 @@
       "trigger": "cutting the timeline, pacing, transitions, montage, trailers"
     },
     {
+      "id": "effects",
+      "file": "effects.md",
+      "title": "The modern edit: transitions, speed, colour, effects, motion text",
+      "trigger": "choosing transitions, speed changes, a grade, effects, animated text, sound effects or cutting on the beat"
+    },
+    {
+      "id": "trailer",
+      "file": "trailer.md",
+      "title": "Product demos and trailers: real footage, motion-graphic scenes, the 30-second shape",
+      "trigger": "making a product demo, launch trailer, feature video or site hero video"
+    },
+    {
       "id": "finishing",
       "file": "finishing.md",
       "title": "Finishing: captions, titles, colour, the final check",
@@ -98,6 +110,54 @@
       "file": "rights.md",
       "title": "Rights and care: music, pictures, faces and voices, labels, claims",
       "trigger": "using music, real people, claims, or realistic material"
+    },
+    {
+      "id": "motion-design",
+      "file": "motion-design.md",
+      "title": "Motion design: kinetic type, logos, diagrams, maps, data, designed transitions, writing scene pages",
+      "trigger": "designing motion graphics: titles, logos, diagrams, charts, maps, animated text"
+    },
+    {
+      "id": "talking-head",
+      "file": "talking-head.md",
+      "title": "Talking heads, creators and interviews: tightening, jump cuts, punch-ins, b-roll, captions",
+      "trigger": "editing someone talking: founder updates, tutorials with a presenter, UGC, interviews"
+    },
+    {
+      "id": "ads",
+      "file": "ads.md",
+      "title": "Ads and performance video: the first second, structures, proof, the ask, variants",
+      "trigger": "making an ad or anything meant to make someone act"
+    },
+    {
+      "id": "explainer",
+      "file": "explainer.md",
+      "title": "Explainers and tutorials: structure, showing ideas, screen tutorials, pace",
+      "trigger": "teaching or explaining on video; screen tutorials"
+    },
+    {
+      "id": "color",
+      "file": "color.md",
+      "title": "Colour: correcting, matching, grading, texture",
+      "trigger": "correcting or matching clips, choosing or applying a grade"
+    },
+    {
+      "id": "music-edit",
+      "file": "music-edit.md",
+      "title": "Cutting music and cutting to music: choosing, structure, fitting length, levels",
+      "trigger": "choosing music, fitting it to length, cutting picture on the beat"
+    },
+    {
+      "id": "ai-video",
+      "file": "ai-video.md",
+      "title": "Generating clips and pictures with models: when, prompts, consistency, cost, failures",
+      "trigger": "writing prompts for pictures or clips, planning generation and its cost"
+    },
+    {
+      "id": "review",
+      "file": "review.md",
+      "title": "Reviewing your own cut: the passes, common faults and fixes, reporting",
+      "trigger": "before exporting the final cut or showing it to the person"
     }
   ]
 }

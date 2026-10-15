@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: video-finish
-version: 0.1.1
+version: 0.2.0
 publisher: localoy
 capabilities: [files]
 description: >-
@@ -37,7 +37,8 @@ platform's buttons, a typo in Bangla, an end card that says nothing.
 1. `PLAN-<topic>.md`: "good means", the platform, the language.
 2. `style-<topic>.md`: lettering (font, colours, style).
 3. `video-craft`: `sections/finishing.md` (captions, titles, the final
-   check); `sections/platforms.md` (safe zones, lengths, loudness);
+   check); `sections/color.md` (matching and the grade);
+   `sections/review.md` (the review passes before the final export); `sections/platforms.md` (safe zones, lengths, loudness);
    `sections/rights.md` before anything realistic or with music goes out.
 
 ## Steps

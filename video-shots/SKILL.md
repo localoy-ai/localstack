@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: video-shots
-version: 0.1.4
+version: 0.2.0
 publisher: localoy
 capabilities: [files, pictures, videos]
 description: >-
@@ -42,7 +42,9 @@ run without one draws the same medium shot twenty times.
 3. `video-craft`: `sections/cinematography.md` (shots, angles, movement,
    composition, light) and `sections/directing.md` (blocking, performance,
    eyelines). For dance, fights or any staged movement,
-   `sections/choreography.md`.
+   `sections/choreography.md`. Before writing any picture or clip prompt,
+   `sections/ai-video.md`; for titles, diagrams or data on screen,
+   `sections/motion-design.md`.
 
 ## The shot list
 

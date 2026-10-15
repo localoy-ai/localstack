@@ -73,4 +73,4 @@ VertX, sharp and editable.
   effects); captions for spoken lines.
 - Can't do yet: speech balloons with tails, panel borders drawn by VertX,
   halftone as a filter (make it part of the picture's prompt), page-turn
-  transitions.
+  transitions (use a slide or cover transition).

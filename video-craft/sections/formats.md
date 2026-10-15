@@ -63,5 +63,4 @@ timings in the outline, music stings between segments, and show notes
   per speaker, `music` for the bed and stings; video podcasts add a still
   or simple picture per speaker with `motion`.
 - VertX lowers music and other sound under any voice by itself (ducking).
-- Can't do yet: a sound effects library, a loudness target for the whole
-  mix.
+- `sfx` for sound effects; every export is levelled to −14 LUFS.

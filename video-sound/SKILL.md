@@ -1,7 +1,7 @@
 ---
 # GENERATED from SKILL.md.tmpl — edit the .tmpl, then run scripts/build.sh.
 name: video-sound
-version: 0.1.2
+version: 0.3.0
 publisher: localoy
 capabilities: [files]
 description: >-
@@ -42,6 +42,7 @@ clock (`sync`), this phase also sets the timing of everything.
 3. `PLAN-<topic>.md`: language, budget, must-use (a brand voice, the
    person's own recording).
 4. `video-craft`: `sections/sound.md` (voices, music, effects, the mix);
+   `sections/music-edit.md` (choosing music, bars and phrases, fitting it);
    `sections/characters.md` → voice casting.
 
 ## Voices
@@ -79,8 +80,10 @@ voice); never imitate a real person's voice.
 ## Sound effects and ambience
 
 List the sounds the script and shots need (the knock, the radio crackle,
-room tone of the station). VertX can't make or fetch sound effects yet:
-use a sound file the person provides or owns (`add` with `role`), or
+room tone of the station). VertX makes the common ones itself, free
+(`sfx {kind, at}`: whoosh, swoosh, swipe, riser, impact, boom, click, pop,
+ding, glitch, shutter, tick, typing); for anything else (a real knock, a
+crowd, rain) use a sound file the person provides or owns (`add`), or
 carry the moment with music and picture, and say which effects are
 missing in the plan.
 

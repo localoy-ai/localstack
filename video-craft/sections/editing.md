@@ -64,9 +64,11 @@ music builds, then a stop and the date or the ask.
 
 - `sync` places scenes on the voice; then `edit {id, at, for}`, `cut`,
   `move` to pace.
-- Dissolve: overlap two clips and give the lower `fade_out` and the upper
-  `fade_in` (layers); fade to black: `fade_out` on the last clip over the
+- Dissolve: `transition {kind: "dissolve"}` (or "fade"); fade to black:
+  `transition {kind: "fadeblack"}`, or `fade_out` on the last clip over the
   `bg` colour.
 - J and L cuts: move the voice's `at` a little before or after the scene's.
-- Can't do yet: whip and wipe transitions, speed ramps, beat detection
-  (place `at` by the music's beat times by hand).
+- Transitions: `transition {kind, seconds}` on the incoming clip (whips,
+  wipes, slides, zooms, flash, glitch and more); see `effects.md` for which.
+- `beats {id}` gives the music's beat times: put each cut's `at` on one.
+- Speed ramps: `cut` the clip and give each part its own `speed`.

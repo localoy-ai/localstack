@@ -69,5 +69,6 @@ bold line of text, a question the viewer wants answered.
   fast piece, ~5 s in a slow one.
 - `captions` for spoken lines, `text` for hook lines and labels; check
   them with `look` at the frames where they appear.
-- Can't do yet: speed ramps, whip transitions, beat-synced cuts by itself
-  (place cuts at the music's beats by hand with `at`).
+- Speed ramps (`cut` + `speed`), whips and other transitions, `beats` for
+  cutting on the beat, word-by-word `captions {highlight}`, `sfx` on every
+  transition and pop: see `effects.md`.

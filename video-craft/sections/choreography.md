@@ -61,7 +61,8 @@ suggested:
 
 - Pose sequences: several `picture`s with short `for` (0.3–0.6 s), same
   cast and style; or a `video` clip `from` the first pose for real motion.
-- Cuts on the beat: place each clip's `at` on the music's beat times (no
-  automatic beat detection yet).
-- Can't do yet: speed ramps, motion blur, beat detection, multi-dancer
-  sync in generated clips (keep groups small and clips short).
+- Cuts on the beat: `beats {id}` gives the music's beat times; place each
+  clip's `at` on one. Speed ramps with `cut` + `speed`; motion blur with
+  the whip transitions or the `trails` effect.
+- Can't do yet: multi-dancer sync in generated clips (keep groups small
+  and clips short).

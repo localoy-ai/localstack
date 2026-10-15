@@ -83,6 +83,7 @@ reason to keep listening matter more than anything else.
   `export {format: m4a | wav}`.
 - A video podcast: a picture or clip per speaker on the timeline with
   `motion`, `captions` on the voice, `export` mp4.
-- Can't do yet: noise removal, EQ, a loudness target, automatic
-  chapter markers, transcript export (write the transcript from the
+- Clean speech with the `voice` (or `denoise-sound`) effect; `tighten` cuts
+  long pauses; every export is levelled to −14 LUFS.
+- Can't do yet: automatic chapter markers, transcript export (write the transcript from the
   script).
